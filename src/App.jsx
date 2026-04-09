@@ -3,6 +3,7 @@ import HeaderTest from "./pages/HeaderTest";
 
 import "./styles/colors/colors.css";
 import "./App.css";
+import "./styles/global/reset.css";
 
 function App() {
   return (
