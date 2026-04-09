@@ -30,3 +30,9 @@
   display: block;
   margin-top: 20px;
 }
+
+.header-right {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
