@@ -3,32 +3,32 @@
      Pretendard Text Styles
   ======================= */
 
-  --text-150-bold: 700 150px / 1.2 "Pretendard", sans-serif;
-  --text-120-bold: 700 120px / 1.2 "Pretendard", sans-serif;
-  --text-80-bold: 700 80px / 1.2 "Pretendard", sans-serif;
+  --text-150-bold: 700 9.375rem / 1.2 "Pretendard", sans-serif;
+  --text-120-bold: 700 7.5rem / 1.2 "Pretendard", sans-serif;
+  --text-80-bold: 700 5rem / 1.2 "Pretendard", sans-serif;
 
-  --text-32-bold: 700 32px / 1.4 "Pretendard", sans-serif;
+  --text-32-bold: 700 2rem / 1.4 "Pretendard", sans-serif;
 
-  --text-24-bold: 700 24px / 1.4 "Pretendard", sans-serif;
-  --text-20-bold: 700 20px / 1.4 "Pretendard", sans-serif;
+  --text-24-bold: 700 1.5rem / 1.4 "Pretendard", sans-serif;
+  --text-20-bold: 700 1.25rem / 1.4 "Pretendard", sans-serif;
 
-  --text-20-medium: 500 20px / 1.5 "Pretendard", sans-serif;
+  --text-20-medium: 500 1.25rem / 1.5 "Pretendard", sans-serif;
 
-  --text-18-bold: 700 18px / 1.4 "Pretendard", sans-serif;
-  --text-18-medium: 500 18px / 1.5 "Pretendard", sans-serif;
-  --text-18-regular: 400 18px / 1.5 "Pretendard", sans-serif;
+  --text-18-bold: 700 1.125rem / 1.4 "Pretendard", sans-serif;
+  --text-18-medium: 500 1.125rem / 1.5 "Pretendard", sans-serif;
+  --text-18-regular: 400 1.125rem / 1.5 "Pretendard", sans-serif;
 
-  --text-16-bold: 700 16px / 1.4 "Pretendard", sans-serif;
-  --text-16-medium: 500 16px / 1.5 "Pretendard", sans-serif;
-  --text-16-regular: 400 16px / 1.5 "Pretendard", sans-serif;
+  --text-16-bold: 700 1rem / 1.4 "Pretendard", sans-serif;
+  --text-16-medium: 500 1rem / 1.5 "Pretendard", sans-serif;
+  --text-16-regular: 400 1rem / 1.5 "Pretendard", sans-serif;
 
-  --text-14-bold: 700 14px / 1.4 "Pretendard", sans-serif;
-  --text-14-medium: 500 14px / 1.5 "Pretendard", sans-serif;
-  --text-14-regular: 400 14px / 1.5 "Pretendard", sans-serif;
+  --text-14-bold: 700 0.875rem / 1.4 "Pretendard", sans-serif;
+  --text-14-medium: 500 0.875rem / 1.5 "Pretendard", sans-serif;
+  --text-14-regular: 400 0.875rem / 1.5 "Pretendard", sans-serif;
 
-  --text-12-medium: 500 12px / 1.5 "Pretendard", sans-serif;
-  --text-12-regular: 400 12px / 1.5 "Pretendard", sans-serif;
+  --text-12-medium: 500 0.75rem / 1.5 "Pretendard", sans-serif;
+  --text-12-regular: 400 0.75rem / 1.5 "Pretendard", sans-serif;
 
-  --text-10-medium: 500 10px / 1.5 "Pretendard", sans-serif;
-  --text-10-regular: 400 10px / 1.5 "Pretendard", sans-serif;
+  --text-10-medium: 500 0.625rem / 1.5 "Pretendard", sans-serif;
+  --text-10-regular: 400 0.625rem / 1.5 "Pretendard", sans-serif;
 }
