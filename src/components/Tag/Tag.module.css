@@ -30,7 +30,7 @@
 .tag-point-general {
   padding: 0.5rem 0.75rem;
   border: var(--tag-border);
-  background: var(--tag-bg-light);
+  background: var(--white);
 }
 
 .content {
