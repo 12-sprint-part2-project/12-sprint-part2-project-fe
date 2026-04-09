@@ -16,7 +16,7 @@ export const Tag = ({
       text: `${points}P 획득`,
     },
     emoji: {
-      icon: <img src={emojiIcon} alt="emoji" />,
+      icon: <span>{emojiIcon}</span>,
       text: count,
     },
   };
