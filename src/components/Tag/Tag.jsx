@@ -2,7 +2,7 @@ import React from "react";
 import styles from "./Tag.module.css";
 import pointIcon from "../../assets/images/ic-point.svg";
 
-export const Tag = ({
+const Tag = ({
   type,
   theme,
   variant = "default",
@@ -16,7 +16,12 @@ export const Tag = ({
       text: `${points}P 획득`,
     },
     emoji: {
-      icon: <span>{emojiIcon}</span>,
+      icon:
+        typeof emojiIcon === "string" && emojiIcon.startsWith("/") ? (
+          <img src={emojiIcon} alt="emoji" />
+        ) : (
+          <span>{emojiIcon}</span>
+        ),
       text: count,
     },
   };
@@ -65,3 +70,5 @@ export const Tag = ({
     </div>
   );
 };
+
+export default Tag;
