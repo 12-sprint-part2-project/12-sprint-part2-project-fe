@@ -1,10 +1,7 @@
 import { Routes, Route, Link } from "react-router-dom";
 import HeaderTest from "./pages/HeaderTest";
 
-import "./styles/colors/colors.css";
 import "./App.css";
-import "./styles/global/reset.css";
-import "./styles/global/common.css";
 
 function App() {
   return (
