@@ -1,10 +1,7 @@
 import { Routes, Route, Link } from "react-router-dom";
 import HeaderTest from "./pages/HeaderTest";
-
-import "./styles/colors/colors.css";
+import TagTest from "./pages/TagTest";
 import "./App.css";
-import "./styles/global/reset.css";
-import "./styles/global/common.css";
 
 function App() {
   return (
@@ -20,11 +17,16 @@ function App() {
               <Link to="/header-test" className="test-btn">
                 Header 테스트 페이지로 이동
               </Link>
+
+              <br />
+
+              <Link to="/tag-test">Tag 테스트 페이지로 이동</Link>
             </div>
           }
         />
 
         <Route path="/header-test" element={<HeaderTest />} />
+        <Route path="/tag-test" element={<TagTest />} />
       </Routes>
     </>
   );
