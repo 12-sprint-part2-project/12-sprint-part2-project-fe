@@ -20,6 +20,7 @@
 }
 
 .tag-light {
+  color: var(--black);
   background: var(--tag-bg-light);
 }
 
