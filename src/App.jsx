@@ -1,6 +1,7 @@
 import { Routes, Route, Link } from "react-router-dom";
 import HeaderTest from "./pages/HeaderTest";
 import TagTest from "./pages/TagTest";
+import CardTest from "./pages/CardTest";
 import "./App.css";
 
 function App() {
@@ -17,16 +18,17 @@ function App() {
               <Link to="/header-test" className="test-btn">
                 Header 테스트 페이지로 이동
               </Link>
-
               <br />
-
               <Link to="/tag-test">Tag 테스트 페이지로 이동</Link>
+              <br />
+              <Link to="/card-test">Card 테스트 페이지로 이동</Link>
             </div>
           }
         />
 
         <Route path="/header-test" element={<HeaderTest />} />
         <Route path="/tag-test" element={<TagTest />} />
+        <Route path="/card-test" element={<CardTest />} />
       </Routes>
     </>
   );
