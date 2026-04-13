@@ -6,7 +6,15 @@ import Button from "../Button/Button";
 //innerComponent : 모달 내부에 들어갈 컴포넌트
 //cancelText : 취소 버튼 텍스트, 없으면 "취소"로 들어감.
 //confirmText : 확인 버튼 텍스트, 없으면 "수정 완료"로 들어감. (이 모달의 기본 목적이 습관 수정 모달이라서)
-const Mordal = ({ title, innerComponent, cancelText, confirmText }) => {
+const Mordal = ({
+  setShowModal,
+  title,
+  innerComponent,
+  confirmText,
+  cancelText,
+  onClickConfirm,
+  onClickCancel,
+}) => {
   return (
     <div className={styles.overlay}>
       <div className={styles.modalContainer}>
@@ -17,14 +25,20 @@ const Mordal = ({ title, innerComponent, cancelText, confirmText }) => {
             <Button
               variant="cancel"
               label={cancelText || "취소"}
-              onClick={() => console.log("취소")}
+              onClick={() => {
+                setShowModal(false);
+                onClickCancel && onClickCancel();
+              }}
             />
           </div>
           <div className={styles.modalButton}>
             <Button
               variant="create"
               label={confirmText || "수정 완료"}
-              onClick={() => console.log("확인")}
+              onClick={() => {
+                setShowModal(false);
+                onClickConfirm && onClickConfirm();
+              }}
             />
           </div>
         </div>
