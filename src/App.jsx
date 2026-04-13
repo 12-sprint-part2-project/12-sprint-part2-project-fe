@@ -3,6 +3,8 @@ import HeaderTest from "./pages/HeaderTest";
 import TagTest from "./pages/TagTest";
 import CardTest from "./pages/CardTest";
 import ButtonTest from "./pages/ButtonTest";
+import PopupTest from "./pages/PopupTest";
+import ModalTest from "./pages/ModalTest";
 import "./App.css";
 
 function App() {
@@ -25,6 +27,10 @@ function App() {
               <Link to="/card-test">Card 테스트 페이지로 이동</Link>
               <br />
               <Link to="/button-test">Button 테스트 페이지로 이동</Link>
+              <br />
+              <Link to="/popup-test">Popup 테스트 페이지로 이동</Link>
+              <br />
+              <Link to="/modal-test">Modal 테스트 페이지로 이동</Link>
             </div>
           }
         />
@@ -33,6 +39,8 @@ function App() {
         <Route path="/tag-test" element={<TagTest />} />
         <Route path="/card-test" element={<CardTest />} />
         <Route path="/button-test" element={<ButtonTest />} />
+        <Route path="/popup-test" element={<PopupTest />} />
+        <Route path="/modal-test" element={<ModalTest />} />
       </Routes>
     </>
   );
