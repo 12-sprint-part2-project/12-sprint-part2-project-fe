@@ -1,0 +1,46 @@
+.btn {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btnText {
+  position: relative;
+  z-index: 2;
+  font-family: "JejuStoneWall", sans-serif;
+  font-size: 1.125rem;
+  font-weight: 400;
+  color: var(--white);
+}
+
+.create .btnText {
+  text-shadow: 0 -0.14rem 0 var(--green-text);
+}
+
+.cancel .btnText {
+  text-shadow: 0 -0.14rem 0 var(--gray-500);
+}
+
+.btn svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.btn svg:nth-of-type(1) {
+  z-index: 1;
+}
+
+.btn svg:nth-of-type(2) {
+  transform: translateY(0.19rem);
+  z-index: 0;
+}
