@@ -1,6 +1,8 @@
+/* Header.module.css */
+
 .header {
   width: 100%;
-  height: 6.25rem; /* 100px */
+  height: 6.25rem;
   background-color: var(--bg-primary);
 }
 
@@ -22,7 +24,7 @@
 
 .headerLeft img {
   width: auto;
-  max-width: 11.35rem; /* 181.6px */
+  max-width: 11.35rem;
   display: block;
 }
 
@@ -30,70 +32,38 @@
   display: flex;
   align-items: center;
   height: 100%;
+  gap: 0.625rem;
 }
 
-.btnCta {
-  position: relative;
-  width: 15.74988rem;
-  aspect-ratio: 252 / 54;
-}
-
-.btnText {
-  position: relative;
-  z-index: 2;
-  font-family: "JejuStoneWall", sans-serif;
-  font-size: 1.125rem;
-  font-weight: 400;
-  color: var(--white);
-  text-shadow: 0 -0.14rem 0 var(--green-text);
-}
-
-.btnCta svg {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-}
-
-/* 앞에 연한 초록 */
-.btnCta svg:nth-of-type(1) {
-  z-index: 1;
-}
-
-/* 뒤에 있는 진한 초록 */
-.btnCta svg:nth-of-type(2) {
-  transform: translateY(0.19rem);
-  z-index: 0;
+.btnWrapper {
+  width: 15.75rem;
+  height: 3.625rem;
 }
 
 /* ── 태블릿 (~ 744px) ── */
 @media (max-width: 744px) {
-  .btnCta {
-    width: 9.99994rem; /* 160px */
-    height: 3.37463rem; /* 53.994px */
-    aspect-ratio: unset;
+  .btnWrapper {
+    width: 10rem;
   }
 }
 
 /* ── 모바일 (~ 375px) ── */
 @media (max-width: 375px) {
   .inner {
-    padding: 0 1rem; /* 16px */
+    padding: 0 1rem;
   }
 
   .headerLeft img {
-    width: 6.625rem; /* 106px */
-    height: 2.19rem; /* 35.02px */
+    width: 6.625rem;
+    height: 2.19rem;
   }
 
-  .btnCta {
-    width: 6.625rem; /* 106px */
-    height: 2.375rem; /* 38px */
-    aspect-ratio: unset;
+  .btnWrapper {
+    width: 6.625rem;
+    height: 2.375rem;
   }
 
-  .btnText {
+  .ctaText {
     font-size: 0.74531rem;
     text-shadow: 0 -0.1rem 0 var(--green-text);
   }
