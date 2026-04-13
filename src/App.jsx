@@ -6,6 +6,7 @@ import ButtonTest from "./pages/ButtonTest";
 import PopupTest from "./pages/PopupTest";
 import ModalTest from "./pages/ModalTest";
 import "./App.css";
+import ToastTest from "./pages/ToastTest";
 
 function App() {
   return (
@@ -31,6 +32,8 @@ function App() {
               <Link to="/popup-test">Popup 테스트 페이지로 이동</Link>
               <br />
               <Link to="/modal-test">Modal 테스트 페이지로 이동</Link>
+              <br />
+              <Link to="/toast-test">Toast 테스트 페이지로 이동</Link>
             </div>
           }
         />
@@ -41,6 +44,7 @@ function App() {
         <Route path="/button-test" element={<ButtonTest />} />
         <Route path="/popup-test" element={<PopupTest />} />
         <Route path="/modal-test" element={<ModalTest />} />
+        <Route path="/toast-test" element={<ToastTest />} />
       </Routes>
     </>
   );
