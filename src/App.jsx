@@ -1,12 +1,11 @@
-import "./styles/colors/colors.css";
+import { Routes, Route, Link } from "react-router-dom";
 import "./App.css";
 
 function App() {
   return (
-    <div className="container">
-      <h1 className="title">Part_2 Team3</h1>
-      <p className="text">CSS Variable Test</p>
-    </div>
+    <>
+      <Routes>{/* 추후 페이지 라우트 추가 예정 */}</Routes>
+    </>
   );
 }
 

@@ -1,0 +1,70 @@
+/* Header.module.css */
+
+.header {
+  width: 100%;
+  height: 6.25rem;
+  background-color: var(--bg-primary);
+}
+
+.inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 120rem;
+  height: 100%;
+  margin: 0 auto;
+  padding: 0 clamp(1.5rem, calc(16.667vw - 6.25rem), 13.75rem);
+}
+
+.headerLeft {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.headerLeft img {
+  width: auto;
+  max-width: 11.35rem;
+  display: block;
+}
+
+.headerRight {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  gap: 0.625rem;
+}
+
+.btnWrapper {
+  width: 15.75rem;
+  height: 3.625rem;
+}
+
+/* ── 태블릿 (~ 744px) ── */
+@media (max-width: 744px) {
+  .btnWrapper {
+    width: 10rem;
+  }
+}
+
+/* ── 모바일 (~ 375px) ── */
+@media (max-width: 375px) {
+  .inner {
+    padding: 0 1rem;
+  }
+
+  .headerLeft img {
+    width: 6.625rem;
+    height: 2.19rem;
+  }
+
+  .btnWrapper {
+    width: 6.625rem;
+    height: 2.375rem;
+  }
+
+  .ctaText {
+    font-size: 0.74531rem;
+    text-shadow: 0 -0.1rem 0 var(--green-text);
+  }
+}

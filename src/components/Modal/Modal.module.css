@@ -1,0 +1,48 @@
+.overlay {
+  /*다른 화면 위에 뜨게 하기 위해 fixed를 적용*/
+  position: fixed;
+  top: 0;
+  left: 0;
+
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modalContainer {
+  border-radius: 20px;
+  border: 1px solid var(--gray-gray_DDDDDD, #ddd);
+  background: #fff;
+  box-shadow: 0rem 0px 15px rgba(0, 0, 0, 0.1);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 2.5rem 1.5rem;
+}
+.modalTitle {
+  color: var(--black-black_414141, #414141);
+  text-align: center;
+  font-family: Pretendard;
+  font-size: 1.5rem;
+  font-style: normal;
+  font-weight: 800;
+  line-height: normal;
+}
+.modalButtons {
+  display: flex;
+  gap: 1.5rem;
+
+  width: 100%;
+  min-width: 20rem; /*최소 크기 설정해둠*/
+  height: 3.625rem;
+}
+.modalButton {
+  flex: 1;
+}
