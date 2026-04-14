@@ -1,22 +1,23 @@
-import React from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import Tag from "../../components/Tag/Tag";
-import "../../styles/global/icon.css";
+import NavButton from "../../components/NavButton/NavButton";
 import styles from "./Focus.module.css";
 
 function Focus() {
+  const navigate = useNavigate();
+  const { studyId } = useParams();
+
   return (
     <section className={styles.container}>
       <div className={styles.header}>
         <div className={styles.headerTop}>
           <h2 className={styles.title}>연우의 개발공장</h2>
           <div className={styles.nav}>
-            <button className={styles.navBtn}>
-              오늘의 습관
-              <span className="ic angle-right"></span>
-            </button>
-            <button className={styles.navBtn}>
-              홈<span className="ic angle-right"></span>
-            </button>
+            <NavButton
+              label="오늘의 습관"
+              onClick={() => navigate(`/studies/${studyId}/habits`)}
+            />
+            <NavButton label="홈" onClick={() => navigate("/")} />
           </div>
         </div>
 
