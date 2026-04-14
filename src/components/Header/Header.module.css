@@ -50,7 +50,7 @@
 /* ── 모바일 (~ 375px) ── */
 @media (max-width: 375px) {
   .inner {
-    padding: 0 1rem;
+    padding: 2 1rem;
   }
 
   .headerLeft img {
