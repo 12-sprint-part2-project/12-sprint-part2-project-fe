@@ -6,4 +6,19 @@
 .main {
   display: flex;
   justify-content: center;
+  margin-top: 2.5rem;
+}
+
+/* ── 태블릿 (~ 744px) ── */
+@media (max-width: 744px) {
+  .main {
+    margin-top: 1.25rem;
+  }
+}
+
+/* ── 모바일 (~ 375px) ── */
+@media (max-width: 375px) {
+  .main {
+    margin-top: 1.25rem;
+  }
 }
