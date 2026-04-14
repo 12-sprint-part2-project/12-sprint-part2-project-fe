@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./Tag.module.css";
-import pointIcon from "../../assets/images/ic-point.svg";
+import "../../styles/global/icon.css";
 
 const Tag = ({
   type,
@@ -12,7 +12,7 @@ const Tag = ({
 }) => {
   const config = {
     point: {
-      icon: <img src={pointIcon} alt="point" />,
+      icon: <div className="ic leaf" />,
       text: `${points}P 획득`,
     },
     emoji: {
