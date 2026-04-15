@@ -1,0 +1,101 @@
+.studyFormContainer {
+  display: flex;
+  flex-direction: column;
+
+  padding: 24px 24px 40px 24px;
+  align-items: flex-start;
+  gap: 24px;
+  border-radius: 20px;
+  background: #fff;
+}
+.formTitle {
+  color: #414141;
+  font-family: Pretendard;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 800;
+  line-height: normal;
+}
+.studyForm {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 24px;
+}
+.inputElement {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+}
+.label {
+  color: var(--black-black_414141, #414141);
+  font-family: Pretendard;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+}
+.input {
+  width: 648px;
+  height: 48px;
+
+  border-radius: 15px;
+  border: 1px solid var(--gray-gray_DDDDDD, #ddd);
+  background: #fff;
+}
+.warningText {
+  color: var(--red-error_C41013, #c41013);
+  font-family: Pretendard;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+.backgrounds {
+  display: flex;
+  width: 648px;
+  align-items: flex-start;
+  align-content: flex-start;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.backgrounds img {
+  width: 150px;
+  height: 150px;
+
+  border-radius: 16px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  background: var(--green-green_E1EDDE, #e1edde);
+}
+.backgrounds .selected {
+}
+
+.background-green {
+  width: 150px;
+  height: 150px;
+
+  border-radius: 16px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  background: var(--green-green_E1EDDE, #e1edde);
+}
+.background-yellow {
+  border-radius: 16px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  background: var(--green-green_E1EDDE, #ebedde);
+}
+.background-blue {
+  border-radius: 16px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  background: var(--green-green_E1EDDE, #dee2ed);
+}
+.background-pink {
+  border-radius: 16px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  background: var(--green-green_E1EDDE, #eddee9);
+}
+.button {
+  width: 648px;
+  height: 58px;
+  padding: 10px;
+}
