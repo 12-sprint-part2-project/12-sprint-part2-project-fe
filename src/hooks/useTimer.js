@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
+import useToast from "./useToast";
 
 export const TIMER_STATUS = {
   IDLE: "idle", // 시작 전
@@ -16,19 +17,19 @@ function useTimer() {
   const [timeLeft, setTimeLeft] = useState(initialSeconds);
   const [earnedPoint, setEarnedPoint] = useState(0);
 
-  // Date.now와 종료 시각을 기준으로 남은 시간 계산
-  const endTimeRef = useRef(null);
-  // 현재 실행 중인 Interval의 ID
-  const intervalIdRef = useRef(null);
+  const endTimeRef = useRef(null); // Date.now와 종료 시각을 기준으로 남은 시간 계산
+  const intervalIdRef = useRef(null); // 현재 실행 중인 Interval의 ID
+
+  const { toast, showToast } = useToast();
 
   const handleComplete = useCallback(async () => {
-    try {
-      setEarnedPoint(0); // API 연동 후 실제 획득한 포인트로 업데이트 예정
-      setTimerStatus(TIMER_STATUS.COMPLETED);
-    } catch (e) {
-      console.error("세션 완료 실패", e);
-    }
-  }, []);
+    const pointResult = 100; // API 연동 후 실제 획득한 포인트로 업데이트 예정
+
+    setEarnedPoint(pointResult);
+    setTimerStatus(TIMER_STATUS.COMPLETED);
+
+    showToast("success", "포인트를 획득했습니다!", pointResult);
+  }, [showToast]);
 
   useEffect(() => {
     if (timerStatus !== TIMER_STATUS.RUNNING) {
@@ -59,19 +60,16 @@ function useTimer() {
   }, [timerStatus, handleComplete]);
 
   const start = async () => {
-    try {
-      // 현재 시간과 설정 시간을 더해 종료 시각 설정
-      endTimeRef.current = new Date(Date.now() + DURATION_MIN * 60 * 1000);
-      setTimeLeft(DURATION_MIN * 60);
-      setTimerStatus(TIMER_STATUS.RUNNING);
-    } catch (e) {
-      console.error("세션 시작 실패", e);
-    }
+    // 현재 시간과 설정 시간을 더해 종료 시각 설정
+    endTimeRef.current = new Date(Date.now() + DURATION_MIN * 60 * 1000);
+    setTimeLeft(DURATION_MIN * 60);
+    setTimerStatus(TIMER_STATUS.RUNNING);
   };
 
   // 일시 정지 (interval만 멈추고 endTimeRef 유지)
   const pause = () => {
     setTimerStatus(TIMER_STATUS.PAUSED);
+    showToast("warning", "집중이 중단되었습니다.");
   };
 
   const resume = async () => {
@@ -88,6 +86,7 @@ function useTimer() {
     start,
     pause,
     resume,
+    toast,
   };
 }
 

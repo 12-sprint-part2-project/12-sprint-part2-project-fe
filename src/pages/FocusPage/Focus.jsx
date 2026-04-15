@@ -1,6 +1,7 @@
 import { useNavigate, useParams } from "react-router-dom";
-import NavButton from "../../components/NavButton/NavButton";
 import BoxHeaderInfo from "../../components/BoxHeader/BoxHeaderInfo";
+import NavButton from "../../components/NavButton/NavButton";
+import Toast from "../../components/Toast/Toast";
 import useTimer, { TIMER_STATUS } from "../../hooks/useTimer";
 import formatTime from "./formatTime";
 import styles from "./Focus.module.css";
@@ -17,6 +18,7 @@ function Focus() {
     start,
     pause,
     resume,
+    toast,
   } = useTimer();
 
   const isRunning = timerStatus === TIMER_STATUS.RUNNING;
@@ -26,6 +28,10 @@ function Focus() {
 
   return (
     <section className={styles.container}>
+      {toast && (
+        <Toast type={toast.type} text={toast.text} point={toast.point} />
+      )}
+
       <div className={styles.header}>
         <div className={styles.headerTop}>
           <h2 className={styles.title}>연우의 개발공장</h2>
