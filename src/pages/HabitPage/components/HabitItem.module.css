@@ -1,0 +1,90 @@
+/* ── 일반 모드: 클릭 가능한 필 버튼 ── */
+.habitBtn {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border-radius: 0.625rem;
+  border: none;
+  background-color: var(--gray-200);
+  color: var(--black);
+  font: var(--text-16-medium);
+  text-align: center;
+  cursor: pointer;
+  transition: opacity 0.15s ease, background-color 0.2s ease;
+}
+
+.habitBtn:hover {
+  opacity: 0.85;
+}
+
+.habitBtn.completed {
+  background-color: var(--brand);
+  color: var(--white);
+}
+
+/* ── 수정 모드: 이름 + 수정/삭제 버튼 ── */
+.editItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0.625rem 1rem;
+  border-radius: 0.625rem;
+  background-color: var(--gray-200);
+}
+
+.editItem.completed {
+  background-color: var(--brand);
+}
+
+.editName {
+  font: var(--text-16-medium);
+  color: var(--black);
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.editItem.completed .editName {
+  color: var(--white);
+}
+
+.editActions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+  margin-left: 0.75rem;
+}
+
+.editBtn {
+  background: none;
+  border: 1px solid var(--gray-300);
+  border-radius: 0.375rem;
+  padding: 0.2rem 0.625rem;
+  font: var(--text-14-medium);
+  color: var(--gray-500);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.editBtn:hover {
+  border-color: var(--gray-500);
+  color: var(--black);
+}
+
+.deleteBtn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--error);
+  display: flex;
+  align-items: center;
+  padding: 0.25rem;
+  font-size: 1.2rem;
+  transition: opacity 0.15s ease;
+}
+
+.deleteBtn:hover {
+  opacity: 0.7;
+}
