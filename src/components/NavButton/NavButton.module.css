@@ -25,3 +25,9 @@
   outline: 2px solid var(--brand);
   outline-offset: 2px;
 }
+
+@media (max-width: 375px) {
+  .navBtn {
+    padding: 0.5rem 0.37rem 0.5rem 0.62rem;
+  }
+}
