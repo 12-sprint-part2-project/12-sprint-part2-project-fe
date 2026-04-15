@@ -8,76 +8,80 @@
 }
 
 .ic.angle-right {
-  background-image: url("../../assets/images/icon/angle_right.png");
-  background-image: url("../../assets/images/icon/angle_right.svg");
+  background-image: url("/src/assets/images/icon/angle_right.png");
+  background-image: url("/src/assets/images/icon/angle_right.svg");
 }
 
 .ic.caret-down {
-  background-image: url("../../assets/images/icon/caret_down.png");
-  background-image: url("../../assets/images/icon/caret_down.svg");
+  background-image: url("/src/assets/images/icon/caret_down.png");
+  background-image: url("/src/assets/images/icon/caret_down.svg");
 }
 
 .ic.close {
-  background-image: url("../../assets/images/icon/close.png");
-  background-image: url("../../assets/images/icon/close.svg");
+  background-image: url("/src/assets/images/icon/close.png");
+  background-image: url("/src/assets/images/icon/close.svg");
 }
 
 .ic.hidden {
-  background-image: url("../../assets/images/icon/hidden.png");
-  background-image: url("../../assets/images/icon/hidden.svg");
+  background-image: url("/src/assets/images/icon/hidden.png");
+  background-image: url("/src/assets/images/icon/hidden.svg");
 }
 
 .ic.leaf {
-  background-image: url("../../assets/images/icon/leaf.png");
-  background-image: url("../../assets/images/icon/leaf.svg");
+  background-image: url("/src/assets/images/icon/leaf.png");
+  background-image: url("/src/assets/images/icon/leaf.svg");
 }
 
 .ic.pause {
-  background-image: url("../../assets/images/icon/pause.png");
-  background-image: url("../../assets/images/icon/pause.svg");
+  background-image: url("/src/assets/images/icon/pause.png");
+  background-image: url("/src/assets/images/icon/pause.svg");
 }
 
 .ic.paw {
-  background-image: url("../../assets/images/icon/paw.png");
-  background-image: url("../../assets/images/icon/paw.svg");
+  background-image: url("/src/assets/images/icon/paw.png");
+  background-image: url("/src/assets/images/icon/paw.svg");
 }
 
 .ic.play {
-  background-image: url("../../assets/images/icon/play.png");
-  background-image: url("../../assets/images/icon/play.svg");
+  background-image: url("/src/assets/images/icon/play.png");
+  background-image: url("/src/assets/images/icon/play.svg");
 }
 
 .ic.plus {
-  background-image: url("../../assets/images/icon/plus.png");
-  background-image: url("../../assets/images/icon/plus.svg");
+  background-image: url("/src/assets/images/icon/plus.png");
+  background-image: url("/src/assets/images/icon/plus.svg");
 }
 
 .ic.restart {
-  background-image: url("../../assets/images/icon/restart.png");
-  background-image: url("../../assets/images/icon/restart.svg");
+  background-image: url("/src/assets/images/icon/restart.png");
+  background-image: url("/src/assets/images/icon/restart.svg");
 }
 
 .ic.search {
-  background-image: url("../../assets/images/icon/search.png");
-  background-image: url("../../assets/images/icon/search.svg");
+  background-image: url("/src/assets/images/icon/search.png");
+  background-image: url("/src/assets/images/icon/search.svg");
 }
 
 .ic.smile {
-  background-image: url("../../assets/images/icon/smile.png");
-  background-image: url("../../assets/images/icon/smile.svg");
+  background-image: url("/src/assets/images/icon/smile.png");
+  background-image: url("/src/assets/images/icon/smile.svg");
 }
 
 .ic.stop {
-  background-image: url("../../assets/images/icon/stop.png");
-  background-image: url("../../assets/images/icon/stop.svg");
+  background-image: url("/src/assets/images/icon/stop.png");
+  background-image: url("/src/assets/images/icon/stop.svg");
 }
 
 .ic.trash {
-  background-image: url("../../assets/images/icon/trash.png");
-  background-image: url("../../assets/images/icon/trash.svg");
+  background-image: url("/src/assets/images/icon/trash.png");
+  background-image: url("/src/assets/images/icon/trash.svg");
 }
 
 .ic.visible {
-  background-image: url("../../assets/images/icon/visible.png");
-  background-image: url("../../assets/images/icon/visible.svg");
+  background-image: url("/src/assets/images/icon/visible.png");
+  background-image: url("/src/assets/images/icon/visible.svg");
+}
+
+.ic.timer {
+  background-image: url("/src/assets/images/icon/timer.svg");
 }
