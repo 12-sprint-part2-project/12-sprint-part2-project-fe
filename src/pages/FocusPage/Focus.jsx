@@ -73,7 +73,7 @@ function Focus() {
           {isIdle || isCompleted ? (
             <button
               type="button"
-              className={styles.timerStartButton}
+              className={`${styles.btnBase} ${styles.timerStartButton}`}
               onClick={start}
             >
               <span className="ic play"></span>
@@ -83,7 +83,7 @@ function Focus() {
             <>
               <button
                 type="button"
-                className={styles.timerPauseButton}
+                className={`${styles.btnBase} ${styles.btnCircle} ${styles.timerPauseButton}`}
                 onClick={pause}
                 disabled={isPaused}
               >
@@ -92,7 +92,7 @@ function Focus() {
 
               <button
                 type="button"
-                className={styles.timerStartButton}
+                className={`${styles.btnBase} ${styles.timerStartButton}`}
                 disabled={isRunning || isPaused}
               >
                 <span className="ic play"></span>
@@ -101,7 +101,7 @@ function Focus() {
 
               <button
                 type="button"
-                className={styles.timerRestartButton}
+                className={`${styles.btnBase} ${styles.btnCircle} ${styles.timerRestartButton}`}
                 onClick={resume}
                 disabled={isRunning}
               >

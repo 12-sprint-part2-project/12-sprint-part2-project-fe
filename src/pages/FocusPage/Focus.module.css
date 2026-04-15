@@ -5,6 +5,7 @@
   background-color: var(--white);
 }
 
+/* 상단 헤더 영역 (제목, 네비게이션 버튼, 포인트) */
 .header {
   display: flex;
   flex-direction: column;
@@ -24,6 +25,7 @@
   color: var(--black);
 }
 
+/* 내비게이션 버튼 (오늘의 습관, 홈) */
 .nav {
   display: flex;
   gap: 1rem;
@@ -42,12 +44,7 @@
   background-color: var(--white);
 }
 
-.pointLabel {
-  margin-bottom: 0.5rem;
-  font: var(--text-18-regular);
-  color: var(--gray-500);
-}
-
+/* 타이머 섹션 */
 .timerSection {
   display: flex;
   flex-direction: column;
@@ -60,6 +57,7 @@
   border: 1px solid var(--gray-300);
 }
 
+/* 타이머 상단 (제목 + 설정시간 뱃지) */
 .timerSectionheader {
   display: flex;
   flex-direction: column;
@@ -97,6 +95,7 @@
   color: var(--black);
 }
 
+/* 타이머 시간 표시 (00:00) */
 .timerDisplay {
   font: var(--text-150-bold);
   color: var(--black);
@@ -106,73 +105,59 @@
   color: var(--red);
 }
 
+/* 타이머 조작 버튼 */
 .btnContainer {
   display: flex;
   align-items: center;
   gap: 1.5rem;
 }
 
-.timerStartButton {
+/* 버튼 공통 스타일 */
+.btnBase {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  border: none;
+  cursor: pointer;
+  font-family: Pretendard, sans-serif;
+  transition: background-color 0.2s;
+}
+
+.btnBase:disabled {
+  background-color: var(--gray-500);
+  cursor: not-allowed;
+}
+
+/* 원형 버튼 공통 스타일 */
+.btnCircle {
+  width: 4rem;
+  height: 4rem;
+  border-radius: 50%;
+}
+
+.btnCircle span {
+  width: 2.2rem;
+  height: 2.2rem;
+}
+
+/* 각 버튼별 개별 스타일 */
+.timerStartButton {
   gap: 1rem;
   width: 20.8125rem;
   height: 3.75rem;
   border-radius: 3.125rem;
-  font-family: Pretendard;
   font-size: 1.75rem;
   font-weight: 800;
   color: var(--white);
   background-color: var(--brand);
 }
 
-.timerStartButton:disabled {
-  background-color: var(--gray-500);
-  cursor: not-allowed;
-}
-
-.timerStartButton span {
-  width: 2.75rem;
-  height: 2.75rem;
-}
-
 .timerPauseButton {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 4rem;
-  height: 4rem;
-  border-radius: 50%;
   background-color: var(--green-text);
 }
 
-.timerPauseButton:disabled {
-  cursor: not-allowed;
-}
-
-.timerPauseButton span {
-  width: 2.2rem;
-  height: 2.2rem;
-}
-
 .timerRestartButton {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 4rem;
-  height: 4rem;
-  border-radius: 50%;
   background-color: var(--brand);
-}
-
-.timerRestartButton span {
-  width: 2.2rem;
-  height: 2.2rem;
-}
-
-.timerRestartButton:disabled {
-  cursor: not-allowed;
 }
 
 /* ── 태블릿 (~ 744px) ── */
@@ -245,22 +230,12 @@
     height: 1.5rem;
   }
 
-  .timerPauseButton {
+  .btnCircle {
     width: 3rem;
     height: 3rem;
   }
 
-  .timerPauseButton span {
-    width: 1.65rem;
-    height: 1.65rem;
-  }
-
-  .timerRestartButton {
-    width: 3rem;
-    height: 3rem;
-  }
-
-  .timerRestartButton span {
+  .btnCircle span {
     width: 1.65rem;
     height: 1.65rem;
   }
