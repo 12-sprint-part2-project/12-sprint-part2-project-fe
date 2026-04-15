@@ -1,0 +1,27 @@
+.boxHeaderInfo {
+  width: 100%;
+}
+
+.boxHeaderInfo:not(:first-child) {
+  margin-top: 24px;
+}
+
+.boxHeaderInfo .title {
+  font: var(--text-18-regular);
+  color: var(--gray-500);
+}
+
+.boxHeaderInfo .info {
+  margin-top: 8px;
+  font: var(--text-18-medium);
+  color: var(--black);
+}
+
+.boxHeaderInfo .curTime {
+  padding: 8px 12px;
+  background-color: var(--white);
+  border: 1px solid var(--gray-300);
+  border-radius: 5em;
+  font: var(--text-16-medium);
+  color: var(--black);
+}
