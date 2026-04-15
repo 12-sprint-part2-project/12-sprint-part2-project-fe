@@ -2,6 +2,9 @@ import React, { useEffect, useState } from "react";
 import styles from "./BoxHeaderInfo.module.css";
 import Tag from "../Tag/Tag";
 
+/**
+ * 고정 타이틀 출력할 상수 세팅
+ */
 const TITLE = {
   point: "현재까지 획득한 포인트",
   time: "현재 시간",
@@ -11,7 +14,7 @@ const BoxHeaderInfo = ({ type = "", title = null, info = null }) => {
   const [currentTime, setCurrentTime] = useState("");
 
   useEffect(() => {
-    if (type !== "time") return; // type 이 time 인 경우에만 useEffect 실행
+    if (type !== "time") return; // type 이 time 인 경우에만 useEffect 실행을 위한 early return
 
     const format = (date) => {
       const yyyy = date.getFullYear();
@@ -30,7 +33,7 @@ const BoxHeaderInfo = ({ type = "", title = null, info = null }) => {
     return () => clearInterval(timer);
   }, [type]);
 
-  const displayTitle = title ?? TITLE[type];
+  const displayTitle = title ?? TITLE[type]; // 전달 받은 title 값이 있을 경우 title 값을 우선 출력
   const displayInfo =
     {
       "": info,
