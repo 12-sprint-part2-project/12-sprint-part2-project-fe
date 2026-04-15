@@ -8,7 +8,7 @@ export const TIMER_STATUS = {
   COMPLETED: "completed", // 종료
 };
 
-const DURATION_MIN = 1;
+const DURATION_MIN = 25; // 타이머 시간 초기값
 
 function useTimer() {
   const initialSeconds = DURATION_MIN * 60;
