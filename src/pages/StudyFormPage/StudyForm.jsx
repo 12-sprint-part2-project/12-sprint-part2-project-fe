@@ -11,10 +11,11 @@ import tile from "../../assets/images/tile.jpg";
 import leaf from "../../assets/images/leaf.jpg";
 
 /*
-TODO: 배경이미지 안보이는 거 해결해야됨
 TODO: API 연동
 TODO: 입력안도니 필드 빨간 테두리 처리
 TODO: 설명 필드 늘어나는 거 처리
+TODO: 반응형 처리
+TODO: 비밀번호 안보이게
 */
 function StudyForm() {
   //input 상태 변수들
@@ -25,6 +26,9 @@ function StudyForm() {
   const [checkPassword, setCheckPassword] = useState("");
 
   const [pwWarning, setPwWarning] = useState("");
+
+  const [pwVisibleBtn, setPwVisibleBtn] = useState(false);
+  const [checkPwVisibleBtn, setCheckPwVisibleBtn] = useState(false);
 
   const [selectedBackground, setSelectedBackground] = useState(1); //기본값주기?
   const backgrounds = [
@@ -134,6 +138,7 @@ function StudyForm() {
               닉네임
             </label>
             <input
+              type="text"
               id="nickname-input"
               value={nickname}
               onChange={(e) => setNickname(e.target.value)}
@@ -146,6 +151,7 @@ function StudyForm() {
               스터디 이름
             </label>
             <input
+              type="text"
               id="title-input"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
@@ -158,6 +164,7 @@ function StudyForm() {
               소개
             </label>
             <input
+              type="text"
               id="description-input"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
@@ -200,26 +207,47 @@ function StudyForm() {
             <label htmlFor="password-input" className={styles.label}>
               비밀번호
             </label>
-            <input
-              id="password-input"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="비밀번호를 입력해 주세요"
-              className={styles.input}
-            />
+            <div className={styles.inputContainer}>
+              <input
+                type={pwVisibleBtn ? "text" : "password"}
+                id="password-input"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="비밀번호를 입력해 주세요"
+                className={styles.input}
+              />
+              <button
+                type="button"
+                className={pwVisibleBtn ? "ic visible" : "ic hidden"}
+                onClick={() => {
+                  setPwVisibleBtn(!pwVisibleBtn);
+                }}
+              />
+            </div>
           </div>
 
           <div className={styles.inputElement}>
             <label htmlFor="password-check-input" className={styles.label}>
               비밀번호 확인
             </label>
-            <input
-              id="password-check-input"
-              value={checkPassword}
-              onChange={(e) => setCheckPassword(e.target.value)}
-              placeholder="비밀번호를 한번 더 입력해 주세요"
-              className={styles.input}
-            />
+            <div className={styles.inputContainer}>
+              <input
+                type={checkPwVisibleBtn ? "text" : "password"}
+                id="password-check-input"
+                value={checkPassword}
+                onChange={(e) => setCheckPassword(e.target.value)}
+                placeholder="비밀번호를 한번 더 입력해 주세요"
+                className={styles.input}
+              />
+              <button
+                type="button"
+                className={checkPwVisibleBtn ? "ic visible" : "ic hidden"}
+                onClick={() => {
+                  setCheckPwVisibleBtn(!checkPwVisibleBtn);
+                }}
+              />
+            </div>
+
             <p className={styles.warningText}>{pwWarning}</p>
           </div>
           <div className={styles.button}>

@@ -41,6 +41,7 @@
   height: 48px;
 
   padding: 15px 20px;
+  padding-right: 50px;
 
   border-radius: 15px;
   border: 1px solid var(--gray-gray_DDDDDD, #ddd);
@@ -53,6 +54,19 @@
   font-style: normal;
   font-weight: 400;
   line-height: normal;
+}
+.inputContainer {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+}
+.inputContainer button {
+  position: absolute;
+  right: 20px;
+
+  width: 20.473px;
+  height: 18.065px;
 }
 .warningText {
   color: var(--red-error_C41013, #c41013);
@@ -124,6 +138,7 @@
   width: 18px;
   height: 18px;
 }
+
 .button {
   width: 648px;
   height: 58px;
