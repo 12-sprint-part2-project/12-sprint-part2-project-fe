@@ -12,7 +12,6 @@ import tile from "../../assets/images/tile.jpg";
 import leaf from "../../assets/images/leaf.jpg";
 
 /*
-TODO: API 연동
 TODO: 생성/수정 버튼을 누른 후 이어질 페이지 설정
 */
 
@@ -165,7 +164,7 @@ function StudyForm({ type = "create", study = {} }) {
       default:
         console.log("type이 잘못되었습니다. type=>", type);
     }
-    setToast({ type: "create", text: "등록되었습니다!" });
+    showToast("success", "등록되었습니다!");
   };
   return (
     <div className={styles.container}>
