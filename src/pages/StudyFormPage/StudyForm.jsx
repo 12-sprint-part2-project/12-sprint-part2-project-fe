@@ -3,6 +3,7 @@ import styles from "./StudyForm.module.css";
 import Button from "../../components/Button/Button";
 import { createStudy, updateStudy } from "../../api/studies";
 import Toast from "../../components/Toast/Toast";
+import useToast from "../../hooks/useToast";
 
 //이미지는 이렇게 가져와야 정상적으로 작동할 확률이 높다.
 import desk1 from "../../assets/images/desk1.jpg";
@@ -36,8 +37,7 @@ function StudyForm({ type = "modify", study = {} }) {
   const [checkPwVisibleBtn, setCheckPwVisibleBtn] = useState(false);
 
   //토스트
-  const [toast, setToast] = useState(null);
-
+  const { toast, showToast } = useToast();
   //배경 이미지 (추후에 따로 분리해두면 좋을듯)
   const [selectedBackground, setSelectedBackground] = useState("GREEN"); //기본값주기?
   const backgrounds = [
@@ -122,15 +122,16 @@ function StudyForm({ type = "modify", study = {} }) {
       password.trim() === "" ||
       checkPassword.trim() === ""
     ) {
-      setToast({ type: "warning", text: "아직 모두 입력되지 않았습니다!" });
+      showToast("warning", "입력이 필요합니다!");
       return;
     }
     //비밀번호와 비밀번호 확인이 일치한지 검사 -> 다르면 토스트 메세지로 띄우기
     if (password !== checkPassword) {
-      setToast({ type: "warning", text: "비밀번호가 일치하지 않습니다!" });
+      showToast("warning", "비밀번호가 일치하지 않습니다!");
 
       return;
     }
+
     //생성/수정 api 보내기
     let result;
     study.id = 8;
@@ -161,6 +162,7 @@ function StudyForm({ type = "modify", study = {} }) {
       default:
         console.log("type이 잘못되었습니다. type=>", type);
     }
+    setToast({ type: "create", text: "등록되었습니다!" });
   };
   return (
     <div className={styles.container}>
