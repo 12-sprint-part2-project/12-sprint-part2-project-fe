@@ -8,7 +8,7 @@
   max-width: 696px;
 
   border-radius: 20px;
-  background: #fff;
+  background: var(--white, #fff);
 
   display: flex;
   flex-direction: column;
@@ -43,7 +43,7 @@
   gap: 16px;
 }
 .label {
-  color: var(--black-black_414141, #414141);
+  color: var(--black, #414141);
   font-family: Pretendard;
   font-size: 18px;
   font-style: normal;
@@ -57,7 +57,7 @@
   height: 48px;
 
   border-radius: 15px;
-  border: 1px solid var(--gray-gray_DDDDDD, #ddd);
+  border: 1px solid var(--gray-300, #ddd);
   background: #fff;
 }
 .pwInput {
@@ -72,16 +72,16 @@
   height: 98px;
 
   border-radius: 15px;
-  border: 1px solid var(--gray-gray_DDDDDD, #ddd);
+  border: 1px solid var(--gray-300, #ddd);
   background: #fff;
 
   line-height: 1.5;
 }
 .noContent {
-  border: 1px solid var(--red-error_C41013, #c41013);
+  border: 1px solid var(--error, #c41013);
 }
 .input::placeholder {
-  color: var(--gray-gray_818181, #818181);
+  color: var(--gray-500, #818181);
   font-family: Pretendard;
   font-size: 16px;
   font-style: normal;
@@ -154,7 +154,7 @@
 }
 /*-----부가 텍스트-----*/
 .warningText {
-  color: var(--red--error, #c41013);
+  color: var(--error, #c41013);
   font-family: Pretendard;
   font-size: 14px;
   font-style: normal;
@@ -162,7 +162,7 @@
   line-height: normal;
 }
 .correctText {
-  color: #0d7637;
+  color: var(--green-text);
 }
 /*-----아이콘-----*/
 .pawContainer {

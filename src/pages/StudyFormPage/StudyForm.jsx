@@ -132,7 +132,6 @@ function StudyForm({ type = "modify", study = {} }) {
     //비밀번호와 비밀번호 확인이 일치한지 검사 -> 다르면 토스트 메세지로 띄우기
     if (password !== checkPassword) {
       showToast("warning", "비밀번호가 일치하지 않습니다!");
-
       return;
     }
 
