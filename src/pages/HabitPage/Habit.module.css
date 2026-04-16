@@ -2,8 +2,58 @@
   max-width: 1248px;
   width: 100%;
   margin: 0 auto;
+  padding: 40px;
   background-color: var(--white);
   border-radius: 20px;
-  /* 임시 높이 */
-  min-height: 400px;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+/* 헤더 영역 */
+.studyInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.studyTitleRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.studyName {
+  font: var(--text-32-bold);
+}
+
+.navButtons {
+  display: flex;
+  gap: 12px;
+}
+
+/* 내부 컨테이너 */
+.habitSection {
+  border: 1px solid var(--gray-300);
+  border-radius: 20px;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.habitHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.habitTitle {
+  font: var(--text-20-bold);
+}
+
+.habitList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
