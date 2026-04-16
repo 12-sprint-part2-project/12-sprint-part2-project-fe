@@ -21,7 +21,7 @@ TODO: 생성/수정 버튼을 누른 후 이어질 페이지 설정
 //  StudyDetail에서 study 객체를 넘겨줌.
 //  기존 스터디 객체를 상태변수의 기본 값으로 설정. create면 빈 객체니까 자동으로 빈 값으로 들어갈 것.
 //- create : 생성을 위한 ui
-function StudyForm({ type = "modify", study = {} }) {
+function StudyForm({ type = "create", study = {} }) {
   //input 상태 변수들
   const [nickname, setNickname] = useState(study.nickname || "");
   const [title, setTitle] = useState(study.title || "");
