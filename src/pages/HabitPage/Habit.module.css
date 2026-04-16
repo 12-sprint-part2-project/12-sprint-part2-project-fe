@@ -39,21 +39,79 @@
   padding: 40px;
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 16px;
 }
 
 .habitHeader {
+  position: relative;
+  width: 100%;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
 }
 
 .habitTitle {
-  font: var(--text-20-bold);
+  font: var(--text-24-bold);
 }
 
 .habitList {
+  width: 100%;
+  max-width: 400px;
   display: flex;
   flex-direction: column;
   gap: 8px;
+}
+
+/* 빈 상태 */
+.emptyState {
+  text-align: center;
+  color: var(--gray-500);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 40px 0;
+}
+
+/* 목록 수정 버튼 */
+.editBtn {
+  position: absolute;
+  left: calc(50% + 92px);
+  background: none;
+  border: none;
+  color: var(--gray-500);
+  font: var(--text-14-medium);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+/* 모달 내부 */
+.modalInner {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+
+.modalAddRow {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-top: 8px;
+}
+
+.addBtn {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  border: 1px solid var(--gray-300);
+  background: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: var(--gray-500);
+}
+
+.addBtn:hover {
+  background-color: rgba(0, 0, 0, 0.5);
 }

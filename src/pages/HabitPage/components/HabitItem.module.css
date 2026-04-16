@@ -1,7 +1,8 @@
 /* ── 일반 모드: 클릭 가능한 필 버튼 ── */
 .habitBtn {
   width: 100%;
-  padding: 0.75rem 1rem;
+  height: 54px;
+  padding: 0 1rem;
   border-radius: 0.625rem;
   border: none;
   background-color: var(--gray-200);
