@@ -31,6 +31,8 @@ function StudyForm({ type = "modify", study = {} }) {
 
   //빨간 텍스트
   const [pwWarning, setPwWarning] = useState("");
+  //비밀번호 일치/비일치 상태
+  const [pwState, setPwState] = useState();
 
   //비밀번호 눈 버튼
   const [pwVisibleBtn, setPwVisibleBtn] = useState(false);
@@ -104,8 +106,10 @@ function StudyForm({ type = "modify", study = {} }) {
     if (password.trim() !== "" && checkPassword.trim() !== "") {
       if (password !== checkPassword) {
         setPwWarning("* 비밀번호가 일치하지 않습니다!");
+        setPwState(false);
       } else if (password === checkPassword) {
         setPwWarning("비밀번호가 일치합니다.");
+        setPwState(true);
       }
     } else {
       setPwWarning("");
@@ -298,7 +302,11 @@ function StudyForm({ type = "modify", study = {} }) {
               />
             </div>
 
-            <p className={styles.warningText}>{pwWarning}</p>
+            <p
+              className={`${pwState && styles.correctText} ${styles.warningText}`}
+            >
+              {pwWarning}
+            </p>
           </div>
           <div className={styles.button}>
             <Button

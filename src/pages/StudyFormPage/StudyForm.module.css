@@ -161,6 +161,9 @@
   font-weight: 400;
   line-height: normal;
 }
+.correctText {
+  color: #0d7637;
+}
 /*-----아이콘-----*/
 .pawContainer {
   width: 32px;
