@@ -10,10 +10,7 @@ import desk1 from "../../assets/images/desk1.jpg";
 import desk2 from "../../assets/images/desk2.jpg";
 import tile from "../../assets/images/tile.jpg";
 import leaf from "../../assets/images/leaf.jpg";
-
-/*
-TODO: 생성/수정 버튼을 누른 후 이어질 페이지 설정
-*/
+import { useNavigate } from "react-router-dom";
 
 //type
 //- modify : 수정을 위한 ui,
@@ -21,6 +18,7 @@ TODO: 생성/수정 버튼을 누른 후 이어질 페이지 설정
 //  기존 스터디 객체를 상태변수의 기본 값으로 설정. create면 빈 객체니까 자동으로 빈 값으로 들어갈 것.
 //- create : 생성을 위한 ui
 function StudyForm({ type = "create", study = {} }) {
+  const navigate = useNavigate();
   //input 상태 변수들
   const [nickname, setNickname] = useState(study.nickname || "");
   const [title, setTitle] = useState(study.title || "");
@@ -136,7 +134,7 @@ function StudyForm({ type = "create", study = {} }) {
 
     //생성/수정 api 보내기
     let result;
-    study.id = 8;
+    // study.id = 8; //테스트용
     switch (type) {
       case "create":
         console.log("스터디 생성 요청 시작");
@@ -165,6 +163,15 @@ function StudyForm({ type = "create", study = {} }) {
         console.log("type이 잘못되었습니다. type=>", type);
     }
     showToast("success", "등록되었습니다!");
+    switch (type) {
+      case "create": //홈으로 (생성 버튼 있는 곳)
+        navigate("/"); //데이터가 등록된 후에 이동해야 하기에, Link가 아닌 navigate를 이용.
+        break;
+      case "modify": //스터디 상세 페이지로 (수정 버튼 있는 곳)
+        navigate(`/studies/${study.id}`);
+        break;
+      default: //무조건 홈으로
+    }
   };
   return (
     <div className={styles.container}>
