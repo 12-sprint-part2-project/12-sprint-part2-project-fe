@@ -25,11 +25,14 @@ function StudyForm() {
   const [password, setPassword] = useState("");
   const [checkPassword, setCheckPassword] = useState("");
 
+  //빨간 텍스트
   const [pwWarning, setPwWarning] = useState("");
 
+  //비밀번호 눈 버튼
   const [pwVisibleBtn, setPwVisibleBtn] = useState(false);
   const [checkPwVisibleBtn, setCheckPwVisibleBtn] = useState(false);
 
+  //배경 이미지
   const [selectedBackground, setSelectedBackground] = useState(1); //기본값주기?
   const backgrounds = [
     {
@@ -94,10 +97,12 @@ function StudyForm() {
   useEffect(() => {
     if (password.trim() !== "" && checkPassword.trim() !== "") {
       if (password !== checkPassword) {
-        setPwWarning("비밀번호가 일치하지 않습니다!");
+        setPwWarning("* 비밀번호가 일치하지 않습니다!");
       } else if (password === checkPassword) {
         setPwWarning("비밀번호가 일치합니다.");
       }
+    } else {
+      setPwWarning("");
     }
   }, [password, checkPassword]);
 
@@ -129,7 +134,7 @@ function StudyForm() {
     // });
   };
   return (
-    <div>
+    <div className={styles.container}>
       <div className={styles.studyFormContainer}>
         <h2 className={styles.formTitle}>스터디 만들기</h2>
         <form className={styles.studyForm}>
@@ -143,8 +148,11 @@ function StudyForm() {
               value={nickname}
               onChange={(e) => setNickname(e.target.value)}
               placeholder="닉네임을 입력해 주세요"
-              className={styles.input}
+              className={`${styles.input} ${!nickname && styles.noContent}`}
             />
+            {!nickname && (
+              <p className={styles.warningText}>* 닉네임을 입력해 주세요</p>
+            )}
           </div>
           <div className={styles.inputElement}>
             <label htmlFor="title-input" className={styles.label}>
@@ -156,20 +164,25 @@ function StudyForm() {
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="스터디 이름을 입력해 주세요"
-              className={styles.input}
+              className={`${styles.input} ${!title && styles.noContent}`}
             />
+            {!title && (
+              <p className={styles.warningText}>
+                * 스터디 이름을 입력해 주세요
+              </p>
+            )}
           </div>
           <div className={styles.inputElement}>
             <label htmlFor="description-input" className={styles.label}>
               소개
             </label>
-            <input
+            <textarea
               type="text"
               id="description-input"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="소개 멘트를 작성해 주세요"
-              className={styles.input}
+              className={styles.textarea}
             />
           </div>
           <p className={styles.label}>배경을 선택해주세요</p>
@@ -214,8 +227,9 @@ function StudyForm() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="비밀번호를 입력해 주세요"
-                className={styles.input}
+                className={`${styles.input} ${!password && styles.noContent} ${styles.pwInput}`}
               />
+
               <button
                 type="button"
                 className={pwVisibleBtn ? "ic visible" : "ic hidden"}
@@ -224,6 +238,9 @@ function StudyForm() {
                 }}
               />
             </div>
+            {!password && (
+              <p className={styles.warningText}>* 비밀번호를 입력해 주세요</p>
+            )}
           </div>
 
           <div className={styles.inputElement}>
