@@ -12,17 +12,19 @@ import leaf from "../../assets/images/leaf.jpg";
 
 /*
 TODO: API 연동
-TODO: 입력안도니 필드 빨간 테두리 처리
-TODO: 설명 필드 늘어나는 거 처리
-TODO: 반응형 처리
-TODO: 비밀번호 안보이게
 */
-function StudyForm() {
+
+//type
+//- modify : 수정을 위한 ui,
+//  StudyDetail에서 study 객체를 넘겨줌.
+//  기존 스터디 객체를 상태변수의 기본 값으로 설정. create면 빈 객체니까 자동으로 빈 값으로 들어갈 것.
+//- create : 생성을 위한 ui
+function StudyForm({ type = "create", study = {} }) {
   //input 상태 변수들
-  const [nickname, setNickname] = useState("");
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [password, setPassword] = useState("");
+  const [nickname, setNickname] = useState(study.nickname || "");
+  const [title, setTitle] = useState(study.title || "");
+  const [description, setDescription] = useState(study.description || "");
+  const [password, setPassword] = useState(""); //비밀번호는 빈 값으로 둠! (보통 그렇지 않나;;)
   const [checkPassword, setCheckPassword] = useState("");
 
   //빨간 텍스트
@@ -32,7 +34,7 @@ function StudyForm() {
   const [pwVisibleBtn, setPwVisibleBtn] = useState(false);
   const [checkPwVisibleBtn, setCheckPwVisibleBtn] = useState(false);
 
-  //배경 이미지
+  //배경 이미지 (추후에 따로 분리해두면 좋을듯)
   const [selectedBackground, setSelectedBackground] = useState(1); //기본값주기?
   const backgrounds = [
     {
@@ -136,7 +138,9 @@ function StudyForm() {
   return (
     <div className={styles.container}>
       <div className={styles.studyFormContainer}>
-        <h2 className={styles.formTitle}>스터디 만들기</h2>
+        <h2 className={styles.formTitle}>
+          {type === "modify" ? "스터디 수정" : "스터디 만들기"}
+        </h2>
         <form className={styles.studyForm}>
           <div className={styles.inputElement}>
             <label htmlFor="nickname-input" className={styles.label}>
