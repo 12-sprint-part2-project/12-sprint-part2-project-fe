@@ -6,7 +6,6 @@ const Toast = ({ type, text, point = 0 }) => {
    * text: 띄울 문구
    * point: 집중 성공시 쌓일 포인트로 필수값은 아님
    */
-
   return (
     <div className={`${styles.toast} ${styles[type]}`}>
       {type === "warning" ? "🚨" : "🎉"} {(point > 0 ? point : "") + text}
