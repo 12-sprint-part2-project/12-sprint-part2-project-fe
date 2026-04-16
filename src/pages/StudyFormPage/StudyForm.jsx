@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styles from "./StudyForm.module.css";
 import Button from "../../components/Button/Button";
-//import { createStudy, updateStudy } from "../../api/studies";
+import { createStudy, updateStudy } from "../../api/studies";
 import Toast from "../../components/Toast/Toast";
 
 //이미지는 이렇게 가져와야 정상적으로 작동할 확률이 높다.
@@ -12,6 +12,7 @@ import leaf from "../../assets/images/leaf.jpg";
 
 /*
 TODO: API 연동
+TODO: 생성/수정 버튼을 누른 후 이어질 페이지 설정
 */
 
 //type
@@ -19,7 +20,7 @@ TODO: API 연동
 //  StudyDetail에서 study 객체를 넘겨줌.
 //  기존 스터디 객체를 상태변수의 기본 값으로 설정. create면 빈 객체니까 자동으로 빈 값으로 들어갈 것.
 //- create : 생성을 위한 ui
-function StudyForm({ type = "create", study = {} }) {
+function StudyForm({ type = "modify", study = {} }) {
   //input 상태 변수들
   const [nickname, setNickname] = useState(study.nickname || "");
   const [title, setTitle] = useState(study.title || "");
@@ -38,7 +39,7 @@ function StudyForm({ type = "create", study = {} }) {
   const [toast, setToast] = useState(null);
 
   //배경 이미지 (추후에 따로 분리해두면 좋을듯)
-  const [selectedBackground, setSelectedBackground] = useState(1); //기본값주기?
+  const [selectedBackground, setSelectedBackground] = useState("GREEN"); //기본값주기?
   const backgrounds = [
     {
       id: 1,
@@ -112,7 +113,7 @@ function StudyForm({ type = "create", study = {} }) {
   }, [password, checkPassword]);
 
   //만들기 버튼 클릭 시
-  const onHandleSubmit = () => {
+  const onHandleSubmit = async () => {
     //설명 제외 모든 곳에 입력이 되었는지 검사 -> 입력 안된 부분 있으면 토스트 메세지로 띄우기
     if (
       nickname.trim() === "" ||
@@ -131,24 +132,31 @@ function StudyForm({ type = "create", study = {} }) {
       return;
     }
     //생성/수정 api 보내기
+    let result;
+    study.id = 8;
     switch (type) {
       case "create":
-        createStudy({
+        console.log("스터디 생성 요청 시작");
+        result = await createStudy({
           title,
           nickname,
           description,
           password,
           theme: selectedBackground,
         });
+        console.log("result=>", result);
+
         break;
       case "modify":
-        updateStudy({
+        console.log("스터디 수정 요청 시작");
+        result = await updateStudy(study.id, {
           title,
           nickname,
           description,
           password,
           theme: selectedBackground,
         });
+        console.log("result=>", result);
         break;
       default:
         console.log("type이 잘못되었습니다. type=>", type);
@@ -215,7 +223,7 @@ function StudyForm({ type = "create", study = {} }) {
                 <div
                   key={background.id}
                   onClick={() => {
-                    setSelectedBackground(background.id);
+                    setSelectedBackground(background.name);
                   }}
                   className={styles.background}
                 >
@@ -228,7 +236,7 @@ function StudyForm({ type = "create", study = {} }) {
                     <img src={background.src} alt={background.alt} />
                   )}
 
-                  {selectedBackground === background.id ? (
+                  {selectedBackground === background.name ? (
                     <div className={styles.pawContainer}>
                       <div className={`ic paw ${styles.paw}`} />
                     </div>
@@ -292,7 +300,7 @@ function StudyForm({ type = "create", study = {} }) {
           </div>
           <div className={styles.button}>
             <Button
-              label="만들기"
+              label={type === "modify" ? "수정하기" : "만들기"}
               onClick={(e) => {
                 e.preventDefault();
                 onHandleSubmit();
