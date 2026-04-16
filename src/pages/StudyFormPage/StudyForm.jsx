@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styles from "./StudyForm.module.css";
 import Button from "../../components/Button/Button";
-//import { createStudy } from "../../api/studies";
+//import { createStudy, updateStudy } from "../../api/studies";
 import Toast from "../../components/Toast/Toast";
 
 //이미지는 이렇게 가져와야 정상적으로 작동할 확률이 높다.
@@ -33,6 +33,9 @@ function StudyForm({ type = "create", study = {} }) {
   //비밀번호 눈 버튼
   const [pwVisibleBtn, setPwVisibleBtn] = useState(false);
   const [checkPwVisibleBtn, setCheckPwVisibleBtn] = useState(false);
+
+  //토스트
+  const [toast, setToast] = useState(null);
 
   //배경 이미지 (추후에 따로 분리해두면 좋을듯)
   const [selectedBackground, setSelectedBackground] = useState(1); //기본값주기?
@@ -118,22 +121,38 @@ function StudyForm({ type = "create", study = {} }) {
       password.trim() === "" ||
       checkPassword.trim() === ""
     ) {
-      <Toast type="warning" text="아직 모두 입력되지 않았습니다!" />;
+      setToast({ type: "warning", text: "아직 모두 입력되지 않았습니다!" });
       return;
     }
     //비밀번호와 비밀번호 확인이 일치한지 검사 -> 다르면 토스트 메세지로 띄우기
     if (password !== checkPassword) {
-      <Toast type="warning" text="비밀번호가 일치하지 않습니다!" />;
+      setToast({ type: "warning", text: "비밀번호가 일치하지 않습니다!" });
+
       return;
     }
-    //생성 api 보내기
-    // createStudy({
-    //   title,
-    //   nickname,
-    //   description,
-    //   password,
-    //   theme: selectedBackground,
-    // });
+    //생성/수정 api 보내기
+    switch (type) {
+      case "create":
+        createStudy({
+          title,
+          nickname,
+          description,
+          password,
+          theme: selectedBackground,
+        });
+        break;
+      case "modify":
+        updateStudy({
+          title,
+          nickname,
+          description,
+          password,
+          theme: selectedBackground,
+        });
+        break;
+      default:
+        console.log("type이 잘못되었습니다. type=>", type);
+    }
   };
   return (
     <div className={styles.container}>
@@ -272,7 +291,16 @@ function StudyForm({ type = "create", study = {} }) {
             <p className={styles.warningText}>{pwWarning}</p>
           </div>
           <div className={styles.button}>
-            <Button label="만들기" onClick={onHandleSubmit} />
+            <Button
+              label="만들기"
+              onClick={(e) => {
+                e.preventDefault();
+                onHandleSubmit();
+              }}
+            />
+          </div>
+          <div className={styles.toast}>
+            {toast && <Toast type={toast.type} text={toast.text} />}
           </div>
         </form>
       </div>

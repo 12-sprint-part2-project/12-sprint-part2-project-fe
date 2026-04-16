@@ -186,3 +186,7 @@
   max-width: 648px;
   height: 58px;
 }
+/*-----Toast------*/
+.toast {
+  z-index: 1000;
+}
