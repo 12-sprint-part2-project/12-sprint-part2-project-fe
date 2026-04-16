@@ -40,9 +40,19 @@
   width: 648px;
   height: 48px;
 
+  padding: 15px 20px;
+
   border-radius: 15px;
   border: 1px solid var(--gray-gray_DDDDDD, #ddd);
   background: #fff;
+}
+.input::placeholder {
+  color: var(--gray-gray_818181, #818181);
+  font-family: Pretendard;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
 }
 .warningText {
   color: var(--red-error_C41013, #c41013);
@@ -60,39 +70,59 @@
   gap: 16px;
   flex-wrap: wrap;
 }
-.backgrounds img {
+.background {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 150px;
   height: 150px;
+  overflow: hidden;
 
   border-radius: 16px;
   border: 1px solid rgba(0, 0, 0, 0.1);
-  background: var(--green-green_E1EDDE, #e1edde);
+  background: var(--green, #e1edde);
+
+  cursor: pointer;
 }
+.background img,
+.background .colorchip {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* 이미지가 찌그러지지 않게 */
+}
+
 .backgrounds .selected {
 }
 
 .background-green {
-  width: 150px;
-  height: 150px;
-
-  border-radius: 16px;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  background: var(--green-green_E1EDDE, #e1edde);
+  background: var(--green, #e1edde);
 }
 .background-yellow {
-  border-radius: 16px;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  background: var(--green-green_E1EDDE, #ebedde);
+  background: var(--yellow, #ebedde);
 }
 .background-blue {
-  border-radius: 16px;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  background: var(--green-green_E1EDDE, #dee2ed);
+  background: var(--blue, #dee2ed);
 }
 .background-pink {
-  border-radius: 16px;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  background: var(--green-green_E1EDDE, #eddee9);
+  background: var(--pink, #eddee9);
+}
+.pawContainer {
+  position: absolute;
+
+  width: 32px;
+  height: 32px;
+
+  border-radius: 50%;
+  background-color: rgba(65, 65, 65, 0.5);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.paw {
+  width: 18px;
+  height: 18px;
 }
 .button {
   width: 648px;

@@ -137,6 +137,7 @@ function StudyForm() {
               id="nickname-input"
               value={nickname}
               onChange={(e) => setNickname(e.target.value)}
+              placeholder="닉네임을 입력해 주세요"
               className={styles.input}
             />
           </div>
@@ -148,6 +149,7 @@ function StudyForm() {
               id="title-input"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
+              placeholder="스터디 이름을 입력해 주세요"
               className={styles.input}
             />
           </div>
@@ -159,6 +161,7 @@ function StudyForm() {
               id="description-input"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
+              placeholder="소개 멘트를 작성해 주세요"
               className={styles.input}
             />
           </div>
@@ -171,15 +174,23 @@ function StudyForm() {
                   onClick={() => {
                     setSelectedBackground(background.id);
                   }}
-                  className={
-                    selectedBackground === background.id ? "selected" : ""
-                  }
+                  className={styles.background}
                 >
+                  {background.className && (
+                    <div
+                      className={`${styles.colorchip} ${styles[background.className]}`}
+                    />
+                  )}
                   {background.src && (
                     <img src={background.src} alt={background.alt} />
                   )}
-                  {background.className && ( //TODO: 수정해야됨 안보여
-                    <div className={`${background.className}`}></div>
+
+                  {selectedBackground === background.id ? (
+                    <div className={styles.pawContainer}>
+                      <div className={`ic paw ${styles.paw}`} />
+                    </div>
+                  ) : (
+                    ""
                   )}
                 </div>
               );
@@ -193,6 +204,7 @@ function StudyForm() {
               id="password-input"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              placeholder="비밀번호를 입력해 주세요"
               className={styles.input}
             />
           </div>
@@ -205,6 +217,7 @@ function StudyForm() {
               id="password-check-input"
               value={checkPassword}
               onChange={(e) => setCheckPassword(e.target.value)}
+              placeholder="비밀번호를 한번 더 입력해 주세요"
               className={styles.input}
             />
             <p className={styles.warningText}>{pwWarning}</p>
