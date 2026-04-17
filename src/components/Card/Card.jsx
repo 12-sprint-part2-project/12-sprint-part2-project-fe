@@ -6,7 +6,7 @@ const COLOR_THEMES = ["GREEN", "YELLOW", "BLUE", "PINK"];
 
 const Card = ({
   nickname,
-  name,
+  title,
   points,
   days,
   description,
@@ -34,7 +34,7 @@ const Card = ({
               >
                 {nickname}
               </span>
-              의 {name}
+              의 {title}
             </h3>
             <Tag
               type="point"
