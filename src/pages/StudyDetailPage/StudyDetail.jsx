@@ -12,7 +12,7 @@ import Toast from "../../components/Toast/Toast";
 import useToast from "../../hooks/useToast";
 
 const StudyDetail = () => {
-  const { id = 1 } = useParams();
+  const { id } = useParams();
   const [study, setStudy] = useState(null); //가져온 스터디 객체를 저장할 변수
   const navigate = useNavigate();
 
@@ -30,9 +30,10 @@ const StudyDetail = () => {
   }, [id]);
 
   /* 공유/삭제/수정 버튼 관련 상태 변수 */
-  const [showPwModal, setShowPwModal] = useState(false); //비밀번호 모달을 보여주는 상태
-  const [showDeletePopup, setShowDeletePopup] = useState(false); //정말 삭제하시겠습니까? 팝업.
-  const [showSharingModal, setShowSharingModal] = useState(false);
+  const [showPwModal, setShowPwModal] = useState(false); //비밀번호 모달
+
+  const [showDeletePopup, setShowDeletePopup] = useState(false); //삭제 재확인 팝업
+  const [showSharingModal, setShowSharingModal] = useState(false); //공유 모달
 
   const [confirmText, setConfirmText] = useState(""); //버튼마다 비밀번호 모달 내 버튼명이 다르므로, 여기에 저장해서 사용.
   const [pwType, setPwType] = useState(""); //삭제/수정 중 무엇인지 기록하는 용도
@@ -72,6 +73,18 @@ const StudyDetail = () => {
       //TODO: 여기에 집중 진입, 습관 진입 시의 코드도 적을 수 있을 것 같습니다!
       default:
         break;
+    }
+  };
+
+  //공유 모달에서 '복사하기'버튼 클릭 시 실행할 함수
+  const onHandleSharing = async () => {
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      console.log("복사 성공.");
+      showToast("success", "복사되었습니다!");
+    } catch (e) {
+      console.log("복사 실패=>", e);
+      showToast("warning", "복사에 실패했습니다.");
     }
   };
 
@@ -115,16 +128,7 @@ const StudyDetail = () => {
           setShowModal={setShowSharingModal}
           title={study.title}
           url={window.location.href}
-          onClickConfirm={async () => {
-            try {
-              await navigator.clipboard.writeText(window.location.href);
-              console.log("복사 성공.");
-              showToast("success", "복사되었습니다!");
-            } catch (e) {
-              console.log("복사 실패=>", e);
-              showToast("warning", "복사에 실패했습니다.");
-            }
-          }}
+          onClickConfirm={onHandleSharing}
         />
       )}
       <div className={styles.boxHeader}>
