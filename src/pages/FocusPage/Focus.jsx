@@ -19,7 +19,7 @@ function Focus() {
     pause,
     resume,
     toast,
-  } = useTimer();
+  } = useTimer(studyId);
 
   const isRunning = timerStatus === TIMER_STATUS.RUNNING;
   const isPaused = timerStatus === TIMER_STATUS.PAUSED;

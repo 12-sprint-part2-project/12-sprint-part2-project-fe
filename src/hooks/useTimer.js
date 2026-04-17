@@ -1,4 +1,9 @@
 import { useState, useEffect, useRef, useCallback } from "react";
+import {
+  getFocusSession,
+  createFocusSession,
+  updateFocusSession,
+} from "../api/focus";
 import useToast from "./useToast";
 
 export const TIMER_STATUS = {
@@ -10,7 +15,7 @@ export const TIMER_STATUS = {
 
 const DURATION_MIN = 25; // 타이머 시간 초기값
 
-function useTimer() {
+function useTimer(studyId) {
   const initialSeconds = DURATION_MIN * 60;
 
   const [timerStatus, setTimerStatus] = useState(TIMER_STATUS.IDLE);
@@ -19,6 +24,7 @@ function useTimer() {
 
   const endTimeRef = useRef(null); // Date.now와 종료 시각을 기준으로 남은 시간 계산
   const intervalIdRef = useRef(null); // 현재 실행 중인 Interval의 ID
+  const sessionIdRef = useRef(null);
 
   const { toast, showToast } = useToast();
 
@@ -60,10 +66,21 @@ function useTimer() {
   }, [timerStatus, handleComplete]);
 
   const start = async () => {
-    // 현재 시간과 설정 시간을 더해 종료 시각 설정
-    endTimeRef.current = new Date(Date.now() + DURATION_MIN * 60 * 1000);
-    setTimeLeft(DURATION_MIN * 60);
-    setTimerStatus(TIMER_STATUS.RUNNING);
+    try {
+      const res = await createFocusSession(studyId, {
+        durationMin: DURATION_MIN,
+      });
+      console.log(res);
+
+      const { data } = res.data;
+
+      sessionIdRef.current = data.id;
+      endTimeRef.current = new Date(data.endTime);
+      setTimeLeft(initialSeconds);
+      setTimerStatus(data.status);
+    } catch (e) {
+      showToast("warning", e.userMessage);
+    }
   };
 
   // 일시 정지 (interval만 멈추고 endTimeRef 유지)
