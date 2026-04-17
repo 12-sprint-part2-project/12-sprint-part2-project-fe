@@ -203,7 +203,9 @@ const Home = () => {
               );
             })
           ) : (
-            <p className={styles.notification}>아직 둘러 볼 스터디가 없어요</p>
+            <p className={styles.notification}>
+              {keyword ? "검색된" : "아직 둘러 볼"} 스터디가 없어요
+            </p>
           )}
         </div>
 
