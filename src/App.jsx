@@ -9,18 +9,15 @@ import PasswordModal from "./pages/StudyDetailPage/components/PasswordModal/Pass
 
 function App() {
   return (
-    <>
-      <Routes>
-        <Route element={<AppLayout />}>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/studies/new" element={<StudyFormPage />} />
-          <Route path="/studies/:studyId" element={<StudyDetailPage />} />
-          <Route path="/studies/:studyId/habits" element={<HabitPage />} />
-          <Route path="/studies/:studyId/focus" element={<FocusPage />} />
-        </Route>
-      </Routes>
-      <PasswordModal />
-    </>
+    <Routes>
+      <Route element={<AppLayout />}>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/studies/new" element={<StudyFormPage />} />
+        <Route path="/studies/:studyId" element={<StudyDetailPage />} />
+        <Route path="/studies/:studyId/habits" element={<HabitPage />} />
+        <Route path="/studies/:studyId/focus" element={<FocusPage />} />
+      </Route>
+    </Routes>
   );
 }
 
