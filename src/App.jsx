@@ -5,7 +5,7 @@ import StudyDetailPage from "./pages/StudyDetailPage/StudyDetail";
 import StudyFormPage from "./pages/StudyFormPage/StudyForm";
 import HabitPage from "./pages/HabitPage/Habit";
 import FocusPage from "./pages/FocusPage/Focus";
-import Mordal from "./components/Modal/Modal";
+import PasswordModal from "./pages/StudyDetailPage/components/PasswordModal/PasswordModal";
 
 function App() {
   return (
@@ -19,7 +19,7 @@ function App() {
           <Route path="/studies/:studyId/focus" element={<FocusPage />} />
         </Route>
       </Routes>
-      <Mordal />
+      <PasswordModal />
     </>
   );
 }

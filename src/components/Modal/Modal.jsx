@@ -8,10 +8,10 @@ import Button from "../Button/Button";
 //confirmText : 확인 버튼 텍스트, 없으면 "수정 완료"로 들어감. (이 모달의 기본 목적이 습관 수정 모달이라서)
 //hasCancle : 취소 버튼 유무
 //hasExit : 나가기 버튼 유무
-const Mordal = ({
+const Modal = ({
   setShowModal,
   title = "모달 제목",
-  hasCancle = true,
+  hasCancel = true,
   hasExit = false,
   cancelText = "취소",
   confirmText = "수정 완료",
@@ -28,15 +28,17 @@ const Mordal = ({
             <button
               type="button"
               className={`${styles.exitBtn} ${styles.topBtn}`}
+              onClick={() => setShowModal(false)}
             >
               나가기
             </button>
           )}
         </div>
 
-        <div>{innerComponent}</div>
+        <div className={styles.innerComponent}>{innerComponent}</div>
+
         <div className={styles.modalButtons}>
-          {hasCancle && (
+          {hasCancel && (
             <div className={styles.modalButton}>
               <Button
                 variant="cancel"
@@ -63,6 +65,7 @@ const Mordal = ({
           <button
             type="button"
             className={`${styles.exitBtn} ${styles.bottomBtn}`}
+            onClick={() => setShowModal(false)}
           >
             나가기
           </button>
@@ -72,4 +75,4 @@ const Mordal = ({
   );
 };
 
-export default Mordal;
+export default Modal;
