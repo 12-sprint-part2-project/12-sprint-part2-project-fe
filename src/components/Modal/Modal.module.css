@@ -46,3 +46,42 @@
 .modalButton {
   flex: 1;
 }
+
+.headerContainer {
+  position: relative;
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  align-items: center; /* 나가기 버튼을 중간에 두기 위함. */
+  justify-content: center;
+}
+.exitBtn {
+  color: #578246;
+  text-align: right;
+  font-family: Pretendard;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+}
+
+/* ── pc, 태블릿 (376px~) ── */
+.topBtn {
+  display: block; /* 굳이 필요없는 코드지만 이해를 돕기 위해 넣음 */
+  position: absolute;
+  right: 0;
+}
+.bottomBtn {
+  display: none;
+}
+
+/* ── 모바일 (~ 375px) ── */
+@media (max-width: 375px) {
+  .topBtn {
+    display: none;
+  }
+  .bottomBtn {
+    display: block;
+  }
+}
