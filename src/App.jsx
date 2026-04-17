@@ -5,6 +5,7 @@ import StudyDetailPage from "./pages/StudyDetailPage/StudyDetail";
 import StudyFormPage from "./pages/StudyFormPage/StudyForm";
 import HabitPage from "./pages/HabitPage/Habit";
 import FocusPage from "./pages/FocusPage/Focus";
+import PasswordModal from "./pages/StudyDetailPage/components/PasswordModal/PasswordModal";
 
 function App() {
   return (
