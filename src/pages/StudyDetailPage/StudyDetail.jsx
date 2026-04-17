@@ -7,6 +7,7 @@ import NavButton from "../../components/NavButton/NavButton";
 import { deleteStudy, getStudyDetail } from "../../api/studies";
 import PasswordModal from "./components/PasswordModal/PasswordModal";
 import Popup from "../../components/Popup/Popup";
+import SharingModal from "./components/SharingModal/SharingModal";
 
 const StudyDetail = () => {
   const { id = 1 } = useParams();
@@ -24,13 +25,15 @@ const StudyDetail = () => {
       }
     };
     fetchStudy();
-  }, []);
+  }, [id]);
 
   /* 공유/삭제/수정 버튼 관련 상태 변수 */
-  const [showModal, setShowModal] = useState(false); //비밀번호 모달을 보여주는 상태
+  const [showPwModal, setShowPwModal] = useState(false); //비밀번호 모달을 보여주는 상태
   const [showDeletePopup, setShowDeletePopup] = useState(false); //정말 삭제하시겠습니까? 팝업.
+  const [showSharingModal, setShowSharingModal] = useState(false);
+
   const [confirmText, setConfirmText] = useState(""); //버튼마다 비밀번호 모달 내 버튼명이 다르므로, 여기에 저장해서 사용.
-  const [pwType, setPwType] = useState("");
+  const [pwType, setPwType] = useState(""); //삭제/수정 중 무엇인지 기록하는 용도
 
   /* 공유/수정/삭제 버튼 클릭 핸들러 */
   const onClickModify = () => {
@@ -38,14 +41,16 @@ const StudyDetail = () => {
     //비밀번호 체크 모달 -> 비밀번호 일치할 시 -> 수정 페이지로 Link
     setPwType("modify");
     setConfirmText("수정하러 가기");
-    setShowModal(true);
+    setShowPwModal(true);
   };
   const onClickDelete = () => {
     setPwType("delete");
     setConfirmText("삭제하기");
-    setShowModal(true);
+    setShowPwModal(true);
   };
-  const onClickSharing = () => {};
+  const onClickSharing = () => {
+    setShowSharingModal(true);
+  };
 
   //비밀번호 인증 성공 시 실행할 함수.
   const onPasswordSuccess = () => {
@@ -65,10 +70,11 @@ const StudyDetail = () => {
     }
   };
 
-  //삭제 버튼 -> 비밀번호 입력 -> 인증 성공 -> 정말 삭제하시겠습니까? 네 -> 하고나서 실행 될 함수.
+  //삭제해주는 함수. 삭제 버튼 -> 비밀번호 입력 -> 인증 성공 -> 정말 삭제하시겠습니까? 네 -> 하고나서 실행 될 함수.
   const handleDelete = async () => {
     try {
       await deleteStudy(id);
+      navigate("/");
     } catch (e) {
       //TODO: 삭제 실패 시 toast 띄우기
       console.log("삭제 실패 =>", e);
@@ -78,10 +84,10 @@ const StudyDetail = () => {
 
   return (
     <section className={styles.box}>
-      {showModal &&
+      {showPwModal &&
         study && ( //비밀번호 모달 띄우기
           <PasswordModal
-            setShowModal={setShowModal}
+            setShowModal={setShowPwModal}
             studyId={id}
             title={study.title}
             confirmText={confirmText}
@@ -95,6 +101,23 @@ const StudyDetail = () => {
           message="정말 삭제하시겠습니까?"
           onClickConfirm={handleDelete}
           onClickCancel={() => setShowDeletePopup(false)}
+        />
+      )}
+      {showSharingModal && study && (
+        <SharingModal
+          setShowModal={setShowSharingModal}
+          title={study.title}
+          url={window.location.href}
+          onClickConfirm={async () => {
+            try {
+              await navigator.clipboard.writeText(window.location.href);
+              console.log("복사 성공.");
+              //TODO: 복사 성공 토스트 띄우기
+            } catch (e) {
+              console.log("복사 실패");
+              //TODO: 복사 실패 토스트 띄우기
+            }
+          }}
         />
       )}
       <div className={styles.boxHeader}>
