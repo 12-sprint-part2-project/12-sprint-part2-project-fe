@@ -1,4 +1,6 @@
+import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { getStudyDetail } from "../../api/studies";
 import BoxHeaderInfo from "../../components/BoxHeader/BoxHeaderInfo";
 import NavButton from "../../components/NavButton/NavButton";
 import Toast from "../../components/Toast/Toast";
@@ -9,6 +11,22 @@ import styles from "./Focus.module.css";
 function Focus() {
   const navigate = useNavigate();
   const { studyId } = useParams();
+  const [study, setStudy] = useState(null);
+
+  useEffect(() => {
+    const fetchStudy = async () => {
+      try {
+        const res = await getStudyDetail(studyId);
+        const { data } = res.data;
+        console.log(data);
+        setStudy(data);
+      } catch (e) {
+        console.error(e);
+      }
+    };
+
+    fetchStudy();
+  }, [studyId]);
 
   const {
     timerStatus,
@@ -34,7 +52,9 @@ function Focus() {
 
       <div className={styles.header}>
         <div className={styles.headerTop}>
-          <h2 className={styles.title}>연우의 개발공장</h2>
+          <h2 className={styles.title}>
+            {study?.nickname}의 {study?.title}
+          </h2>
           <div className={styles.nav}>
             <NavButton
               label="오늘의 습관"
