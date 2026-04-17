@@ -28,12 +28,12 @@ function useTimer(studyId) {
 
   const { toast, showToast } = useToast();
 
+  // 타이머 완료 처리
   const handleComplete = useCallback(async () => {
     try {
       const res = await updateFocusSession(studyId, sessionIdRef.current, {
-        status: "completed",
+        action: TIMER_STATUS.COMPLETED,
       });
-      console.log(res);
 
       const { data } = res.data;
 
@@ -46,6 +46,58 @@ function useTimer(studyId) {
     }
   }, [showToast, studyId]);
 
+  // 페이지 진입 시 세션 조회
+  useEffect(() => {
+    const fetchSession = async () => {
+      try {
+        const res = await getFocusSession(studyId);
+
+        const { data } = res.data;
+        if (!data) return;
+
+        sessionIdRef.current = data.id;
+        setEarnedPoint(data.earnedPoint ?? 0);
+
+        if (data.status === TIMER_STATUS.RUNNING) {
+          // endTime 기준으로 남은 시간 계산
+          const remaining = Math.ceil(
+            (new Date(data.endTime).getTime() - Date.now()) / 1000,
+          );
+
+          if (remaining <= 0) {
+            // 서버에선 running인데 시간이 이미 지난 경우
+            handleComplete();
+            return;
+          }
+
+          endTimeRef.current = new Date(data.endTime);
+          setTimeLeft(remaining);
+          setTimerStatus(TIMER_STATUS.RUNNING);
+        } else if (data.status === TIMER_STATUS.PAUSED) {
+          // paused: endTime - pausedAt 으로 남은 시간 계산
+          const remaining = Math.ceil(
+            (new Date(data.endTime).getTime() -
+              new Date(data.pausedAt).getTime()) /
+              1000,
+          );
+
+          await updateFocusSession(studyId, sessionIdRef.current, {
+            action: TIMER_STATUS.RUNNING,
+          });
+
+          endTimeRef.current = new Date(Date.now() + remaining * 1000);
+          setTimeLeft(remaining > 0 ? remaining : 0);
+          setTimerStatus(TIMER_STATUS.RUNNING);
+        }
+      } catch (e) {
+        showToast("warning", e.userMessage);
+      }
+    };
+
+    fetchSession();
+  }, [studyId, handleComplete, showToast]);
+
+  // 타이머 실행
   useEffect(() => {
     if (timerStatus !== TIMER_STATUS.RUNNING) {
       clearInterval(intervalIdRef.current);
@@ -79,7 +131,6 @@ function useTimer(studyId) {
       const res = await createFocusSession(studyId, {
         durationMin: DURATION_MIN,
       });
-      console.log(res);
 
       const { data } = res.data;
 
@@ -96,9 +147,8 @@ function useTimer(studyId) {
   const pause = async () => {
     try {
       const res = await updateFocusSession(studyId, sessionIdRef.current, {
-        action: "paused",
+        action: TIMER_STATUS.PAUSED,
       });
-      console.log(res);
 
       const { data } = res.data;
 
@@ -114,9 +164,8 @@ function useTimer(studyId) {
       const requestedAt = Date.now();
 
       const res = await updateFocusSession(studyId, sessionIdRef.current, {
-        action: "running",
+        action: TIMER_STATUS.RUNNING,
       });
-      console.log(res);
 
       const { data } = res.data;
 
