@@ -6,8 +6,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 22.375rem;
-  height: 15.1875rem;
+  height: 100%;
+  min-height: 15.1875rem;
   border-radius: 1.25rem;
   color: var(--white);
 }
@@ -15,17 +15,21 @@
 /* color theme */
 .card-GREEN {
   background-color: var(--green);
+  border: 1px solid rgb(0 0 0 / 0.1);
 }
 .card-YELLOW {
   background-color: var(--yellow);
+  border: 1px solid rgb(0 0 0 / 0.1);
 }
 
 .card-BLUE {
   background-color: var(--blue);
+  border: 1px solid rgb(0 0 0 / 0.1);
 }
 
 .card-PINK {
   background-color: var(--pink);
+  border: 1px solid rgb(0 0 0 / 0.1);
 }
 
 /* picture card */
@@ -74,11 +78,13 @@
   justify-content: space-between;
   align-items: flex-start;
   align-self: stretch;
+  gap: 0.625rem;
 }
 
 .title {
   font: var(--text-18-bold);
   margin-bottom: 0.69rem;
+  /* word-break: keep-all; */
 }
 
 .colorThemeText.title {
@@ -111,6 +117,12 @@
 }
 
 .description {
+  overflow: hidden;
+  display: -webkit-box;
+  height: 3em;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  text-overflow: ellipsis;
   font: var(--text-16-regular);
 }
 
@@ -126,15 +138,13 @@
 
 @media (max-width: 744px) {
   .card {
-    width: 19.5rem;
-    height: 15.1875rem;
+    min-height: 15.1875rem;
   }
 }
 
 @media (max-width: 375px) {
   .card {
-    width: 15rem;
-    height: 11.25rem;
+    min-height: auto;
   }
 
   .card-feed {
@@ -143,6 +153,7 @@
   }
 
   .container {
+    justify-content: flex-start;
     padding: 1rem;
   }
 
@@ -170,7 +181,9 @@
   }
 
   .description {
-    margin-bottom: 0.25rem;
+    /* margin-bottom: 0.25rem; */
+    height: 2.4em;
+    margin-block: 0.75rem;
     font: var(--text-14-regular);
     line-height: normal;
   }
