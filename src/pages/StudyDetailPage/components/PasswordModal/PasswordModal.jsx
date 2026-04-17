@@ -66,7 +66,7 @@ const PasswordModal = ({
     }
   };
   return (
-    <div>
+    <div className={styles.pwModalContainer}>
       <Modal
         setShowModal={setShowModal}
         title={title}
