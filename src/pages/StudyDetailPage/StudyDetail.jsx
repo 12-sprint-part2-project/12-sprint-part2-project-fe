@@ -8,6 +8,8 @@ import { deleteStudy, getStudyDetail } from "../../api/studies";
 import PasswordModal from "./components/PasswordModal/PasswordModal";
 import Popup from "../../components/Popup/Popup";
 import SharingModal from "./components/SharingModal/SharingModal";
+import Toast from "../../components/Toast/Toast";
+import useToast from "../../hooks/useToast";
 
 const StudyDetail = () => {
   const { id = 1 } = useParams();
@@ -34,6 +36,9 @@ const StudyDetail = () => {
 
   const [confirmText, setConfirmText] = useState(""); //버튼마다 비밀번호 모달 내 버튼명이 다르므로, 여기에 저장해서 사용.
   const [pwType, setPwType] = useState(""); //삭제/수정 중 무엇인지 기록하는 용도
+
+  //토스트
+  const { toast, showToast } = useToast();
 
   /* 공유/수정/삭제 버튼 클릭 핸들러 */
   const onClickModify = () => {
@@ -75,8 +80,9 @@ const StudyDetail = () => {
     try {
       await deleteStudy(id);
       navigate("/");
+      showToast("success", "삭제되었습니다");
     } catch (e) {
-      //TODO: 삭제 실패 시 toast 띄우기
+      showToast("warning", "삭제에 실패했습니다");
       console.log("삭제 실패 =>", e);
     }
     setShowDeletePopup(false);
@@ -84,6 +90,7 @@ const StudyDetail = () => {
 
   return (
     <section className={styles.box}>
+      {toast && <Toast type={toast.type} text={toast.text} />}
       {showPwModal &&
         study && ( //비밀번호 모달 띄우기
           <PasswordModal
@@ -112,10 +119,10 @@ const StudyDetail = () => {
             try {
               await navigator.clipboard.writeText(window.location.href);
               console.log("복사 성공.");
-              //TODO: 복사 성공 토스트 띄우기
+              showToast("success", "복사되었습니다!");
             } catch (e) {
-              console.log("복사 실패");
-              //TODO: 복사 실패 토스트 띄우기
+              console.log("복사 실패=>", e);
+              showToast("warning", "복사에 실패했습니다.");
             }
           }}
         />
