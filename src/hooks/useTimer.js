@@ -29,13 +29,22 @@ function useTimer(studyId) {
   const { toast, showToast } = useToast();
 
   const handleComplete = useCallback(async () => {
-    const pointResult = 100; // API 연동 후 실제 획득한 포인트로 업데이트 예정
+    try {
+      const res = await updateFocusSession(studyId, sessionIdRef.current, {
+        status: "completed",
+      });
+      console.log(res);
 
-    setEarnedPoint(pointResult);
-    setTimerStatus(TIMER_STATUS.COMPLETED);
+      const { data } = res.data;
 
-    showToast("success", "포인트를 획득했습니다!", pointResult);
-  }, [showToast]);
+      const pointResult = data.earnedPoint ?? 0;
+      setEarnedPoint(pointResult);
+      setTimerStatus(data.status);
+      showToast("success", "포인트를 획득했습니다!", pointResult);
+    } catch (e) {
+      showToast("warning", e.userMessage);
+    }
+  }, [showToast, studyId]);
 
   useEffect(() => {
     if (timerStatus !== TIMER_STATUS.RUNNING) {
@@ -84,15 +93,39 @@ function useTimer(studyId) {
   };
 
   // 일시 정지 (interval만 멈추고 endTimeRef 유지)
-  const pause = () => {
-    setTimerStatus(TIMER_STATUS.PAUSED);
-    showToast("warning", "집중이 중단되었습니다.");
+  const pause = async () => {
+    try {
+      const res = await updateFocusSession(studyId, sessionIdRef.current, {
+        action: "paused",
+      });
+      console.log(res);
+
+      const { data } = res.data;
+
+      setTimerStatus(data.status);
+      showToast("warning", "집중이 중단되었습니다.");
+    } catch (e) {
+      showToast("warning", e.userMessage);
+    }
   };
 
   const resume = async () => {
-    // 일시정지 시점의 남은 시간을 현재 시각에 더해 종료 시각을 재설정
-    endTimeRef.current = new Date(Date.now() + timeLeft * 1000);
-    setTimerStatus(TIMER_STATUS.RUNNING);
+    try {
+      const requestedAt = Date.now();
+
+      const res = await updateFocusSession(studyId, sessionIdRef.current, {
+        action: "running",
+      });
+      console.log(res);
+
+      const { data } = res.data;
+
+      const elapsed = Date.now() - requestedAt;
+      endTimeRef.current = new Date(new Date(data.endTime).getTime() - elapsed);
+      setTimerStatus(data.status);
+    } catch (e) {
+      showToast("warning", e.userMessage);
+    }
   };
 
   return {
