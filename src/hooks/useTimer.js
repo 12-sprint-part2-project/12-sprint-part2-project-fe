@@ -13,14 +13,11 @@ export const TIMER_STATUS = {
   COMPLETED: "completed", // 종료
 };
 
-const DURATION_MIN = 25; // 타이머 시간 초기값
-
-function useTimer(studyId) {
-  const initialSeconds = DURATION_MIN * 60;
-
+function useTimer(studyId, durationSec) {
   const [timerStatus, setTimerStatus] = useState(TIMER_STATUS.IDLE);
-  const [timeLeft, setTimeLeft] = useState(initialSeconds);
+  const [timeLeft, setTimeLeft] = useState(durationSec);
   const [earnedPoint, setEarnedPoint] = useState(0);
+  const [sessionDuration, setSessionDuration] = useState(null); // 페이지 재진입 시 타이머 설정 시간 표시
 
   const endTimeRef = useRef(null); // Date.now와 종료 시각을 기준으로 남은 시간 계산
   const intervalIdRef = useRef(null); // 현재 실행 중인 Interval의 ID
@@ -73,6 +70,7 @@ function useTimer(studyId) {
           endTimeRef.current = new Date(data.endTime);
           setTimeLeft(remaining);
           setTimerStatus(TIMER_STATUS.RUNNING);
+          setSessionDuration(data.durationMin * 60);
         } else if (data.status === TIMER_STATUS.PAUSED) {
           // paused: endTime - pausedAt 으로 남은 시간 계산
           const remaining = Math.ceil(
@@ -88,6 +86,7 @@ function useTimer(studyId) {
           endTimeRef.current = new Date(Date.now() + remaining * 1000);
           setTimeLeft(remaining > 0 ? remaining : 0);
           setTimerStatus(TIMER_STATUS.RUNNING);
+          setSessionDuration(data.durationMin * 60);
         }
       } catch (e) {
         showToast("warning", e.userMessage);
@@ -129,14 +128,14 @@ function useTimer(studyId) {
   const start = async () => {
     try {
       const res = await createFocusSession(studyId, {
-        durationMin: DURATION_MIN,
+        durationMin: Math.ceil(durationSec / 60),
       });
 
       const { data } = res.data;
 
       sessionIdRef.current = data.id;
-      endTimeRef.current = new Date(data.endTime);
-      setTimeLeft(initialSeconds);
+      endTimeRef.current = new Date(Date.now() + durationSec * 1000);
+      setTimeLeft(durationSec);
       setTimerStatus(data.status);
     } catch (e) {
       showToast("warning", e.userMessage);
@@ -152,6 +151,7 @@ function useTimer(studyId) {
 
       const { data } = res.data;
 
+      endTimeRef.current = null;
       setTimerStatus(data.status);
       showToast("warning", "집중이 중단되었습니다.");
     } catch (e) {
@@ -161,16 +161,13 @@ function useTimer(studyId) {
 
   const resume = async () => {
     try {
-      const requestedAt = Date.now();
-
       const res = await updateFocusSession(studyId, sessionIdRef.current, {
         action: TIMER_STATUS.RUNNING,
       });
 
       const { data } = res.data;
 
-      const elapsed = Date.now() - requestedAt;
-      endTimeRef.current = new Date(new Date(data.endTime).getTime() - elapsed);
+      endTimeRef.current = new Date(Date.now() + timeLeft * 1000);
       setTimerStatus(data.status);
     } catch (e) {
       showToast("warning", e.userMessage);
@@ -180,12 +177,12 @@ function useTimer(studyId) {
   return {
     timerStatus,
     timeLeft,
-    initialSeconds,
     earnedPoint,
     start,
     pause,
     resume,
     toast,
+    sessionDuration,
   };
 }
 
