@@ -4,22 +4,20 @@ import "../../../styles/global/icon.css";
 function HabitItem({ habit, isEditMode, onToggle, onEdit, onDelete }) {
   if (isEditMode) {
     return (
-      <div
-        className={`${styles.editItem} ${habit.isCompleted ? styles.completed : ""}`}
-      >
-        <span className={styles.editName}>{habit.habitName}</span>
-        <div className={styles.editActions}>
-          <button className={styles.editBtn} onClick={() => onEdit(habit)}>
-            수정
-          </button>
-          <button
-            className={styles.deleteBtn}
-            onClick={() => onDelete(habit.id)}
-            aria-label="삭제"
-          >
-            <span className="ic trash" />
-          </button>
-        </div>
+      <div className={styles.editRow}>
+        <button
+          className={`${styles.editItem} ${habit.isCompleted ? styles.completed : ""}`}
+          onClick={() => onEdit(habit)}
+        >
+          <span className={styles.editName}>{habit.habitName}</span>
+        </button>
+        <button
+          className={styles.deleteBtn}
+          onClick={() => onDelete(habit.id)}
+          aria-label="delete"
+        >
+          <span className="ic trash" />
+        </button>
       </div>
     );
   }

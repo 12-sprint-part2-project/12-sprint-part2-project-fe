@@ -4,16 +4,17 @@ import styles from "./Habit.module.css";
 import NavButton from "../../components/NavButton/NavButton";
 import BoxHeaderInfo from "../../components/BoxHeader/BoxHeaderInfo";
 import HabitItem from "./components/HabitItem";
-import HabitForm from "./components/HabitForm";
 import Modal from "../../components/Modal/Modal";
 import { getStudyDetail } from "../../api/studies";
 import useHabits from "../../hooks/useHabits";
+import "../../styles/global/icon.css";
 
 function Habit() {
   const { studyId } = useParams();
   const navigate = useNavigate();
   const [study, setStudy] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [isAdding, setIsAdding] = useState(false);
   const [habitInput, setHabitInput] = useState("");
   const { habits, isLoading, toggleHabit, addHabit, removeHabit } =
     useHabits(studyId);
@@ -30,10 +31,17 @@ function Habit() {
     fetchStudy();
   }, [studyId]);
 
-  const handleAddHabit = async () => {
-    if (!habitInput.trim()) return;
-    await addHabit(habitInput);
+  const handleAddConfirm = async () => {
+    if (habitInput.trim()) {
+      await addHabit(habitInput);
+    }
     setHabitInput("");
+    setIsAdding(false);
+  };
+
+  const handleAddCancel = () => {
+    setHabitInput("");
+    setIsAdding(false);
   };
 
   const modalInner = (
@@ -47,12 +55,37 @@ function Habit() {
           onEdit={() => {}}
         />
       ))}
-      <div className={styles.modalAddRow}>
-        <HabitForm value={habitInput} onChange={setHabitInput} />
-        <button className={styles.addBtn} onClick={handleAddHabit}>
-          +
-        </button>
-      </div>
+      {isAdding && (
+        <div className={styles.newHabitRow}>
+          <div
+            className={`${styles.newHabitInputWrap} ${
+              habitInput ? styles.hasValue : ""
+            }`}
+          >
+            <input
+              className={styles.newHabitInput}
+              value={habitInput}
+              onChange={(e) => setHabitInput(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") handleAddConfirm();
+                if (e.key === "Escape") handleAddCancel();
+              }}
+              autoFocus
+            />
+          </div>
+          <button
+            className={styles.newHabitDeleteBtn}
+            onClick={handleAddCancel}
+            aria-label="취소"
+          >
+            <span className="ic trash" />
+          </button>
+        </div>
+      )}
+
+      <button className={styles.addBtn} onClick={() => setIsAdding(true)}>
+        +
+      </button>
     </div>
   );
 
@@ -81,13 +114,15 @@ function Habit() {
       {/* 내부 컨테이너 */}
       <div className={styles.habitSection}>
         <div className={styles.habitHeader}>
-          <h2 className={styles.habitTitle}>오늘의 습관</h2>
-          <button
-            className={styles.editBtn}
-            onClick={() => setShowModal(true)}
-          >
-            목록 수정
-          </button>
+          <div className={styles.titleGroup}>
+            <h2 className={styles.habitTitle}>오늘의 습관</h2>
+            <button
+              className={styles.editBtn}
+              onClick={() => setShowModal(true)}
+            >
+              목록 수정
+            </button>
+          </div>
         </div>
         <div className={styles.habitList}>
           {isLoading ? (
@@ -117,7 +152,11 @@ function Habit() {
           title="습관 목록"
           confirmText="수정 완료"
           cancelText="취소"
-          onClickConfirm={() => {}}
+          onClickConfirm={handleAddConfirm}
+          onClickCancel={() => {
+            setIsAdding(false);
+            setHabitInput("");
+          }}
           innerComponent={modalInner}
         />
       )}

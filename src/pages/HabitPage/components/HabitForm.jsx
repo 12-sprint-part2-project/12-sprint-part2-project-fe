@@ -7,7 +7,7 @@ function HabitForm({ value, onChange }) {
     <input
       className={styles.input}
       type="text"
-      placeholder="습관을 입력해주세요"
+      placeholder="+"
       value={value}
       onChange={(e) => onChange(e.target.value)}
       maxLength={30}
