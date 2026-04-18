@@ -68,9 +68,9 @@ function Focus() {
           <h3 className={styles.timerTitle}>오늘의 집중</h3>
 
           {(isRunning || isPaused) && (
-            <div className={styles.timerPresetTime}>
-              <span className={`ic timer ${styles.timerPresetIcon}`}></span>
-              <span className={styles.timerPresetValue}>
+            <div className={styles.timerSetTime}>
+              <span className={`ic timer ${styles.timerSetIcon}`}></span>
+              <span className={styles.timerSetValue}>
                 {formatTime(durationMin)}
               </span>
             </div>

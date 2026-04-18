@@ -70,7 +70,7 @@
   color: var(--black);
 }
 
-.timerPresetTime {
+.timerSetTime {
   display: flex;
   align-items: center;
   gap: 0.25rem;
@@ -85,11 +85,11 @@
   background: rgba(255, 255, 255, 0.3);
 }
 
-.timerPresetIcon {
+.timerSetIcon {
   font-size: 1.1875rem;
 }
 
-.timerPresetValue {
+.timerSetValue {
   font: var(--text-16-medium);
   line-height: 1.1875rem;
   color: var(--black);
@@ -205,7 +205,7 @@
     padding: 1.5rem 1rem;
   }
 
-  .timerPresetTime {
+  .timerSetTime {
     margin-top: 1rem;
   }
 
