@@ -140,6 +140,25 @@
   color: var(--red);
 }
 
+/* 입력 모드 */
+.timeInput {
+  width: 2ch;
+  height: 100%;
+  font: inherit;
+  appearance: none;
+}
+
+.timeInput::-webkit-outer-spin-button,
+.timeInput::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+
+.timeInput:focus,
+.timeInput:focus-visible {
+  outline: none;
+  border-bottom: 2px solid var(--brand);
+}
+
 /* 타이머 조작 버튼 */
 .btnContainer {
   display: flex;

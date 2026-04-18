@@ -13,11 +13,9 @@ export const TIMER_STATUS = {
   COMPLETED: "completed", // 종료
 };
 
-function useTimer(studyId, durationMin) {
-  const initialSeconds = durationMin * 60;
-
+function useTimer(studyId, durationSec) {
   const [timerStatus, setTimerStatus] = useState(TIMER_STATUS.IDLE);
-  const [timeLeft, setTimeLeft] = useState(initialSeconds);
+  const [timeLeft, setTimeLeft] = useState(durationSec);
   const [earnedPoint, setEarnedPoint] = useState(0);
 
   const endTimeRef = useRef(null); // Date.now와 종료 시각을 기준으로 남은 시간 계산
@@ -127,14 +125,14 @@ function useTimer(studyId, durationMin) {
   const start = async () => {
     try {
       const res = await createFocusSession(studyId, {
-        durationMin: durationMin,
+        durationMin: Math.ceil(durationSec / 60),
       });
 
       const { data } = res.data;
 
       sessionIdRef.current = data.id;
-      endTimeRef.current = new Date(data.endTime);
-      setTimeLeft(initialSeconds);
+      endTimeRef.current = new Date(Date.now() + durationSec * 1000);
+      setTimeLeft(durationSec);
       setTimerStatus(data.status);
     } catch (e) {
       showToast("warning", e.userMessage);
@@ -150,6 +148,7 @@ function useTimer(studyId, durationMin) {
 
       const { data } = res.data;
 
+      endTimeRef.current = null;
       setTimerStatus(data.status);
       showToast("warning", "집중이 중단되었습니다.");
     } catch (e) {
@@ -159,16 +158,13 @@ function useTimer(studyId, durationMin) {
 
   const resume = async () => {
     try {
-      const requestedAt = Date.now();
-
       const res = await updateFocusSession(studyId, sessionIdRef.current, {
         action: TIMER_STATUS.RUNNING,
       });
 
       const { data } = res.data;
 
-      const elapsed = Date.now() - requestedAt;
-      endTimeRef.current = new Date(new Date(data.endTime).getTime() - elapsed);
+      endTimeRef.current = new Date(Date.now() + timeLeft * 1000);
       setTimerStatus(data.status);
     } catch (e) {
       showToast("warning", e.userMessage);
