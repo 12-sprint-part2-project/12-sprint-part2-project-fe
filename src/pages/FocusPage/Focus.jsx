@@ -8,6 +8,8 @@ import useTimer, { TIMER_STATUS } from "../../hooks/useTimer";
 import formatTime from "./formatTime";
 import styles from "./Focus.module.css";
 
+const PRESETS = [15, 25, 50];
+
 function Focus() {
   const navigate = useNavigate();
   const { studyId } = useParams();
@@ -17,14 +19,9 @@ function Focus() {
 
   useEffect(() => {
     const fetchStudy = async () => {
-      try {
-        const res = await getStudyDetail(studyId);
-        const { data } = res.data;
-        console.log(data);
-        setStudy(data);
-      } catch (e) {
-        console.error(e);
-      }
+      const res = await getStudyDetail(studyId);
+      const { data } = res.data;
+      setStudy(data);
     };
 
     fetchStudy();
@@ -67,7 +64,20 @@ function Focus() {
         <div className={styles.timerSectionheader}>
           <h3 className={styles.timerTitle}>오늘의 집중</h3>
 
-          {(isRunning || isPaused) && (
+          {isIdle || isCompleted ? (
+            <div className={styles.timerPresets}>
+              {PRESETS.map((min) => (
+                <button
+                  key={min}
+                  type="button"
+                  className={`${styles.presetBtn} ${durationMin === min ? styles.active : ""}`}
+                  onClick={() => setDurationMin(min)}
+                >
+                  {min}분
+                </button>
+              ))}
+            </div>
+          ) : (
             <div className={styles.timerSetTime}>
               <span className={`ic timer ${styles.timerSetIcon}`}></span>
               <span className={styles.timerSetValue}>
@@ -80,7 +90,7 @@ function Focus() {
         <p
           className={`${styles.timerDisplay} ${isRunning || isPaused ? styles.timerActive : ""}`}
         >
-          {formatTime(isCompleted ? durationMin : timeLeft)}
+          {formatTime(isIdle || isCompleted ? durationMin * 60 : timeLeft)}
         </p>
 
         <div className={styles.btnContainer}>
