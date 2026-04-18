@@ -13,10 +13,8 @@ export const TIMER_STATUS = {
   COMPLETED: "completed", // 종료
 };
 
-const DURATION_MIN = 25; // 타이머 시간 초기값
-
-function useTimer(studyId) {
-  const initialSeconds = DURATION_MIN * 60;
+function useTimer(studyId, durationMin) {
+  const initialSeconds = durationMin * 60;
 
   const [timerStatus, setTimerStatus] = useState(TIMER_STATUS.IDLE);
   const [timeLeft, setTimeLeft] = useState(initialSeconds);
@@ -129,7 +127,7 @@ function useTimer(studyId) {
   const start = async () => {
     try {
       const res = await createFocusSession(studyId, {
-        durationMin: DURATION_MIN,
+        durationMin: durationMin,
       });
 
       const { data } = res.data;
@@ -180,7 +178,6 @@ function useTimer(studyId) {
   return {
     timerStatus,
     timeLeft,
-    initialSeconds,
     earnedPoint,
     start,
     pause,

@@ -13,6 +13,8 @@ function Focus() {
   const { studyId } = useParams();
   const [study, setStudy] = useState(null);
 
+  const [durationMin, setDurationMin] = useState(25);
+
   useEffect(() => {
     const fetchStudy = async () => {
       try {
@@ -28,16 +30,8 @@ function Focus() {
     fetchStudy();
   }, [studyId]);
 
-  const {
-    timerStatus,
-    timeLeft,
-    initialSeconds,
-    earnedPoint,
-    start,
-    pause,
-    resume,
-    toast,
-  } = useTimer(studyId);
+  const { timerStatus, timeLeft, earnedPoint, start, pause, resume, toast } =
+    useTimer(studyId, durationMin);
 
   const isRunning = timerStatus === TIMER_STATUS.RUNNING;
   const isPaused = timerStatus === TIMER_STATUS.PAUSED;
@@ -77,7 +71,7 @@ function Focus() {
             <div className={styles.timerPresetTime}>
               <span className={`ic timer ${styles.timerPresetIcon}`}></span>
               <span className={styles.timerPresetValue}>
-                {formatTime(initialSeconds)}
+                {formatTime(durationMin)}
               </span>
             </div>
           )}
@@ -86,7 +80,7 @@ function Focus() {
         <p
           className={`${styles.timerDisplay} ${isRunning || isPaused ? styles.timerActive : ""}`}
         >
-          {formatTime(isCompleted ? initialSeconds : timeLeft)}
+          {formatTime(isCompleted ? durationMin : timeLeft)}
         </p>
 
         <div className={styles.btnContainer}>
