@@ -1,4 +1,6 @@
+import { useState, useEffect, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { getStudyDetail } from "../../api/studies";
 import BoxHeaderInfo from "../../components/BoxHeader/BoxHeaderInfo";
 import NavButton from "../../components/NavButton/NavButton";
 import Toast from "../../components/Toast/Toast";
@@ -6,25 +8,77 @@ import useTimer, { TIMER_STATUS } from "../../hooks/useTimer";
 import formatTime from "./formatTime";
 import styles from "./Focus.module.css";
 
+// 타이머 프리셋 버튼: 버튼 클릭 시 바로 적용되는 시간(분)
+const PRESETS = [15, 25, 50];
+
 function Focus() {
   const navigate = useNavigate();
   const { studyId } = useParams();
 
+  const [study, setStudy] = useState(null);
+  const [durationSec, setDurationSec] = useState(25 * 60);
+  const [isEditing, setIsEditing] = useState(false);
+  const [inputMin, setInputMin] = useState("25");
+  const [inputSec, setInputSec] = useState("00");
+
+  const minInputRef = useRef(null); // 직접입력 버튼 클릭 시 분 input에 자동으로 포커스줄 용도
+
+  // 스터디 정보 조회 (추후 전역 상태로 수정 예정)
+  useEffect(() => {
+    const fetchStudy = async () => {
+      const res = await getStudyDetail(studyId);
+      const { data } = res.data;
+      setStudy(data);
+    };
+
+    fetchStudy();
+  }, [studyId]);
+
   const {
     timerStatus,
     timeLeft,
-    initialSeconds,
     earnedPoint,
     start,
     pause,
     resume,
     toast,
-  } = useTimer();
+    sessionDuration,
+  } = useTimer(studyId, durationSec);
 
+  // 페이지 재진입 시 타이머 설정 시간 표시
+  useEffect(() => {
+    if (sessionDuration) setDurationSec(sessionDuration);
+  }, [sessionDuration]);
+
+  // 타이머 상태: 진행/중지/완료/시작 전
   const isRunning = timerStatus === TIMER_STATUS.RUNNING;
   const isPaused = timerStatus === TIMER_STATUS.PAUSED;
   const isCompleted = timerStatus === TIMER_STATUS.COMPLETED;
   const isIdle = timerStatus === TIMER_STATUS.IDLE;
+
+  // 프리셋 버튼 클릭
+  const handleSelectPreset = (min) => {
+    setDurationSec(min * 60);
+    setIsEditing(false);
+  };
+
+  // 직접 입력 버튼 클릭
+  const handleSelectCustom = () => {
+    setInputMin(String(Math.floor(durationSec / 60)));
+    setInputSec(String(durationSec % 60).padStart(2, "0"));
+    setIsEditing(true);
+    setTimeout(() => minInputRef.current?.focus(), 0);
+  };
+
+  // input 값대로 타이머 시간 설정
+  const handleInputChange = (min, sec) => {
+    const m = Math.min(99, Math.max(0, parseInt(min) || 1));
+    const s = Math.min(59, Math.max(0, parseInt(sec) || 0));
+
+    setInputMin(String(m));
+    setInputSec(String(s).padStart(2, "0"));
+    setDurationSec(Math.max(1, m * 60 + s));
+  };
 
   return (
     <section className={styles.container}>
@@ -32,9 +86,12 @@ function Focus() {
         <Toast type={toast.type} text={toast.text} point={toast.point} />
       )}
 
+      {/* 스터디 정보 표시 */}
       <div className={styles.header}>
         <div className={styles.headerTop}>
-          <h2 className={styles.title}>연우의 개발공장</h2>
+          <h2 className={styles.title}>
+            {study?.nickname}의 {study?.title}
+          </h2>
           <div className={styles.nav}>
             <NavButton
               label="오늘의 습관"
@@ -49,38 +106,99 @@ function Focus() {
         </div>
       </div>
 
+      {/* 타이머 */}
       <div className={styles.timerSection}>
         <div className={styles.timerSectionheader}>
           <h3 className={styles.timerTitle}>오늘의 집중</h3>
 
-          {(isRunning || isPaused) && (
-            <div className={styles.timerPresetTime}>
-              <span className={`ic timer ${styles.timerPresetIcon}`}></span>
-              <span className={styles.timerPresetValue}>
-                {formatTime(initialSeconds)}
+          {/* 타이머 시작 전/완료: 집중 시간 설정 UI 표시 */}
+          {isIdle || isCompleted ? (
+            <div className={styles.timerPresets}>
+              {/* 프리셋 버튼: 버튼 클릭 시 15분/25분/50분 시간 설정 */}
+              {PRESETS.map((min) => (
+                <button
+                  key={min}
+                  type="button"
+                  className={`
+                    ${styles.presetBtn} 
+                    ${!isEditing && durationSec === min * 60 ? styles.active : ""}
+                  `}
+                  onClick={() => handleSelectPreset(min)}
+                >
+                  {min}분
+                </button>
+              ))}
+              {/* 직접 입력 버튼: 버튼 클릭 시 분/초 직접 설정 */}
+              <button
+                type="button"
+                className={`${styles.presetBtn} ${isEditing ? styles.active : ""}`}
+                onClick={handleSelectCustom}
+              >
+                직접 입력
+              </button>
+            </div>
+          ) : (
+            <div className={styles.timerSetTime}>
+              {/* 타이머 진행 중/일시중지: 타이머 설정 시간 표시 */}
+              <span className={`ic timer ${styles.timerSetIcon}`}></span>
+              <span className={styles.timerSetValue}>
+                {formatTime(durationSec)}
               </span>
             </div>
           )}
         </div>
 
-        <p
+        <div
           className={`${styles.timerDisplay} ${isRunning || isPaused ? styles.timerActive : ""}`}
         >
-          {formatTime(isCompleted ? initialSeconds : timeLeft)}
-        </p>
+          {/* 직접 입력 버튼을 클릭한 경우 타이머 시간(분/초) 입력 Input */}
+          {/* 그 외의 경우에는 사용자가 설정한 타이머 시간 */}
+          {isEditing ? (
+            <div className={styles.timerEdit}>
+              <input
+                ref={minInputRef}
+                className={styles.timeInput}
+                type="number"
+                min="1"
+                max="99"
+                value={inputMin}
+                onChange={(e) => setInputMin(e.target.value)}
+                onBlur={() => handleInputChange(inputMin, inputSec)}
+              />
+              <span className={styles.timeSep}>:</span>
+              <input
+                className={styles.timeInput}
+                type="number"
+                min="0"
+                max="59"
+                value={inputSec}
+                onChange={(e) => setInputSec(e.target.value)}
+                onBlur={() => handleInputChange(inputMin, inputSec)}
+              />
+            </div>
+          ) : (
+            formatTime(isIdle || isCompleted ? durationSec : timeLeft)
+          )}
+        </div>
 
+        {/* 타이머 조작 버튼 (시작/일시정지/재시작) */}
         <div className={styles.btnContainer}>
+          {/* 타이머 시작 전/완료: 시작 버튼만 표시 */}
           {isIdle || isCompleted ? (
             <button
               type="button"
               className={`${styles.btnBase} ${styles.timerStartButton}`}
-              onClick={start}
+              onClick={() => {
+                if (isEditing) setIsEditing(false);
+                start();
+              }}
             >
               <span className="ic play"></span>
               Start!
             </button>
           ) : (
             <>
+              {/* 타이머 진행 중/일시중지: 시작, 일시정지, 재시작 버튼 모두 표시 */}
               <button
                 type="button"
                 className={`${styles.btnBase} ${styles.btnCircle} ${styles.timerPauseButton}`}

@@ -10,7 +10,7 @@ import desk1 from "../../assets/images/desk1.jpg";
 import desk2 from "../../assets/images/desk2.jpg";
 import tile from "../../assets/images/tile.jpg";
 import leaf from "../../assets/images/leaf.jpg";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 //type
 //- modify : 수정을 위한 ui,
@@ -18,11 +18,22 @@ import { useNavigate } from "react-router-dom";
 //  기존 스터디 객체를 상태변수의 기본 값으로 설정. create면 빈 객체니까 자동으로 빈 값으로 들어갈 것.
 //- create : 생성을 위한 ui
 function StudyForm({ type = "create", study = {} }) {
+  //일단 지금은 navigate로만 접근하기 때문에, 실질적으로 props는 필요가 없음. 그러나 혹시 모르니 남겨둔다..
+  //만약 다른 곳에서 얘를 컴포넌트로 사용하게 된다면..그러면 필요한..
+  useEffect(() => {
+    console.log("type=>", type);
+    console.log("study=>", study);
+  }, []);
+
+  const location = useLocation();
+  type = location.state.type;
+  study = location.state.study;
+
   const navigate = useNavigate();
   //input 상태 변수들
-  const [nickname, setNickname] = useState(study.nickname || "");
-  const [title, setTitle] = useState(study.title || "");
-  const [description, setDescription] = useState(study.description || "");
+  const [nickname, setNickname] = useState(study?.nickname || "");
+  const [title, setTitle] = useState(study?.title || "");
+  const [description, setDescription] = useState(study?.description || "");
   const [password, setPassword] = useState(""); //비밀번호는 빈 값으로 둠! (보통 그렇지 않나;;)
   const [checkPassword, setCheckPassword] = useState("");
 
@@ -113,7 +124,7 @@ function StudyForm({ type = "create", study = {} }) {
     }
   }, [password, checkPassword]);
 
-  //만들기 버튼 클릭 시
+  //만들기/수정하기 버튼 클릭 시
   const onHandleSubmit = async () => {
     //설명 제외 모든 곳에 입력이 되었는지 검사 -> 입력 안된 부분 있으면 토스트 메세지로 띄우기
     if (
