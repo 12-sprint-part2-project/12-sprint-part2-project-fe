@@ -56,9 +56,12 @@ function Focus() {
 
   // input 값대로 타이머 시간 설정
   const handleInputChange = (min, sec) => {
-    const m = Math.min(99, Math.max(0, parseInt(min) || 0));
+    const m = Math.min(99, Math.max(0, parseInt(min) || 1));
     const s = Math.min(59, Math.max(0, parseInt(sec) || 0));
-    setDurationSec(m * 60 + s);
+
+    setInputMin(String(m));
+    setInputSec(String(s).padStart(2, "0"));
+    setDurationSec(Math.max(1, m * 60 + s));
   };
 
   return (
@@ -135,10 +138,8 @@ function Focus() {
                 min="1"
                 max="99"
                 value={inputMin}
-                onChange={(e) => {
-                  setInputMin(e.target.value);
-                  handleInputChange(e.target.value, inputSec);
-                }}
+                onChange={(e) => setInputMin(e.target.value)}
+                onBlur={() => handleInputChange(inputMin, inputSec)}
               />
               <span className={styles.timeSep}>:</span>
               <input
@@ -147,10 +148,8 @@ function Focus() {
                 min="0"
                 max="59"
                 value={inputSec}
-                onChange={(e) => {
-                  setInputSec(e.target.value);
-                  handleInputChange(inputMin, e.target.value);
-                }}
+                onChange={(e) => setInputSec(e.target.value)}
+                onBlur={() => handleInputChange(inputMin, inputSec)}
               />
             </div>
           ) : (
