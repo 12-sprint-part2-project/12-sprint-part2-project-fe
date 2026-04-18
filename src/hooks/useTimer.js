@@ -17,6 +17,7 @@ function useTimer(studyId, durationSec) {
   const [timerStatus, setTimerStatus] = useState(TIMER_STATUS.IDLE);
   const [timeLeft, setTimeLeft] = useState(durationSec);
   const [earnedPoint, setEarnedPoint] = useState(0);
+  const [sessionDuration, setSessionDuration] = useState(null); // 페이지 재진입 시 타이머 설정 시간 표시
 
   const endTimeRef = useRef(null); // Date.now와 종료 시각을 기준으로 남은 시간 계산
   const intervalIdRef = useRef(null); // 현재 실행 중인 Interval의 ID
@@ -69,6 +70,7 @@ function useTimer(studyId, durationSec) {
           endTimeRef.current = new Date(data.endTime);
           setTimeLeft(remaining);
           setTimerStatus(TIMER_STATUS.RUNNING);
+          setSessionDuration(data.durationMin * 60);
         } else if (data.status === TIMER_STATUS.PAUSED) {
           // paused: endTime - pausedAt 으로 남은 시간 계산
           const remaining = Math.ceil(
@@ -84,6 +86,7 @@ function useTimer(studyId, durationSec) {
           endTimeRef.current = new Date(Date.now() + remaining * 1000);
           setTimeLeft(remaining > 0 ? remaining : 0);
           setTimerStatus(TIMER_STATUS.RUNNING);
+          setSessionDuration(data.durationMin * 60);
         }
       } catch (e) {
         showToast("warning", e.userMessage);
@@ -179,6 +182,7 @@ function useTimer(studyId, durationSec) {
     pause,
     resume,
     toast,
+    sessionDuration,
   };
 }
 
