@@ -1,33 +1,41 @@
 import React, { useEffect, useState } from "react";
-import styles from "./StudyDetail.module.css";
 import { useNavigate, useParams } from "react-router-dom";
+import { deleteStudy, getStudyDetail } from "../../api/studies";
+import useToast from "../../hooks/useToast";
 import Tag from "../../components/Tag/Tag";
 import BoxHeaderInfo from "../../components/BoxHeader/BoxHeaderInfo";
 import NavButton from "../../components/NavButton/NavButton";
-import { deleteStudy, getStudyDetail } from "../../api/studies";
 import PasswordModal from "./components/PasswordModal/PasswordModal";
 import Popup from "../../components/Popup/Popup";
 import SharingModal from "./components/SharingModal/SharingModal";
 import Toast from "../../components/Toast/Toast";
-import useToast from "../../hooks/useToast";
+import styles from "./StudyDetail.module.css";
 
 const StudyDetail = () => {
-  const { id } = useParams();
+  const { studyId } = useParams();
   const [study, setStudy] = useState(null); //가져온 스터디 객체를 저장할 변수
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchStudy = async () => {
       try {
-        const res = await getStudyDetail(id);
-        setStudy(res.data.data);
-        console.log(res.data.data);
+        const res = await getStudyDetail(studyId);
+        // console.log(res);
+        const { data } = res.data;
+
+        setStudy(data);
       } catch (error) {
         console.error(`데이터 조회 실패: ${error}`);
       }
     };
+
     fetchStudy();
-  }, [id]);
+  }, [studyId]);
+  // console.log(study);
+
+  // 획득 포인트 합계
+  const totalPoint =
+    study?.focusSessions?.reduce((acc, cur) => acc + cur.earnedPoint, 0) ?? 0;
 
   /* 공유/삭제/수정 버튼 관련 상태 변수 */
   const [showPwModal, setShowPwModal] = useState(false); //비밀번호 모달
@@ -108,8 +116,8 @@ const StudyDetail = () => {
         study && ( //비밀번호 모달 띄우기
           <PasswordModal
             setShowModal={setShowPwModal}
-            studyId={id}
-            title={study.title}
+            studyId={study?.id}
+            title={study?.title}
             confirmText={confirmText}
             onPasswordSuccess={onPasswordSuccess}
           />
@@ -126,7 +134,7 @@ const StudyDetail = () => {
       {showSharingModal && study && (
         <SharingModal
           setShowModal={setShowSharingModal}
-          title={study.title}
+          title={study?.title}
           url={window.location.href}
           onClickConfirm={onHandleSharing}
         />
@@ -178,7 +186,9 @@ const StudyDetail = () => {
           </div>
         </div>
         <div className={styles.headerTitle}>
-          <h2 className={styles.headline}>연우의 개발공장</h2>
+          <h2 className={styles.headline}>
+            {study?.nickname}의 {study?.title}
+          </h2>
 
           <div className={styles.btnGroup}>
             <NavButton
@@ -193,11 +203,8 @@ const StudyDetail = () => {
         </div>
 
         <div className={styles.headerInfo}>
-          <BoxHeaderInfo
-            title="소개"
-            info="Slow And Steady Wins The Race! 다들 오늘 하루도 화이팅 :)"
-          />
-          <BoxHeaderInfo type="point" info={310} />
+          <BoxHeaderInfo title="소개" info={study?.description} />
+          <BoxHeaderInfo type="point" info={totalPoint} />
         </div>
       </div>
 
