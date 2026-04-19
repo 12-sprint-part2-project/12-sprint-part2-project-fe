@@ -87,7 +87,7 @@
 /* 빈 상태 */
 .emptyState {
   text-align: center;
-  color: var(--gray-200);
+  color: var(--gray-500);
   display: flex;
   flex-direction: column;
   gap: 8px;
