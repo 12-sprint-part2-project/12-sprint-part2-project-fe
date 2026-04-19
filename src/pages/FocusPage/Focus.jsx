@@ -4,6 +4,8 @@ import { getStudyDetail } from "../../api/studies";
 import BoxHeaderInfo from "../../components/BoxHeader/BoxHeaderInfo";
 import NavButton from "../../components/NavButton/NavButton";
 import Toast from "../../components/Toast/Toast";
+import ResumeConfirmPopup from "./components/ResumeConfirmPopup";
+import StopConfirmPopup from "./components/StopConfirmPopup";
 import useTimer, { TIMER_STATUS } from "../../hooks/useTimer";
 import formatTime from "./formatTime";
 import styles from "./Focus.module.css";
@@ -20,6 +22,8 @@ function Focus() {
   const [isEditing, setIsEditing] = useState(false);
   const [inputMin, setInputMin] = useState("25");
   const [inputSec, setInputSec] = useState("00");
+  const [showResumePopup, setShowResumePopup] = useState(false);
+  const [showStopConfirmPopup, setShowStopConfirmPopup] = useState(false);
 
   const minInputRef = useRef(null); // 직접입력 버튼 클릭 시 분 input에 자동으로 포커스줄 용도
 
@@ -41,14 +45,20 @@ function Focus() {
     start,
     pause,
     resume,
+    complete,
     toast,
     sessionDuration,
+    shouldShowResumePopup,
   } = useTimer(studyId, durationSec);
 
   // 페이지 재진입 시 타이머 설정 시간 표시
   useEffect(() => {
     if (sessionDuration) setDurationSec(sessionDuration);
   }, [sessionDuration]);
+
+  useEffect(() => {
+    if (shouldShowResumePopup) setShowResumePopup(true);
+  }, [shouldShowResumePopup]);
 
   // 타이머 상태: 진행/중지/완료/시작 전
   const isRunning = timerStatus === TIMER_STATUS.RUNNING;
@@ -80,10 +90,42 @@ function Focus() {
     setDurationSec(Math.max(1, m * 60 + s));
   };
 
+  const handleResumeConfirm = () => {
+    resume();
+    setShowResumePopup(false);
+  };
+
+  const handleStopClick = () => {
+    //complete({ failed: true });
+    setShowResumePopup(false);
+    setShowStopConfirmPopup(true);
+  };
+
+  const handleStopConfirm = () => {
+    complete({ failed: true });
+    setShowStopConfirmPopup(false);
+  };
+
   return (
     <section className={styles.container}>
       {toast && (
         <Toast type={toast.type} text={toast.text} point={toast.point} />
+      )}
+
+      {showResumePopup && (
+        <ResumeConfirmPopup
+          setShow={setShowResumePopup}
+          onResume={handleResumeConfirm}
+          onStop={handleStopClick}
+        />
+      )}
+
+      {showStopConfirmPopup && (
+        <StopConfirmPopup
+          setShow={setShowStopConfirmPopup}
+          onResume={handleResumeConfirm}
+          onStop={handleStopConfirm}
+        />
       )}
 
       {/* 스터디 정보 표시 */}
