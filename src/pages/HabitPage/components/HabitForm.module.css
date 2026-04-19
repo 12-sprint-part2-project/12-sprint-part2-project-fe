@@ -1,0 +1,21 @@
+.input {
+  width: 100%;
+  min-width: 18rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--gray-300);
+  border-radius: 1.3rem;
+  font: var(--text-16-regular);
+  color: var(--black);
+  background-color: var(--white);
+  text-align: center;
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.input:focus {
+  border-color: var(--brand);
+}
+
+.input::placeholder {
+  color: var(--black);
+}
