@@ -73,11 +73,9 @@ const Home = () => {
   }, [page, keyword, sortBy, order]);
 
   useEffect(() => {
-    const studies = localStorage.getItem(RECENT_STUDIES) || [];
+    const storaged = JSON.parse(localStorage.getItem(RECENT_STUDIES) || "[]");
 
-    console.log(studies);
-
-    setRecentStudies(studies);
+    setRecentStudies(storaged);
   }, []);
 
   const currentSort = SORTINGS.find(
@@ -116,7 +114,7 @@ const Home = () => {
                     title={study.title}
                     description={study.description}
                     days={diffDays}
-                    points={study.points}
+                    points={study.points ?? 0}
                     theme={study.theme}
                     emojis={study.emojis}
                   />
