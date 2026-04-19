@@ -66,6 +66,22 @@ function Habit() {
     setIsAdding(false);
   };
 
+  // + 버튼 클릭: 입력 중인 게 있으면 저장 후 새 입력 열기
+  const handleAddClick = async () => {
+    if (isAdding) {
+      if (habitInput.trim()) {
+        try {
+          await addHabit(habitInput);
+        } finally {
+          setHabitInput("");
+        }
+      }
+      // isAdding은 true 유지 → 입력 칸 그대로 열린 상태
+    } else {
+      setIsAdding(true);
+    }
+  };
+
   const modalInner = (
     <div className={styles.modalInner}>
       {habits.map((habit) => (
@@ -107,7 +123,7 @@ function Habit() {
         </div>
       )}
 
-      <button className={styles.addBtn} onClick={() => setIsAdding(true)}>
+      <button className={styles.addBtn} onClick={handleAddClick}>
         +
       </button>
     </div>
