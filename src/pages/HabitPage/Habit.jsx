@@ -46,17 +46,19 @@ function Habit() {
 
   // 수정 완료: 편집 중인 습관 저장 + 추가 중인 습관 저장
   const handleConfirm = async () => {
-    if (editingHabitId !== null && editingValue.trim()) {
-      await editHabit(editingHabitId, editingValue.trim());
+    try {
+      if (editingHabitId !== null && editingValue.trim()) {
+        await editHabit(editingHabitId, editingValue.trim());
+      }
+      if (isAdding && habitInput.trim()) {
+        await addHabit(habitInput);
+      }
+    } finally {
+      setEditingHabitId(null);
+      setEditingValue("");
+      setHabitInput("");
+      setIsAdding(false);
     }
-    setEditingHabitId(null);
-    setEditingValue("");
-
-    if (isAdding && habitInput.trim()) {
-      await addHabit(habitInput);
-    }
-    setHabitInput("");
-    setIsAdding(false);
   };
 
   const handleAddCancel = () => {
