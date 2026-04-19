@@ -17,7 +17,9 @@ function useTimer(studyId, durationSec) {
   const [timerStatus, setTimerStatus] = useState(TIMER_STATUS.IDLE);
   const [timeLeft, setTimeLeft] = useState(durationSec);
   const [earnedPoint, setEarnedPoint] = useState(0);
-  const [sessionDuration, setSessionDuration] = useState(null); // 페이지 재진입 시 타이머 설정 시간 표시
+  // 페이지 재진입 시 타이머 설정 시간 표시용
+  const [sessionDuration, setSessionDuration] = useState(null);
+  // 페이지 재진입 시 타이머가 paused 상태인지 여부 (재개 팝업 표시용)
   const [shouldShowResumePopup, setShouldShowResumePopup] = useState(false);
 
   const endTimeRef = useRef(null); // Date.now와 종료 시각을 기준으로 남은 시간 계산
@@ -27,7 +29,7 @@ function useTimer(studyId, durationSec) {
 
   const { toast, showToast } = useToast();
 
-  // 타이머 완료 처리
+  // 타이머 완료 처리: failed=true일 경우 포인트 미지급
   const handleComplete = useCallback(
     async ({ failed = false } = {}) => {
       if (isCompletingRef.current) return;
@@ -99,7 +101,7 @@ function useTimer(studyId, durationSec) {
           setTimerStatus(TIMER_STATUS.PAUSED);
           setSessionDuration(data.durationMin * 60);
 
-          // 페이지 재진입에서만 popup
+          // 타이머가 paused 상태안 경우에만 타이머 재개 여부 팝업 표시
           setShouldShowResumePopup(true);
         }
       } catch (e) {

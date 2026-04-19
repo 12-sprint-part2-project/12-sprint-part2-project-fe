@@ -22,10 +22,13 @@ function Focus() {
   const [isEditing, setIsEditing] = useState(false);
   const [inputMin, setInputMin] = useState("25");
   const [inputSec, setInputSec] = useState("00");
+  // 재개 여부 선택 팝업 상태
   const [showResumePopup, setShowResumePopup] = useState(false);
+  // 종료 재확인 팝업 상태
   const [showStopConfirmPopup, setShowStopConfirmPopup] = useState(false);
 
-  const minInputRef = useRef(null); // 직접입력 버튼 클릭 시 분 input에 자동으로 포커스줄 용도
+  // 직접입력 버튼 클릭 시 분 input 포커스용 ref
+  const minInputRef = useRef(null);
 
   // 스터디 정보 조회 (추후 전역 상태로 수정 예정)
   useEffect(() => {
@@ -90,17 +93,19 @@ function Focus() {
     setDurationSec(Math.max(1, m * 60 + s));
   };
 
+  // 재진입 팝업에서 "계속 진행" 선택 시 일시정지된 타이머를 재시작하고 팝업 닫기
   const handleResumeConfirm = () => {
     resume();
     setShowResumePopup(false);
   };
 
+  // 재진입 팝업에서 "종료" 선택 시 바로 종료하지 않고 종료 재확인 팝업 노출
   const handleStopClick = () => {
-    //complete({ failed: true });
     setShowResumePopup(false);
     setShowStopConfirmPopup(true);
   };
 
+  // 종료 재확인 팝업에서 "종료" 선택 시 포인트 지급 없이 타이머 종료 처리
   const handleStopConfirm = () => {
     complete({ failed: true });
     setShowStopConfirmPopup(false);
@@ -112,6 +117,7 @@ function Focus() {
         <Toast type={toast.type} text={toast.text} point={toast.point} />
       )}
 
+      {/* 페이지 재진입 시 타이머가 paused 상태일 경우 표시되는 재개 여부 선택 팝업 */}
       {showResumePopup && (
         <ResumeConfirmPopup
           setShow={setShowResumePopup}
@@ -120,6 +126,7 @@ function Focus() {
         />
       )}
 
+      {/* 재진입 팝업에서 종료 선택 시 표시되는 최종 종료 확인 팝업 */}
       {showStopConfirmPopup && (
         <StopConfirmPopup
           setShow={setShowStopConfirmPopup}
