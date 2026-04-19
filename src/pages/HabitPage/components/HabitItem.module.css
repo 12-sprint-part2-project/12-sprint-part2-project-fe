@@ -66,6 +66,30 @@
   color: var(--white);
 }
 
+/* 인라인 편집 입력 */
+.editInputWrap {
+  width: 400px;
+  height: 54px;
+  margin-left: 100px;
+  border-radius: 1.25rem;
+  background-color: var(--gray-200);
+  display: flex;
+  align-items: center;
+}
+
+.editInput {
+  width: 100%;
+  height: 100%;
+  padding: 0 1rem;
+  border: none;
+  border-radius: 1.25rem;
+  background: transparent;
+  font: var(--text-16-bold);
+  text-align: center;
+  outline: none;
+  color: var(--gray-500);
+}
+
 .deleteBtn {
   width: 42px;
   height: 42px;

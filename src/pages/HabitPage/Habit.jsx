@@ -16,7 +16,9 @@ function Habit() {
   const [showModal, setShowModal] = useState(false);
   const [isAdding, setIsAdding] = useState(false);
   const [habitInput, setHabitInput] = useState("");
-  const { habits, isLoading, toggleHabit, addHabit, removeHabit } =
+  const [editingHabitId, setEditingHabitId] = useState(null);
+  const [editingValue, setEditingValue] = useState("");
+  const { habits, isLoading, toggleHabit, addHabit, editHabit, removeHabit } =
     useHabits(studyId);
 
   useEffect(() => {
@@ -31,8 +33,26 @@ function Habit() {
     fetchStudy();
   }, [studyId]);
 
-  const handleAddConfirm = async () => {
-    if (habitInput.trim()) {
+  // 인라인 편집 시작 / 취소
+  const handleEditStart = (habit) => {
+    if (habit === null) {
+      setEditingHabitId(null);
+      setEditingValue("");
+      return;
+    }
+    setEditingHabitId(habit.id);
+    setEditingValue(habit.habitName);
+  };
+
+  // 수정 완료: 편집 중인 습관 저장 + 추가 중인 습관 저장
+  const handleConfirm = async () => {
+    if (editingHabitId !== null && editingValue.trim()) {
+      await editHabit(editingHabitId, editingValue.trim());
+    }
+    setEditingHabitId(null);
+    setEditingValue("");
+
+    if (isAdding && habitInput.trim()) {
       await addHabit(habitInput);
     }
     setHabitInput("");
@@ -51,8 +71,11 @@ function Habit() {
           key={habit.id}
           habit={habit}
           isEditMode={true}
+          isEditing={editingHabitId === habit.id}
+          editValue={editingValue}
+          onEditStart={handleEditStart}
+          onEditChange={setEditingValue}
           onDelete={removeHabit}
-          onEdit={() => {}}
         />
       ))}
       {isAdding && (
@@ -67,7 +90,7 @@ function Habit() {
               value={habitInput}
               onChange={(e) => setHabitInput(e.target.value)}
               onKeyDown={(e) => {
-                if (e.key === "Enter") handleAddConfirm();
+                if (e.key === "Enter") handleConfirm();
                 if (e.key === "Escape") handleAddCancel();
               }}
               autoFocus
@@ -152,8 +175,10 @@ function Habit() {
           title="습관 목록"
           confirmText="수정 완료"
           cancelText="취소"
-          onClickConfirm={handleAddConfirm}
+          onClickConfirm={handleConfirm}
           onClickCancel={() => {
+            setEditingHabitId(null);
+            setEditingValue("");
             setIsAdding(false);
             setHabitInput("");
           }}
