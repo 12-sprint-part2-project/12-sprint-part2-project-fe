@@ -18,6 +18,7 @@ function useTimer(studyId, durationSec) {
   const [timeLeft, setTimeLeft] = useState(durationSec);
   const [earnedPoint, setEarnedPoint] = useState(0);
   const [sessionDuration, setSessionDuration] = useState(null); // 페이지 재진입 시 타이머 설정 시간 표시
+  const [shouldShowResumePopup, setShouldShowResumePopup] = useState(false);
 
   const endTimeRef = useRef(null); // Date.now와 종료 시각을 기준으로 남은 시간 계산
   const intervalIdRef = useRef(null); // 현재 실행 중인 Interval의 ID
@@ -27,26 +28,35 @@ function useTimer(studyId, durationSec) {
   const { toast, showToast } = useToast();
 
   // 타이머 완료 처리
-  const handleComplete = useCallback(async () => {
-    if (isCompletingRef.current) return;
-    isCompletingRef.current = true;
+  const handleComplete = useCallback(
+    async ({ failed = false } = {}) => {
+      if (isCompletingRef.current) return;
+      isCompletingRef.current = true;
 
-    try {
-      const res = await updateFocusSession(studyId, sessionIdRef.current, {
-        action: TIMER_STATUS.COMPLETED,
-      });
+      try {
+        const res = await updateFocusSession(studyId, sessionIdRef.current, {
+          action: TIMER_STATUS.COMPLETED,
+          ...(failed && { status: "failed" }),
+        });
 
-      const { data } = res.data;
+        const { data } = res.data;
 
-      const pointResult = data.earnedPoint ?? 0;
-      setEarnedPoint(pointResult);
-      setTimerStatus(data.status);
-      showToast("success", "포인트를 획득했습니다!", pointResult);
-    } catch (e) {
-      isCompletingRef.current = false;
-      showToast("warning", e.userMessage);
-    }
-  }, [showToast, studyId]);
+        if (!failed) {
+          const pointResult = data.earnedPoint ?? 0;
+          setEarnedPoint(pointResult);
+          showToast("success", "포인트를 획득했습니다!", pointResult);
+        } else {
+          showToast("warning", "집중이 종료되어 포인트가 지급되지 않습니다.");
+        }
+
+        setTimerStatus(data.status);
+      } catch (e) {
+        isCompletingRef.current = false;
+        showToast("warning", e.userMessage);
+      }
+    },
+    [showToast, studyId],
+  );
 
   // 페이지 진입 시 세션 조회
   useEffect(() => {
@@ -84,14 +94,13 @@ function useTimer(studyId, durationSec) {
               1000,
           );
 
-          await updateFocusSession(studyId, sessionIdRef.current, {
-            action: TIMER_STATUS.RUNNING,
-          });
-
-          endTimeRef.current = new Date(Date.now() + remaining * 1000);
+          endTimeRef.current = null;
           setTimeLeft(remaining > 0 ? remaining : 0);
-          setTimerStatus(TIMER_STATUS.RUNNING);
+          setTimerStatus(TIMER_STATUS.PAUSED);
           setSessionDuration(data.durationMin * 60);
+
+          // 페이지 재진입에서만 popup
+          setShouldShowResumePopup(true);
         }
       } catch (e) {
         showToast("warning", e.userMessage);
@@ -179,6 +188,10 @@ function useTimer(studyId, durationSec) {
     }
   };
 
+  const complete = (options) => {
+    handleComplete(options);
+  };
+
   return {
     timerStatus,
     timeLeft,
@@ -186,8 +199,10 @@ function useTimer(studyId, durationSec) {
     start,
     pause,
     resume,
+    complete,
     toast,
     sessionDuration,
+    shouldShowResumePopup,
   };
 }
 
