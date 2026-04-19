@@ -93,7 +93,6 @@ function Habit() {
                 if (e.key === "Enter") handleConfirm();
                 if (e.key === "Escape") handleAddCancel();
               }}
-              autoFocus
             />
           </div>
           <button
