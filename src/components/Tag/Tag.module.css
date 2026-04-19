@@ -11,6 +11,7 @@
   border-radius: 3.125rem;
   width: max-content;
   flex-shrink: 0;
+  cursor: pointer;
 }
 
 .tag-point {
@@ -33,7 +34,7 @@
 }
 
 .tag-point-general {
-  padding: 0.5rem 0.75rem;
+  padding: 0.375rem 0.5rem;
   border: var(--tag-border);
   background: var(--white);
 }
@@ -94,6 +95,7 @@
 .text-general {
   font: var(--text-16-regular);
   color: var(--white);
+  line-height: 1;
 }
 
 .text-point-general {
