@@ -152,6 +152,10 @@
   text-align: center;
 }
 
+.recent {
+  margin-top: 1.875rem;
+}
+
 .recent .notification {
   padding-block: 6.25rem 8.75rem;
 }
