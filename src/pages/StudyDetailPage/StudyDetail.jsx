@@ -20,6 +20,11 @@ const StudyDetail = () => {
   const navigate = useNavigate();
 
   const saveRecentStudy = (data) => {
+    const recentStudyTotalPoints =
+      data.focusSessions?.reduce((acc, cur) => acc + cur.earnedPoint, 0) ?? 0;
+
+    data.points = recentStudyTotalPoints;
+
     const storaged = JSON.parse(localStorage.getItem(RECENT_STUDIES) || "[]");
     const filtered = storaged.filter((s) => s.id !== data.id); // 이미 로컬스토리지에 해당 스터디가 저장되어 있는 경우 담지 않음
     filtered.unshift(data);
