@@ -18,7 +18,7 @@ function useHabits(studyId) {
     setError(null);
     try {
       const res = await getTodayHabits(studyId);
-      setHabits(res.data);
+      setHabits(res.data.data);
     } catch (err) {
       setError(err.userMessage || "습관을 불러오지 못했습니다.");
     } finally {
@@ -43,7 +43,9 @@ function useHabits(studyId) {
   // 습관 체크/해제 — BE TODO: 낙관적 업데이트 후 실패 시 롤백
   const toggleHabit = async (habitId, completed) => {
     setHabits((prev) =>
-      prev.map((h) => (h.id === habitId ? { ...h, isCompleted: completed } : h))
+      prev.map((h) =>
+        h.id === habitId ? { ...h, isCompleted: completed } : h,
+      ),
     );
     try {
       await checkHabit(studyId, habitId, { completed });
@@ -51,8 +53,8 @@ function useHabits(studyId) {
       // 실패 시 원래대로 롤백
       setHabits((prev) =>
         prev.map((h) =>
-          h.id === habitId ? { ...h, isCompleted: !completed } : h
-        )
+          h.id === habitId ? { ...h, isCompleted: !completed } : h,
+        ),
       );
       throw err;
     }
@@ -62,7 +64,7 @@ function useHabits(studyId) {
   const editHabit = async (habitId, habitName) => {
     await updateHabitApi(studyId, habitId, { habitName });
     setHabits((prev) =>
-      prev.map((h) => (h.id === habitId ? { ...h, habitName } : h))
+      prev.map((h) => (h.id === habitId ? { ...h, habitName } : h)),
     );
   };
 
