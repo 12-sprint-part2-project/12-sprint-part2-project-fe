@@ -22,11 +22,15 @@ function useTimer(studyId, durationSec) {
   const endTimeRef = useRef(null); // Date.now와 종료 시각을 기준으로 남은 시간 계산
   const intervalIdRef = useRef(null); // 현재 실행 중인 Interval의 ID
   const sessionIdRef = useRef(null);
+  const isCompletingRef = useRef(false); // 타이머 완료 API 중복 호출 방어 플래그
 
   const { toast, showToast } = useToast();
 
   // 타이머 완료 처리
   const handleComplete = useCallback(async () => {
+    if (isCompletingRef.current) return;
+    isCompletingRef.current = true;
+
     try {
       const res = await updateFocusSession(studyId, sessionIdRef.current, {
         action: TIMER_STATUS.COMPLETED,
@@ -39,6 +43,7 @@ function useTimer(studyId, durationSec) {
       setTimerStatus(data.status);
       showToast("success", "포인트를 획득했습니다!", pointResult);
     } catch (e) {
+      isCompletingRef.current = false;
       showToast("warning", e.userMessage);
     }
   }, [showToast, studyId]);
