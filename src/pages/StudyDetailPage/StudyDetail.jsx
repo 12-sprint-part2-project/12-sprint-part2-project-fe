@@ -11,10 +11,25 @@ import SharingModal from "./components/SharingModal/SharingModal";
 import Toast from "../../components/Toast/Toast";
 import styles from "./StudyDetail.module.css";
 
+const RECENT_STUDIES = "recent_studies";
+
 const StudyDetail = () => {
+  const [loading, setLoading] = useState(true);
   const { studyId } = useParams();
   const [study, setStudy] = useState(null); //가져온 스터디 객체를 저장할 변수
   const navigate = useNavigate();
+
+  const saveRecentStudy = (data) => {
+    const storaged = JSON.parse(localStorage.getItem(RECENT_STUDIES) || "[]");
+    const filtered = storaged.filter((s) => s.id !== data.id); // 이미 로컬스토리지에 해당 스터디가 저장되어 있는 경우 담지 않음
+    filtered.unshift(data);
+    if (filtered.length > 3) {
+      // 3개를 넘어가면 제일 처음에 조회한 스터디 제거
+      filtered.pop();
+    }
+
+    localStorage.setItem(RECENT_STUDIES, JSON.stringify(filtered));
+  };
 
   useEffect(() => {
     const fetchStudy = async () => {
@@ -22,10 +37,13 @@ const StudyDetail = () => {
         const res = await getStudyDetail(studyId);
         // console.log(res);
         const { data } = res.data;
-
         setStudy(data);
+
+        saveRecentStudy(data); // localStorage 에 담기
       } catch (error) {
         console.error(`데이터 조회 실패: ${error}`);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -34,7 +52,7 @@ const StudyDetail = () => {
   // console.log(study);
 
   // 획득 포인트 합계
-  const totalPoint =
+  const totalPoints =
     study?.focusSessions?.reduce((acc, cur) => acc + cur.earnedPoint, 0) ?? 0;
 
   /* 공유/삭제/수정 버튼 관련 상태 변수 */
@@ -111,104 +129,110 @@ const StudyDetail = () => {
 
   return (
     <section className={styles.box}>
-      {toast && <Toast type={toast.type} text={toast.text} />}
-      {showPwModal &&
-        study && ( //비밀번호 모달 띄우기
-          <PasswordModal
-            setShowModal={setShowPwModal}
-            studyId={study?.id}
-            title={study?.title}
-            confirmText={confirmText}
-            onPasswordSuccess={onPasswordSuccess}
-          />
-        )}
-      {showDeletePopup && ( //정말 삭제하시겠습니까? 팝업
-        <Popup
-          setShowPopup={setShowDeletePopup}
-          hasCancel={true}
-          message="정말 삭제하시겠습니까?"
-          onClickConfirm={handleDelete}
-          onClickCancel={() => setShowDeletePopup(false)}
-        />
-      )}
-      {showSharingModal && study && (
-        <SharingModal
-          setShowModal={setShowSharingModal}
-          title={study?.title}
-          url={window.location.href}
-          onClickConfirm={onHandleSharing}
-        />
-      )}
-      <div className={styles.boxHeader}>
-        <div className={styles.headerTop}>
-          <div className={styles.management}>
-            <ul>
-              <li>
-                <button onClick={onClickSharing}>공유하기</button>
-              </li>
-              <li>
-                <button onClick={onClickModify}>수정하기</button>
-              </li>
-              <li>
-                <button onClick={onClickDelete}>스터디 삭제하기</button>
-              </li>
-            </ul>
-          </div>
+      {loading ? (
+        <p className={styles.notification}>스터디 조회중...</p>
+      ) : (
+        <>
+          {toast && <Toast type={toast.type} text={toast.text} />}
+          {showPwModal &&
+            study && ( //비밀번호 모달 띄우기
+              <PasswordModal
+                setShowModal={setShowPwModal}
+                studyId={study?.id}
+                title={study?.title}
+                confirmText={confirmText}
+                onPasswordSuccess={onPasswordSuccess}
+              />
+            )}
+          {showDeletePopup && ( //정말 삭제하시겠습니까? 팝업
+            <Popup
+              setShowPopup={setShowDeletePopup}
+              hasCancel={true}
+              message="정말 삭제하시겠습니까?"
+              onClickConfirm={handleDelete}
+              onClickCancel={() => setShowDeletePopup(false)}
+            />
+          )}
+          {showSharingModal && study && (
+            <SharingModal
+              setShowModal={setShowSharingModal}
+              title={study?.title}
+              url={window.location.href}
+              onClickConfirm={onHandleSharing}
+            />
+          )}
+          <div className={styles.boxHeader}>
+            <div className={styles.headerTop}>
+              <div className={styles.management}>
+                <ul>
+                  <li>
+                    <button onClick={onClickSharing}>공유하기</button>
+                  </li>
+                  <li>
+                    <button onClick={onClickModify}>수정하기</button>
+                  </li>
+                  <li>
+                    <button onClick={onClickDelete}>스터디 삭제하기</button>
+                  </li>
+                </ul>
+              </div>
 
-          <div className={styles.emoji}>
-            <div className={styles.emojiTop3}>
-              <Tag
-                variant="general"
-                type="emoji"
-                theme="dark"
-                emojiIcon="👩🏻‍💻"
-                count={37}
-              />
-              <Tag
-                variant="general"
-                type="emoji"
-                theme="dark"
-                emojiIcon="👍"
-                count={11}
-              />
-              <Tag
-                variant="general"
-                type="emoji"
-                theme="dark"
-                emojiIcon="🤩"
-                count={9}
-              />
+              <div className={styles.emoji}>
+                <div className={styles.emojiTop3}>
+                  <Tag
+                    variant="general"
+                    type="emoji"
+                    theme="dark"
+                    emojiIcon="👩🏻‍💻"
+                    count={37}
+                  />
+                  <Tag
+                    variant="general"
+                    type="emoji"
+                    theme="dark"
+                    emojiIcon="👍"
+                    count={11}
+                  />
+                  <Tag
+                    variant="general"
+                    type="emoji"
+                    theme="dark"
+                    emojiIcon="🤩"
+                    count={9}
+                  />
+                </div>
+
+                <button className={styles.addEmoji}>
+                  <i className="ic smile"></i> 추가
+                </button>
+              </div>
+            </div>
+            <div className={styles.headerTitle}>
+              <h2 className={styles.headline}>
+                {study?.nickname}의 {study?.title}
+              </h2>
+
+              <div className={styles.btnGroup}>
+                <NavButton
+                  label="오늘의 습관"
+                  onClick={() => navigate(`/studies/${studyId}/habits`)}
+                />
+                <NavButton
+                  label="오늘의 집중"
+                  onClick={() => navigate(`/studies/${studyId}/focus`)}
+                />
+              </div>
             </div>
 
-            <button className={styles.addEmoji}>
-              <i className="ic smile"></i> 추가
-            </button>
+            <div className={styles.headerInfo}>
+              <BoxHeaderInfo title="소개" info={study?.description} />
+              <BoxHeaderInfo type="point" info={totalPoints} />
+            </div>
           </div>
-        </div>
-        <div className={styles.headerTitle}>
-          <h2 className={styles.headline}>
-            {study?.nickname}의 {study?.title}
-          </h2>
 
-          <div className={styles.btnGroup}>
-            <NavButton
-              label="오늘의 습관"
-              onClick={() => navigate(`/studies/${studyId}/habits`)}
-            />
-            <NavButton
-              label="오늘의 집중"
-              onClick={() => navigate(`/studies/${studyId}/focus`)}
-            />
-          </div>
-        </div>
-
-        <div className={styles.headerInfo}>
-          <BoxHeaderInfo title="소개" info={study?.description} />
-          <BoxHeaderInfo type="point" info={totalPoint} />
-        </div>
-      </div>
-
-      <div className={styles.todayHabits}>습관 데이터 불러올 자리</div>
+          <div className={styles.todayHabits}>습관 데이터 불러올 자리</div>
+        </>
+      )}
     </section>
   );
 };

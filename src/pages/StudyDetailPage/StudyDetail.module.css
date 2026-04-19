@@ -1,9 +1,17 @@
 .box {
-  width: min(100%, 1200px);
-  padding: 40px;
+  width: min(100%, 75rem);
+  padding: 2.5rem;
   margin-inline: auto;
   background-color: var(--white);
-  border-radius: 20px;
+  border-radius: 1.25rem;
+}
+
+.notification {
+  grid-column: 1 / span 3;
+  padding-block: 1.25rem;
+  font: var(--text-20-medium);
+  color: var(--gray-500);
+  text-align: center;
 }
 
 .boxHeader .headerTop,
@@ -19,7 +27,7 @@
 }
 
 .boxHeader .headerTitle {
-  margin-top: 24px;
+  margin-top: 1.5rem;
 }
 
 .boxHeader .headline {
@@ -31,21 +39,21 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 8px;
+  gap: 0.5rem;
 }
 
 .emojiTop3 {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 0.25rem;
 }
 
 .emoji .addEmoji {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 5px;
-  padding: 6px 8px;
+  gap: 0.3125rem;
+  padding: 6px-0.375rem 0.5rem;
   background-color: var(--white);
   border: 1px solid var(--gray-300);
   border-radius: 5em;
@@ -61,8 +69,8 @@
 
 .management ul li:not(:first-child) {
   position: relative;
-  padding-left: 16px;
-  margin-left: 16px;
+  padding-left: 1rem;
+  margin-left: 1rem;
 }
 
 .management ul li:not(:first-child)::before {
@@ -71,8 +79,8 @@
   top: 50%;
   left: 0;
   width: 1px;
-  height: 16px;
-  margin-top: -8px;
+  height: 1rem;
+  margin-top: -0.5rem;
   background-color: var(--green-text);
 }
 
@@ -93,19 +101,19 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 16px;
+  gap: 1rem;
 }
 
 .btnOpenModal {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 4px;
-  min-width: 144px;
-  padding-block: 12px;
+  gap: 0.25rem;
+  min-width: 9rem;
+  padding-block: 0.75rem;
   background-color: var(--white);
   border: 1px solid var(--gray-300);
-  border-radius: 15px;
+  border-radius: 0.9375rem;
   font: var(--text-16-medium);
   color: var(--gray-500);
 }
@@ -116,16 +124,16 @@
 }
 
 .headerInfo {
-  margin-top: 16px;
+  margin-top: 1rem;
 }
 
 .todayHabits {
-  margin-top: 40px;
+  margin-top: 2.5rem;
 }
 
 @media all and (max-width: 744px) {
   .box {
-    padding: 24px;
+    padding: 1.5rem;
   }
 
   .boxHeader .headerTop,
@@ -134,7 +142,7 @@
   }
 
   .btnGroup {
-    margin-top: 16px;
+    margin-top: 1rem;
   }
 
   .management ul {
@@ -142,22 +150,22 @@
   }
 
   .management ul li:not(:first-child) {
-    padding-left: 8px;
-    margin-left: 8px;
+    padding-left: 0.5rem;
+    margin-left: 0.5rem;
   }
 
   .emoji {
-    margin-top: 16px;
+    margin-top: 1rem;
   }
 
   .todayHabits {
-    margin-top: 24px;
+    margin-top: 1.5rem;
   }
 }
 
 @media all and (max-width: 375px) {
   .box {
-    padding: 16px;
+    padding: 1rem;
   }
 
   .boxHeader .headline {
@@ -165,8 +173,8 @@
   }
 
   .management ul li:not(:first-child)::before {
-    height: 12px;
-    margin-top: -6px;
+    height: 0.75rem;
+    margin-top: -0.375rem;
   }
   .management button {
     font: var(--text-12-medium);
