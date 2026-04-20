@@ -16,7 +16,9 @@ function Habit() {
   const [showModal, setShowModal] = useState(false);
   const [isAdding, setIsAdding] = useState(false);
   const [habitInput, setHabitInput] = useState("");
-  const { habits, isLoading, toggleHabit, addHabit, removeHabit } =
+  const [editingHabitId, setEditingHabitId] = useState(null);
+  const [editingValue, setEditingValue] = useState("");
+  const { habits, isLoading, toggleHabit, addHabit, editHabit, removeHabit } =
     useHabits(studyId);
 
   useEffect(() => {
@@ -31,17 +33,62 @@ function Habit() {
     fetchStudy();
   }, [studyId]);
 
-  const handleAddConfirm = async () => {
-    if (habitInput.trim()) {
-      await addHabit(habitInput);
+  // 인라인 편집 시작 / 취소
+  const handleEditStart = (habit) => {
+    if (habit === null) {
+      setEditingHabitId(null);
+      setEditingValue("");
+      return;
     }
-    setHabitInput("");
-    setIsAdding(false);
+    setEditingHabitId(habit.id);
+    setEditingValue(habit.habitName);
+  };
+
+  // 수정 완료: 편집 중인 습관 저장 + 추가 중인 습관 저장
+  const handleConfirm = async () => {
+    try {
+      if (editingHabitId !== null && editingValue.trim()) {
+        await editHabit(editingHabitId, editingValue.trim());
+      }
+      if (isAdding && habitInput.trim()) {
+        await addHabit(habitInput);
+      }
+    } finally {
+      setEditingHabitId(null);
+      setEditingValue("");
+      setHabitInput("");
+      setIsAdding(false);
+    }
   };
 
   const handleAddCancel = () => {
     setHabitInput("");
     setIsAdding(false);
+  };
+
+  // 삭제: 편집 중인 아이템이 삭제되면 편집 상태도 초기화
+  const handleDelete = async (habitId) => {
+    await removeHabit(habitId);
+    if (editingHabitId === habitId) {
+      setEditingHabitId(null);
+      setEditingValue("");
+    }
+  };
+
+  // + 버튼 클릭: 입력 중인 게 있으면 저장 후 새 입력 열기
+  const handleAddClick = async () => {
+    if (isAdding) {
+      if (habitInput.trim()) {
+        try {
+          await addHabit(habitInput);
+        } finally {
+          setHabitInput("");
+        }
+      }
+      // isAdding은 true 유지 → 입력 칸 그대로 열린 상태
+    } else {
+      setIsAdding(true);
+    }
   };
 
   const modalInner = (
@@ -51,8 +98,11 @@ function Habit() {
           key={habit.id}
           habit={habit}
           isEditMode={true}
-          onDelete={removeHabit}
-          onEdit={() => {}}
+          isEditing={editingHabitId === habit.id}
+          editValue={editingValue}
+          onEditStart={handleEditStart}
+          onEditChange={setEditingValue}
+          onDelete={handleDelete}
         />
       ))}
       {isAdding && (
@@ -67,10 +117,9 @@ function Habit() {
               value={habitInput}
               onChange={(e) => setHabitInput(e.target.value)}
               onKeyDown={(e) => {
-                if (e.key === "Enter") handleAddConfirm();
+                if (e.key === "Enter") handleConfirm();
                 if (e.key === "Escape") handleAddCancel();
               }}
-              autoFocus
             />
           </div>
           <button
@@ -83,7 +132,7 @@ function Habit() {
         </div>
       )}
 
-      <button className={styles.addBtn} onClick={() => setIsAdding(true)}>
+      <button className={styles.addBtn} onClick={handleAddClick}>
         +
       </button>
     </div>
@@ -152,8 +201,10 @@ function Habit() {
           title="습관 목록"
           confirmText="수정 완료"
           cancelText="취소"
-          onClickConfirm={handleAddConfirm}
+          onClickConfirm={handleConfirm}
           onClickCancel={() => {
+            setEditingHabitId(null);
+            setEditingValue("");
             setIsAdding(false);
             setHabitInput("");
           }}
