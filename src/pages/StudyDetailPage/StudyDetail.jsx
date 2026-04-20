@@ -88,6 +88,18 @@ const StudyDetail = () => {
   const onClickSharing = () => {
     setShowSharingModal(true);
   };
+  const onClickEnterHabit = () => {
+    //비밀번호 모달에 필요한 Props설정
+    setPwType("habit"); //어떤 페이지로 이동 시킬지 설정하기 위함
+    setConfirmText("확인");
+    setShowPwModal(true);
+  };
+  const onClickEnterFocus = () => {
+    //비밀번호 모달에 필요한 Props설정
+    setPwType("focus"); //어떤 페이지로 이동 시킬지 설정하기 위함
+    setConfirmText("확인");
+    setShowPwModal(true);
+  };
 
   //비밀번호 인증 성공 시 실행할 함수.
   const onPasswordSuccess = () => {
@@ -101,7 +113,12 @@ const StudyDetail = () => {
         //진짜로 삭제할거냔 거 표시하기 -> 취소버튼 누르면, 원래 상세 페이지로. 확인 버튼 누르면 -> delete api 호출
         setShowDeletePopup(true);
         break;
-      //TODO: 여기에 집중 진입, 습관 진입 시의 코드도 적을 수 있을 것 같습니다!
+      case "habit":
+        navigate(`/studies/${studyId}/habits`);
+        break;
+      case "focus":
+        navigate(`/studies/${studyId}/focus`);
+        break;
       default:
         break;
     }
@@ -218,14 +235,8 @@ const StudyDetail = () => {
               </h2>
 
               <div className={styles.btnGroup}>
-                <NavButton
-                  label="오늘의 습관"
-                  onClick={() => navigate(`/studies/${studyId}/habits`)}
-                />
-                <NavButton
-                  label="오늘의 집중"
-                  onClick={() => navigate(`/studies/${studyId}/focus`)}
-                />
+                <NavButton label="오늘의 습관" onClick={onClickEnterHabit} />
+                <NavButton label="오늘의 집중" onClick={onClickEnterFocus} />
               </div>
             </div>
 
