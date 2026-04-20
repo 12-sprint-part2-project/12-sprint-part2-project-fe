@@ -53,17 +53,17 @@ const PasswordModal = ({
   const onClickConfirmHandler = async () => {
     if (!password.trim()) {
       showToast("warning", "비밀번호를 입력해주세요!");
-      return false;
+      return;
     }
     try {
       const res = await verifyPassword(studyId, { password });
       console.log("비밀번호 검증 결과=>", res);
       // showToast("success", "인증 되었습니다!");
-      //setShowModal(false); //비밀번호 일치하면 여기서 모달 닫음. (Modal에선 나가기 버튼 누를 시 모달 닫음)
+      setShowModal(false); //비밀번호 일치하면 여기서 모달 닫음.
       onPasswordSuccess();
     } catch (e) {
       showToast("warning", "비밀번호가 일치하지 않습니다!");
-      return false;
+      return;
     }
   };
   return (
@@ -76,6 +76,7 @@ const PasswordModal = ({
         confirmText={confirmText}
         innerComponent={innerComponent}
         onClickConfirm={onClickConfirmHandler}
+        preventAutoClose={true}
       ></Modal>
       <div className={styles.toast}>
         {toast && <Toast type={toast.type} text={toast.text} />}
