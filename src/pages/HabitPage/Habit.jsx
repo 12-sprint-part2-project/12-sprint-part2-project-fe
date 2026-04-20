@@ -17,6 +17,7 @@ function Habit() {
   const [isAdding, setIsAdding] = useState(false);
   const [habitInput, setHabitInput] = useState("");
   const [editingHabitId, setEditingHabitId] = useState(null);
+  const [originalHabitName, setOriginalHabitName] = useState("");
   const [editingValue, setEditingValue] = useState("");
   const { habits, isLoading, toggleHabit, addHabit, editHabit, removeHabit } =
     useHabits(studyId);
@@ -42,12 +43,17 @@ function Habit() {
     }
     setEditingHabitId(habit.id);
     setEditingValue(habit.habitName);
+    setOriginalHabitName(habit.habitName);
   };
 
   // 수정 완료: 편집 중인 습관 저장 + 추가 중인 습관 저장
   const handleConfirm = async () => {
     try {
-      if (editingHabitId !== null && editingValue.trim()) {
+      if (
+        editingHabitId !== null &&
+        editingValue.trim() &&
+        editingValue.trim() !== originalHabitName
+      ) {
         await editHabit(editingHabitId, editingValue.trim());
       }
       if (isAdding && habitInput.trim()) {
@@ -56,6 +62,7 @@ function Habit() {
     } finally {
       setEditingHabitId(null);
       setEditingValue("");
+      setOriginalHabitName("");
       setHabitInput("");
       setIsAdding(false);
     }
