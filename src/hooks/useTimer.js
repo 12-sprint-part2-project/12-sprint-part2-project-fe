@@ -88,7 +88,7 @@ function useTimer(studyId, durationSec) {
           endTimeRef.current = new Date(data.endTime);
           setTimeLeft(remaining);
           setTimerStatus(TIMER_STATUS.RUNNING);
-          setSessionDuration(data.durationMin * 60);
+          setSessionDuration(data.durationSec);
         } else if (data.status === TIMER_STATUS.PAUSED) {
           // paused: endTime - pausedAt 으로 남은 시간 계산
           const remaining = Math.ceil(
@@ -100,7 +100,7 @@ function useTimer(studyId, durationSec) {
           endTimeRef.current = null;
           setTimeLeft(remaining > 0 ? remaining : 0);
           setTimerStatus(TIMER_STATUS.PAUSED);
-          setSessionDuration(data.durationMin * 60);
+          setSessionDuration(data.durationSec);
 
           // 타이머가 paused 상태안 경우에만 타이머 재개 여부 팝업 표시
           setShouldShowResumePopup(true);
@@ -145,13 +145,13 @@ function useTimer(studyId, durationSec) {
   const start = async () => {
     try {
       const res = await createFocusSession(studyId, {
-        durationMin: Math.ceil(durationSec / 60),
+        durationSec,
       });
 
       const { data } = res.data;
 
       sessionIdRef.current = data.id;
-      endTimeRef.current = new Date(Date.now() + durationSec * 1000);
+      endTimeRef.current = new Date(data.endTime);
       setTimeLeft(durationSec);
       setTimerStatus(data.status);
     } catch (e) {
@@ -168,7 +168,6 @@ function useTimer(studyId, durationSec) {
 
       const { data } = res.data;
 
-      endTimeRef.current = null;
       setTimerStatus(data.status);
       showToast("warning", "집중이 중단되었습니다.");
     } catch (e) {
@@ -178,13 +177,17 @@ function useTimer(studyId, durationSec) {
 
   const resume = async () => {
     try {
+      const requestedAt = Date.now(); // 네트워크 요청 직전 시각
+
       const res = await updateFocusSession(studyId, sessionIdRef.current, {
         action: TIMER_STATUS.RUNNING,
       });
 
       const { data } = res.data;
 
-      endTimeRef.current = new Date(Date.now() + timeLeft * 1000);
+      // 요청~응답 사이 경과 시간만큼 endTime을 앞당겨 네트워크 딜레이 보정
+      const elapsed = Date.now() - requestedAt;
+      endTimeRef.current = new Date(new Date(data.endTime).getTime() - elapsed);
       setTimerStatus(data.status);
     } catch (e) {
       showToast("warning", e.userMessage);
