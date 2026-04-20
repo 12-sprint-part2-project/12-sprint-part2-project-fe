@@ -11,13 +11,17 @@ export const TIMER_STATUS = {
   RUNNING: "running", // 진행 중
   PAUSED: "paused", // 일시 정지
   COMPLETED: "completed", // 종료
+  FAILED: "failed",
 };
 
 function useTimer(studyId, durationSec) {
   const [timerStatus, setTimerStatus] = useState(TIMER_STATUS.IDLE);
   const [timeLeft, setTimeLeft] = useState(durationSec);
   const [earnedPoint, setEarnedPoint] = useState(0);
-  const [sessionDuration, setSessionDuration] = useState(null); // 페이지 재진입 시 타이머 설정 시간 표시
+  // 페이지 재진입 시 타이머 설정 시간 표시용
+  const [sessionDuration, setSessionDuration] = useState(null);
+  // 페이지 재진입 시 타이머가 paused 상태인지 여부 (재개 팝업 표시용)
+  const [shouldShowResumePopup, setShouldShowResumePopup] = useState(false);
 
   const endTimeRef = useRef(null); // Date.now와 종료 시각을 기준으로 남은 시간 계산
   const intervalIdRef = useRef(null); // 현재 실행 중인 Interval의 ID
@@ -26,27 +30,36 @@ function useTimer(studyId, durationSec) {
 
   const { toast, showToast } = useToast();
 
-  // 타이머 완료 처리
-  const handleComplete = useCallback(async () => {
-    if (isCompletingRef.current) return;
-    isCompletingRef.current = true;
+  // 타이머 완료 처리: failed=true일 경우 포인트 미지급
+  const handleComplete = useCallback(
+    async ({ action = TIMER_STATUS.COMPLETED } = {}) => {
+      if (isCompletingRef.current) return;
+      isCompletingRef.current = true;
 
-    try {
-      const res = await updateFocusSession(studyId, sessionIdRef.current, {
-        action: TIMER_STATUS.COMPLETED,
-      });
+      try {
+        const res = await updateFocusSession(studyId, sessionIdRef.current, {
+          action,
+        });
 
-      const { data } = res.data;
+        const { data } = res.data;
 
-      const pointResult = data.earnedPoint ?? 0;
-      setEarnedPoint(pointResult);
-      setTimerStatus(data.status);
-      showToast("success", "포인트를 획득했습니다!", pointResult);
-    } catch (e) {
-      isCompletingRef.current = false;
-      showToast("warning", e.userMessage);
-    }
-  }, [showToast, studyId]);
+        if (action === TIMER_STATUS.COMPLETED) {
+          const pointResult = data.earnedPoint ?? 0;
+          setEarnedPoint(pointResult);
+          showToast("success", "포인트를 획득했습니다!", pointResult);
+        } else if (action === TIMER_STATUS.FAILED) {
+          showToast("warning", "집중이 종료되어 포인트가 지급되지 않습니다.");
+        }
+
+        setTimerStatus(data.status);
+      } catch (e) {
+        isCompletingRef.current = false;
+        showToast("warning", e.userMessage);
+        console.log(e);
+      }
+    },
+    [showToast, studyId],
+  );
 
   // 페이지 진입 시 세션 조회
   useEffect(() => {
@@ -84,14 +97,13 @@ function useTimer(studyId, durationSec) {
               1000,
           );
 
-          await updateFocusSession(studyId, sessionIdRef.current, {
-            action: TIMER_STATUS.RUNNING,
-          });
-
-          endTimeRef.current = new Date(Date.now() + remaining * 1000);
+          endTimeRef.current = null;
           setTimeLeft(remaining > 0 ? remaining : 0);
-          setTimerStatus(TIMER_STATUS.RUNNING);
+          setTimerStatus(TIMER_STATUS.PAUSED);
           setSessionDuration(data.durationMin * 60);
+
+          // 타이머가 paused 상태안 경우에만 타이머 재개 여부 팝업 표시
+          setShouldShowResumePopup(true);
         }
       } catch (e) {
         showToast("warning", e.userMessage);
@@ -179,6 +191,10 @@ function useTimer(studyId, durationSec) {
     }
   };
 
+  const complete = (options) => {
+    handleComplete(options);
+  };
+
   return {
     timerStatus,
     timeLeft,
@@ -186,8 +202,10 @@ function useTimer(studyId, durationSec) {
     start,
     pause,
     resume,
+    complete,
     toast,
     sessionDuration,
+    shouldShowResumePopup,
   };
 }
 
