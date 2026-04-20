@@ -28,3 +28,7 @@
   color: var(--gray-500);
   padding: 0.5rem 0 0 0.3rem;
 }
+
+.errorText {
+  border-color: var(--error);
+}

@@ -138,6 +138,7 @@ function Focus() {
 
   // 제목 설정 이후 타이머 시작
   const handleStart = () => {
+    if (!sessionTitle.trim()) return;
     start(sessionTitle);
     setShowTitleModal(false);
     setSessionTitle("");

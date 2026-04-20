@@ -1,6 +1,8 @@
 import styles from "./SessionTitleInput.module.css";
 
 function SessionTitleInput({ value, onChange }) {
+  const isInvalid = value.length > 0 && value.trim().length === 0;
+
   return (
     <div className={styles.inputElement}>
       <label htmlFor="session-title" className={styles.label}>
@@ -14,8 +16,10 @@ function SessionTitleInput({ value, onChange }) {
         onChange={(e) => onChange(e.target.value)}
         placeholder="집중 세션 제목을 입력하세요"
       />
-      <div className={styles.helperText}>
-        세션 제목은 생성 후 수정할 수 없습니다.
+      <div className={isInvalid ? styles.errorText : styles.helperText}>
+        {isInvalid
+          ? "제목을 입력해주세요."
+          : "세션 제목은 생성 후 수정할 수 없습니다."}
       </div>
     </div>
   );
