@@ -33,19 +33,8 @@ function Focus() {
   const [showTitleModal, setShowTitleModal] = useState(false);
   const [sessionTitle, setSessionTitle] = useState("");
 
-  // state 추가
-  const [showSessionListModal, setShowSessionListModal] = useState(true); // 테스트용 true
-  const [sessions, setSessions] = useState([
-    // 테스트용 더미 데이터
-    {
-      id: 1,
-      title: "알고리즘",
-    },
-    {
-      id: 2,
-      title: "리액트 공부",
-    },
-  ]);
+  // 세션 목록 확인 팝업 (테스트용으로 초기값 true로 설정)
+  const [showSessionListModal, setShowSessionListModal] = useState(true);
 
   // 직접입력 버튼 클릭 시 분 input 포커스용 ref
   const minInputRef = useRef(null);
@@ -72,7 +61,35 @@ function Focus() {
     toast,
     sessionDuration,
     shouldShowResumePopup,
+    sessions,
+    shouldShowSessionList,
+    selectSession,
+    selectedSession,
   } = useTimer(studyId, durationSec);
+
+  // 테스트용 더미 데이터
+  const dummySessions = [
+    {
+      id: 1,
+      title: "알고리즘",
+      status: "paused",
+      endTime: new Date(Date.now() + 25 * 60 * 1000).toISOString(),
+      pausedAt: new Date(Date.now()).toISOString(),
+      durationSec: 1500,
+    },
+    {
+      id: 2,
+      title: "리액트 공부",
+      status: "paused",
+      endTime: new Date(Date.now() + 10 * 60 * 1000).toISOString(),
+      pausedAt: new Date(Date.now()).toISOString(),
+      durationSec: 600,
+    },
+  ];
+
+  useEffect(() => {
+    if (shouldShowSessionList) setShowSessionListModal(true);
+  }, [shouldShowSessionList]);
 
   // 페이지 재진입 시 타이머 설정 시간 표시
   useEffect(() => {
@@ -152,9 +169,9 @@ function Focus() {
 
       {showSessionListModal && (
         <SessionListModal
-          sessions={sessions}
+          sessions={dummySessions}
           onSelect={(session) => {
-            console.log("선택된 세션:", session);
+            selectSession(session);
             setShowSessionListModal(false);
           }}
           onClose={() => setShowSessionListModal(false)}
@@ -183,6 +200,7 @@ function Focus() {
           setShow={setShowResumePopup}
           onResume={handleResumeConfirm}
           onStop={handleStopClick}
+          title={selectedSession?.title}
         />
       )}
 
