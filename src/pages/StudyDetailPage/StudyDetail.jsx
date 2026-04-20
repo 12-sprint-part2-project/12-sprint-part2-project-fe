@@ -9,6 +9,7 @@ import PasswordModal from "./components/PasswordModal/PasswordModal";
 import Popup from "../../components/Popup/Popup";
 import SharingModal from "./components/SharingModal/SharingModal";
 import Toast from "../../components/Toast/Toast";
+import HabitTable from "./components/HabitTable/HabitTable";
 import styles from "./StudyDetail.module.css";
 
 const RECENT_STUDIES = "recent_studies";
@@ -54,7 +55,7 @@ const StudyDetail = () => {
 
     fetchStudy();
   }, [studyId]);
-  // console.log(study);
+  console.log(study);
 
   // 획득 포인트 합계
   const totalPoints =
@@ -258,7 +259,7 @@ const StudyDetail = () => {
             </div>
           </div>
 
-          <div className={styles.todayHabits}>습관 데이터 불러올 자리</div>
+          <HabitTable habits={study.habits} studyId={study.id} />
         </>
       )}
     </section>
