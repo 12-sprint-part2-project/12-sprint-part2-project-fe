@@ -7,9 +7,7 @@ function SessionListModal({ sessions, onSelect, onClose }) {
       <p className={styles.description}>
         이 스터디에 진행 중이던 집중 세션이 있어요.
         <br />
-        이어서 진행하고 싶은 세션을 선택하거나,
-        <br />
-        닫기를 눌러 새로 시작하세요.
+        이어서 진행하고 싶은 세션을 선택하거나, 닫기를 눌러 새로 시작하세요.
       </p>
       <div className={styles.list}>
         {sessions.map((session) => {
