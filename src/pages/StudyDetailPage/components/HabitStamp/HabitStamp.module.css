@@ -1,0 +1,11 @@
+.stamp {
+  overflow: hidden;
+  width: 2.25rem;
+  background-image: url("../../../../assets/images/icon/paw.png");
+  background-image: url("../../../../assets/images/icon/paw.svg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 47% auto;
+  border-radius: 50%;
+  aspect-ratio: 1;
+}
