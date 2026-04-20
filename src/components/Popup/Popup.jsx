@@ -9,6 +9,8 @@ const Popup = ({
   message,
   onClickConfirm,
   onClickCancel,
+  confirmText = "확인",
+  cancelText = "취소",
 }) => {
   return (
     <div className={styles.overlay}>
@@ -22,7 +24,7 @@ const Popup = ({
           {hasCancel && (
             <Button
               variant="cancel"
-              label="취소"
+              label={cancelText}
               onClick={() => {
                 setShowPopup(false);
                 //취소 버튼 클릭 시 수행할 작업 (아마 거의 쓰일 일이 없을듯 싶지만?)
@@ -33,7 +35,7 @@ const Popup = ({
           )}
           <Button
             variant="create"
-            label="확인"
+            label={confirmText}
             onClick={() => {
               // 확인 버튼 클릭 시 수행할 작업
               setShowPopup(false);
