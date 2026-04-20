@@ -4,8 +4,11 @@ import { getStudyDetail } from "../../api/studies";
 import BoxHeaderInfo from "../../components/BoxHeader/BoxHeaderInfo";
 import NavButton from "../../components/NavButton/NavButton";
 import Toast from "../../components/Toast/Toast";
+import Modal from "../../components/Modal/Modal";
 import ResumeConfirmPopup from "./components/ResumeConfirmPopup";
 import StopConfirmPopup from "./components/StopConfirmPopup";
+import SessionTitleInput from "./components/SessionTitleInput";
+import SessionListModal from "./components/SessionListModal";
 import useTimer, { TIMER_STATUS } from "../../hooks/useTimer";
 import formatTime from "./formatTime";
 import styles from "./Focus.module.css";
@@ -26,6 +29,12 @@ function Focus() {
   const [showResumePopup, setShowResumePopup] = useState(false);
   // 종료 재확인 팝업 상태
   const [showStopConfirmPopup, setShowStopConfirmPopup] = useState(false);
+  // 타이머 시작 시 제목 생성 팝업 상태
+  const [showTitleModal, setShowTitleModal] = useState(false);
+  // 타이머 세션 제목
+  const [title, setTitle] = useState("");
+  // 세션 목록 확인 팝업 상태
+  const [showSessionListModal, setShowSessionListModal] = useState(false);
 
   // 직접입력 버튼 클릭 시 분 input 포커스용 ref
   const minInputRef = useRef(null);
@@ -52,7 +61,16 @@ function Focus() {
     toast,
     sessionDuration,
     shouldShowResumePopup,
+    sessions,
+    shouldShowSessionList,
+    selectSession,
+    selectedSession,
+    currentTitle,
   } = useTimer(studyId, durationSec);
+
+  useEffect(() => {
+    if (shouldShowSessionList) setShowSessionListModal(true);
+  }, [shouldShowSessionList]);
 
   // 페이지 재진입 시 타이머 설정 시간 표시
   useEffect(() => {
@@ -93,6 +111,20 @@ function Focus() {
     setDurationSec(Math.max(1, m * 60 + s));
   };
 
+  // 타이머 start 버튼 클릭 이벤트 핸들러
+  const handleStartClick = () => {
+    if (isEditing) setIsEditing(false);
+    setShowTitleModal(true);
+  };
+
+  // 제목 설정 이후 타이머 시작
+  const handleStart = () => {
+    if (!title.trim()) return;
+    start(title);
+    setShowTitleModal(false);
+    setTitle("");
+  };
+
   // 재진입 팝업에서 "계속 진행" 선택 시 일시정지된 타이머를 재시작하고 팝업 닫기
   const handleResumeConfirm = () => {
     resume();
@@ -117,12 +149,37 @@ function Focus() {
         <Toast type={toast.type} text={toast.text} point={toast.point} />
       )}
 
-      {/* 페이지 재진입 시 타이머가 paused 상태일 경우 표시되는 재개 여부 선택 팝업 */}
+      {showSessionListModal && (
+        <SessionListModal
+          sessions={sessions}
+          onSelect={(session) => {
+            selectSession(session);
+            setShowSessionListModal(false);
+          }}
+          onClose={() => setShowSessionListModal(false)}
+        />
+      )}
+
+      {/* 타이머 생성 시 집중 세션 제목 설정 팝업 */}
+      {showTitleModal && (
+        <Modal
+          title="세션 생성"
+          setShowModal={setShowTitleModal}
+          confirmText="생성"
+          innerComponent={
+            <SessionTitleInput value={title} onChange={setTitle} />
+          }
+          onClickConfirm={handleStart}
+        />
+      )}
+
+      {/* 페이지 재진입 시 진행 중이던 타이머가 있었던 경우 표시되는 재개 여부 선택 팝업 */}
       {showResumePopup && (
         <ResumeConfirmPopup
           setShow={setShowResumePopup}
           onResume={handleResumeConfirm}
           onStop={handleStopClick}
+          title={selectedSession?.title}
         />
       )}
 
@@ -158,7 +215,11 @@ function Focus() {
       {/* 타이머 */}
       <div className={styles.timerSection}>
         <div className={styles.timerSectionheader}>
-          <h3 className={styles.timerTitle}>오늘의 집중</h3>
+          <h3 className={styles.timerTitle}>
+            {isRunning || isPaused
+              ? (currentTitle ?? "오늘의 집중")
+              : "오늘의 집중"}
+          </h3>
 
           {/* 타이머 시작 전/완료: 집중 시간 설정 UI 표시 */}
           {isIdle || isCompleted ? (
@@ -237,10 +298,7 @@ function Focus() {
             <button
               type="button"
               className={`${styles.btnBase} ${styles.timerStartButton}`}
-              onClick={() => {
-                if (isEditing) setIsEditing(false);
-                start();
-              }}
+              onClick={handleStartClick}
             >
               <span className="ic play"></span>
               Start!

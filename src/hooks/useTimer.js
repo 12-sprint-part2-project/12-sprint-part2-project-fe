@@ -23,6 +23,16 @@ function useTimer(studyId, durationSec) {
   // 페이지 재진입 시 타이머가 paused 상태인지 여부 (재개 팝업 표시용)
   const [shouldShowResumePopup, setShouldShowResumePopup] = useState(false);
 
+  // 페이지 재진입 시 과거에 진행 중이던 집중 세션 목록
+  const [sessions, setSessions] = useState([]);
+  // 페이지 재진입 시 진행 중이던 집중 세션 목록 모달 상태
+  const [shouldShowSessionList, setShouldShowSessionList] = useState(false);
+  // 선택한 세션 정보
+  const [selectedSession, setSelectedSession] = useState(null);
+
+  // 사용자가 설정한 세션 제목
+  const [currentTitle, setCurrentTitle] = useState(null);
+
   const endTimeRef = useRef(null); // Date.now와 종료 시각을 기준으로 남은 시간 계산
   const intervalIdRef = useRef(null); // 현재 실행 중인 Interval의 ID
   const sessionIdRef = useRef(null);
@@ -66,55 +76,12 @@ function useTimer(studyId, durationSec) {
     const fetchSession = async () => {
       try {
         const res = await getFocusSession(studyId);
-
         const { data } = res.data;
-        if (!data) return;
 
-        sessionIdRef.current = data.id;
-        setEarnedPoint(data.earnedPoint ?? 0);
+        if (!data || data.length === 0) return;
 
-        if (data.status === TIMER_STATUS.RUNNING) {
-          // endTime 기준으로 남은 시간 계산
-          const remaining = Math.ceil(
-            (new Date(data.endTime).getTime() - Date.now()) / 1000,
-          );
-
-          // 타이머가 돌아가는 도중 페이지를 나갔는데, 돌아왔을 때 타이머 시간이 다 지나버린 경우
-          if (remaining <= 0) {
-            handleComplete();
-            return;
-          }
-
-          // 자동 재시작 대신 paused로 전환 후 팝업 표시
-          await updateFocusSession(studyId, data.id, {
-            action: TIMER_STATUS.PAUSED,
-          });
-
-          endTimeRef.current = null;
-          setTimeLeft(remaining);
-          setTimerStatus(TIMER_STATUS.PAUSED);
-          console.log("data.durationSec:", data.durationSec);
-          setSessionDuration(data.durationSec);
-          console.log("sessionDuration 세팅 완료");
-          setShouldShowResumePopup(true);
-        } else if (data.status === TIMER_STATUS.PAUSED) {
-          // paused: endTime - pausedAt 으로 남은 시간 계산
-          const remaining = Math.ceil(
-            (new Date(data.endTime).getTime() -
-              new Date(data.pausedAt).getTime()) /
-              1000,
-          );
-
-          endTimeRef.current = null;
-          setTimeLeft(remaining > 0 ? remaining : 0);
-          setTimerStatus(TIMER_STATUS.PAUSED);
-          console.log("data.durationSec:", data.durationSec);
-          setSessionDuration(data.durationSec);
-          console.log("sessionDuration 세팅 완료");
-
-          // 타이머가 paused 상태안 경우에만 타이머 재개 여부 팝업 표시
-          setShouldShowResumePopup(true);
-        }
+        setSessions(data);
+        setShouldShowSessionList(true);
       } catch (e) {
         showToast("warning", e.userMessage);
       }
@@ -122,6 +89,50 @@ function useTimer(studyId, durationSec) {
 
     fetchSession();
   }, [studyId, handleComplete, showToast]);
+
+  // 세션 선택 시 호출 (SessionListModal에서 클릭 시)
+  const selectSession = async (session) => {
+    // 선택한 세션 저장
+    setSelectedSession(session);
+    sessionIdRef.current = session.id;
+    setEarnedPoint(session.earnedPoint ?? 0);
+    setCurrentTitle(session.title); // 세션 선택 시 제목 저장
+
+    if (session.status === TIMER_STATUS.RUNNING) {
+      const remaining = Math.ceil(
+        (new Date(session.endTime).getTime() - Date.now()) / 1000,
+      );
+
+      // 타이머가 돌아가는 도중 페이지를 나갔는데, 돌아왔을 때 타이머 시간이 다 지나버린 경우
+      if (remaining <= 0) {
+        handleComplete();
+        return;
+      }
+
+      // 서버에 paused로 요청
+      await updateFocusSession(studyId, session.id, {
+        action: TIMER_STATUS.PAUSED,
+      });
+
+      endTimeRef.current = null;
+      setTimeLeft(remaining);
+      setTimerStatus(TIMER_STATUS.PAUSED);
+      setSessionDuration(session.durationSec);
+      setShouldShowResumePopup(true);
+    } else if (session.status === TIMER_STATUS.PAUSED) {
+      const remaining = Math.ceil(
+        (new Date(session.endTime).getTime() -
+          new Date(session.pausedAt).getTime()) /
+          1000,
+      );
+
+      endTimeRef.current = null;
+      setTimeLeft(remaining > 0 ? remaining : 0);
+      setTimerStatus(TIMER_STATUS.PAUSED);
+      setSessionDuration(session.durationSec);
+      setShouldShowResumePopup(true);
+    }
+  };
 
   // 타이머 실행
   useEffect(() => {
@@ -152,10 +163,11 @@ function useTimer(studyId, durationSec) {
     return () => clearInterval(intervalIdRef.current);
   }, [timerStatus, handleComplete]);
 
-  const start = async () => {
+  const start = async (title) => {
     try {
       const res = await createFocusSession(studyId, {
         durationSec,
+        title,
       });
 
       const { data } = res.data;
@@ -164,6 +176,7 @@ function useTimer(studyId, durationSec) {
       endTimeRef.current = new Date(data.endTime);
       setTimeLeft(durationSec);
       setTimerStatus(data.status);
+      setCurrentTitle(title); // 시작 시 제목 저장
     } catch (e) {
       showToast("warning", e.userMessage);
     }
@@ -219,6 +232,11 @@ function useTimer(studyId, durationSec) {
     toast,
     sessionDuration,
     shouldShowResumePopup,
+    sessions,
+    shouldShowSessionList,
+    selectSession,
+    selectedSession,
+    currentTitle,
   };
 }
 
