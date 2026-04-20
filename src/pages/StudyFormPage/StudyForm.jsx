@@ -26,7 +26,7 @@ function StudyForm({ type = "create", study = {} }) {
   }, []);
 
   const location = useLocation();
-  type = location.state?.type;
+  type = location.state?.type || "create"; //없을 경우, "create"가 유지되는 것이 아니라, undefined가 들어가게 되는 것 같다. 여기에도 그냥 "create"를 default값으로 넣어주었다. props의 create의 기본값은 필요없어지지만, 이해도를 위해 남겨두겠다.
   study = location.state?.study;
 
   const navigate = useNavigate();
