@@ -8,6 +8,7 @@ import Modal from "../../components/Modal/Modal";
 import ResumeConfirmPopup from "./components/ResumeConfirmPopup";
 import StopConfirmPopup from "./components/StopConfirmPopup";
 import SessionTitleInput from "./components/SessionTitleInput";
+import SessionListModal from "./components/SessionListModal";
 import useTimer, { TIMER_STATUS } from "../../hooks/useTimer";
 import formatTime from "./formatTime";
 import styles from "./Focus.module.css";
@@ -31,6 +32,20 @@ function Focus() {
   // 타이머 시작 시 제목 생성 팝업 상태
   const [showTitleModal, setShowTitleModal] = useState(false);
   const [sessionTitle, setSessionTitle] = useState("");
+
+  // state 추가
+  const [showSessionListModal, setShowSessionListModal] = useState(true); // 테스트용 true
+  const [sessions, setSessions] = useState([
+    // 테스트용 더미 데이터
+    {
+      id: 1,
+      title: "알고리즘",
+    },
+    {
+      id: 2,
+      title: "리액트 공부",
+    },
+  ]);
 
   // 직접입력 버튼 클릭 시 분 input 포커스용 ref
   const minInputRef = useRef(null);
@@ -135,6 +150,17 @@ function Focus() {
         <Toast type={toast.type} text={toast.text} point={toast.point} />
       )}
 
+      {showSessionListModal && (
+        <SessionListModal
+          sessions={sessions}
+          onSelect={(session) => {
+            console.log("선택된 세션:", session);
+            setShowSessionListModal(false);
+          }}
+          onClose={() => setShowSessionListModal(false)}
+        />
+      )}
+
       {/* 타이머 생성 시 집중 세션 제목 설정 팝업 */}
       {showTitleModal && (
         <Modal
@@ -151,7 +177,7 @@ function Focus() {
         />
       )}
 
-      {/* 페이지 재진입 시 타이머가 paused 상태일 경우 표시되는 재개 여부 선택 팝업 */}
+      {/* 페이지 재진입 시 진행 중이던 타이머가 있었던 경우 표시되는 재개 여부 선택 팝업 */}
       {showResumePopup && (
         <ResumeConfirmPopup
           setShow={setShowResumePopup}
