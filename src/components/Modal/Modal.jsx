@@ -55,8 +55,8 @@ const Modal = ({
               variant="create"
               label={confirmText}
               onClick={() => {
-                setShowModal(false);
                 onClickConfirm && onClickConfirm();
+                //setShowModal(false); //버튼 클릭시, 위 함수가 다 실행되기 전에 모달이 닫혀버림. (왤까?)
               }}
             />
           </div>
