@@ -26,8 +26,8 @@ function StudyForm({ type = "create", study = {} }) {
   }, []);
 
   const location = useLocation();
-  type = location.state.type;
-  study = location.state.study;
+  type = location.state?.type;
+  study = location.state?.study;
 
   const navigate = useNavigate();
   //input 상태 변수들
