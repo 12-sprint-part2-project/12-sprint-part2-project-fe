@@ -18,6 +18,7 @@ const Modal = ({
   innerComponent,
   onClickConfirm,
   onClickCancel,
+  preventAutoClose = false,
 }) => {
   return (
     <div className={styles.overlay}>
@@ -55,8 +56,10 @@ const Modal = ({
               variant="create"
               label={confirmText}
               onClick={async () => {
-                await (onClickConfirm && onClickConfirm());
-                setShowModal(false);
+                await (onClickConfirm && onClickConfirm()); //모달을 닫지 말아야 하는 상황이라면, onClickConfirm함수에서 false를 리턴하도록 하자.
+                if (!preventAutoClose) {
+                  setShowModal(false);
+                }
               }}
             />
           </div>

@@ -115,22 +115,33 @@ const StudyDetail = () => {
   };
 
   //비밀번호 인증 성공 시 실행할 함수.
+  //ㄴ그렇담 여기에서 성공 토스트 메세지를 실행한다!
   const onPasswordSuccess = () => {
     switch (pwType) {
       case "modify":
-        navigate(`/studies/new`, {
-          state: { type: "modify", study },
-        });
+        showToast("success", "인증 되었습니다!"); //비밀번호 일치로 넘어갈 때도, 세션에 들어있어서 넘어갈 때도 모두 토스트 메세지를 보여줄 수 있다.
+        setTimeout(() => {
+          //성공 시의 toast메세지가 보이게 하기 위함.
+          navigate(`/studies/new`, { state: { type: "modify", study } });
+        }, 500); // 0.5초 후 이동
         break;
       case "delete":
         //진짜로 삭제할거냔 거 표시하기 -> 취소버튼 누르면, 원래 상세 페이지로. 확인 버튼 누르면 -> delete api 호출
         setShowDeletePopup(true);
         break;
       case "habit":
-        navigate(`/studies/${studyId}/habits`);
+        showToast("success", "인증 되었습니다!");
+        setTimeout(() => {
+          navigate(`/studies/${studyId}/habits`);
+        }, 500);
+
         break;
       case "focus":
-        navigate(`/studies/${studyId}/focus`);
+        showToast("success", "인증 되었습니다!");
+        setTimeout(() => {
+          navigate(`/studies/${studyId}/focus`);
+        }, 500);
+
         break;
       default:
         break;
