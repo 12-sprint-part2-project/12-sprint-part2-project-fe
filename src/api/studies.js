@@ -20,6 +20,10 @@ export const deleteStudy = (studyId) => api.delete(`/studies/${studyId}`);
 export const verifyPassword = (studyId, body) =>
   api.post(`/studies/${studyId}/verify-password`, body);
 
+// 세션 검증 (비밀번호가 이미 인증된 스터디인지)
+export const checkSession = (studyId) =>
+  api.get(`/studies/${studyId}/check-session`);
+
 // 응원 이모지 추가
 export const addEmoji = (studyId, body) =>
   api.post(`/studies/${studyId}/emojis`, body);
