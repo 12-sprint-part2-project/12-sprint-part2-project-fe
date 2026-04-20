@@ -1,4 +1,5 @@
-import logo from "../../assets/images/img_logo.svg";
+import { Link, useNavigate } from "react-router-dom";
+import logo from "../../assets/images/logos/logo.svg";
 import Button from "../Button/Button";
 import styles from "./Header.module.css";
 
@@ -7,7 +8,9 @@ function Header({ onCreateStudy, showButton = true }) {
     <header className={styles.header}>
       <div className={styles.inner}>
         <div className={styles.headerLeft}>
-          <img src={logo} alt="공부의 숲" />
+          <Link to="/">
+            <img src={logo} alt="공부의 숲" />
+          </Link>
         </div>
         {showButton && (
           <div className={styles.headerRight}>
