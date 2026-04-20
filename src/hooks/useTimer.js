@@ -11,6 +11,7 @@ export const TIMER_STATUS = {
   RUNNING: "running", // 진행 중
   PAUSED: "paused", // 일시 정지
   COMPLETED: "completed", // 종료
+  FAILED: "failed",
 };
 
 function useTimer(studyId, durationSec) {
@@ -31,23 +32,22 @@ function useTimer(studyId, durationSec) {
 
   // 타이머 완료 처리: failed=true일 경우 포인트 미지급
   const handleComplete = useCallback(
-    async ({ failed = false } = {}) => {
+    async ({ action = TIMER_STATUS.COMPLETED } = {}) => {
       if (isCompletingRef.current) return;
       isCompletingRef.current = true;
 
       try {
         const res = await updateFocusSession(studyId, sessionIdRef.current, {
-          action: TIMER_STATUS.COMPLETED,
-          ...(failed && { status: "failed" }),
+          action,
         });
 
         const { data } = res.data;
 
-        if (!failed) {
+        if (action === TIMER_STATUS.COMPLETED) {
           const pointResult = data.earnedPoint ?? 0;
           setEarnedPoint(pointResult);
           showToast("success", "포인트를 획득했습니다!", pointResult);
-        } else {
+        } else if (action === TIMER_STATUS.FAILED) {
           showToast("warning", "집중이 종료되어 포인트가 지급되지 않습니다.");
         }
 
@@ -55,6 +55,7 @@ function useTimer(studyId, durationSec) {
       } catch (e) {
         isCompletingRef.current = false;
         showToast("warning", e.userMessage);
+        console.log(e);
       }
     },
     [showToast, studyId],

@@ -107,7 +107,7 @@ function Focus() {
 
   // 종료 재확인 팝업에서 "종료" 선택 시 포인트 지급 없이 타이머 종료 처리
   const handleStopConfirm = () => {
-    complete({ failed: true });
+    complete({ action: "failed" });
     setShowStopConfirmPopup(false);
   };
 
