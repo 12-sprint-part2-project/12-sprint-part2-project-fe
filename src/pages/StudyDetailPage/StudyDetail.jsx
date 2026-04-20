@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { deleteStudy, getStudyDetail } from "../../api/studies";
+import { checkSession, deleteStudy, getStudyDetail } from "../../api/studies";
 import useToast from "../../hooks/useToast";
 import Tag from "../../components/Tag/Tag";
 import BoxHeaderInfo from "../../components/BoxHeader/BoxHeaderInfo";
@@ -73,17 +73,17 @@ const StudyDetail = () => {
   const { toast, showToast } = useToast();
 
   /* 공유/수정/삭제 버튼 클릭 핸들러 */
-  const onClickModify = () => {
+  const onClickModify = async () => {
     //먼저 세션 확인!!!!! 세션에 없다면 비밀번호 모달 실행
     //비밀번호 체크 모달 -> 비밀번호 일치할 시 -> 수정 페이지로 Link
-    setPwType("modify");
+    setPwType("modify"); //비밀번호 모달에 필요한 Props설정
     setConfirmText("수정하러 가기");
-    setShowPwModal(true);
+    checkSessionFunc();
   };
-  const onClickDelete = () => {
+  const onClickDelete = async () => {
     setPwType("delete");
     setConfirmText("삭제하기");
-    setShowPwModal(true);
+    checkSessionFunc();
   };
   const onClickSharing = () => {
     setShowSharingModal(true);
@@ -92,13 +92,25 @@ const StudyDetail = () => {
     //비밀번호 모달에 필요한 Props설정
     setPwType("habit"); //어떤 페이지로 이동 시킬지 설정하기 위함
     setConfirmText("확인");
-    setShowPwModal(true);
+    checkSessionFunc();
   };
   const onClickEnterFocus = () => {
     //비밀번호 모달에 필요한 Props설정
     setPwType("focus"); //어떤 페이지로 이동 시킬지 설정하기 위함
     setConfirmText("확인");
-    setShowPwModal(true);
+    checkSessionFunc();
+  };
+
+  //세션 체크 -> 존재하지 않으면 비밀번호 모달, 존재하면 타겟 페이지로 이동
+  const checkSessionFunc = async () => {
+    try {
+      await checkSession(studyId);
+      //세션에 존재할 시, 바로 다음 페이지로 보냄
+      onPasswordSuccess(); //(원랜 이걸 비밀번호 모달에 넘겨줬었다.)
+    } catch (e) {
+      console.log("세션에 존재하지 않음 =>", e);
+      setShowPwModal(true);
+    }
   };
 
   //비밀번호 인증 성공 시 실행할 함수.
