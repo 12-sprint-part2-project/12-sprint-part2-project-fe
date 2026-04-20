@@ -27,9 +27,11 @@ function useTimer(studyId, durationSec) {
   const [sessions, setSessions] = useState([]);
   // 페이지 재진입 시 진행 중이던 집중 세션 목록 모달 상태
   const [shouldShowSessionList, setShouldShowSessionList] = useState(false);
-
   // 선택한 세션 정보
   const [selectedSession, setSelectedSession] = useState(null);
+
+  // 사용자가 설정한 세션 제목
+  const [currentTitle, setCurrentTitle] = useState(null);
 
   const endTimeRef = useRef(null); // Date.now와 종료 시각을 기준으로 남은 시간 계산
   const intervalIdRef = useRef(null); // 현재 실행 중인 Interval의 ID
@@ -94,6 +96,7 @@ function useTimer(studyId, durationSec) {
     setSelectedSession(session);
     sessionIdRef.current = session.id;
     setEarnedPoint(session.earnedPoint ?? 0);
+    setCurrentTitle(session.title); // 세션 선택 시 제목 저장
 
     if (session.status === TIMER_STATUS.RUNNING) {
       const remaining = Math.ceil(
@@ -107,7 +110,7 @@ function useTimer(studyId, durationSec) {
       }
 
       // 서버에 paused로 요청
-      await updateFocusSession(studyId, data.id, {
+      await updateFocusSession(studyId, session.id, {
         action: TIMER_STATUS.PAUSED,
       });
 
@@ -160,11 +163,11 @@ function useTimer(studyId, durationSec) {
     return () => clearInterval(intervalIdRef.current);
   }, [timerStatus, handleComplete]);
 
-  const start = async () => {
+  const start = async (title) => {
     try {
       const res = await createFocusSession(studyId, {
         durationSec,
-        // sessionTitle,
+        title,
       });
 
       const { data } = res.data;
@@ -173,6 +176,7 @@ function useTimer(studyId, durationSec) {
       endTimeRef.current = new Date(data.endTime);
       setTimeLeft(durationSec);
       setTimerStatus(data.status);
+      setCurrentTitle(title); // 시작 시 제목 저장
     } catch (e) {
       showToast("warning", e.userMessage);
     }
@@ -232,6 +236,7 @@ function useTimer(studyId, durationSec) {
     shouldShowSessionList,
     selectSession,
     selectedSession,
+    currentTitle,
   };
 }
 

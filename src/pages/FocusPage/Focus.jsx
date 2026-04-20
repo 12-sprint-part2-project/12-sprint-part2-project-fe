@@ -31,10 +31,10 @@ function Focus() {
   const [showStopConfirmPopup, setShowStopConfirmPopup] = useState(false);
   // 타이머 시작 시 제목 생성 팝업 상태
   const [showTitleModal, setShowTitleModal] = useState(false);
-  const [sessionTitle, setSessionTitle] = useState("");
-
-  // 세션 목록 확인 팝업 (테스트용으로 초기값 true로 설정)
-  const [showSessionListModal, setShowSessionListModal] = useState(true);
+  // 타이머 세션 제목
+  const [title, setTitle] = useState("");
+  // 세션 목록 확인 팝업 상태
+  const [showSessionListModal, setShowSessionListModal] = useState(false);
 
   // 직접입력 버튼 클릭 시 분 input 포커스용 ref
   const minInputRef = useRef(null);
@@ -65,27 +65,8 @@ function Focus() {
     shouldShowSessionList,
     selectSession,
     selectedSession,
+    currentTitle,
   } = useTimer(studyId, durationSec);
-
-  // 테스트용 더미 데이터
-  const dummySessions = [
-    {
-      id: 1,
-      title: "알고리즘",
-      status: "paused",
-      endTime: new Date(Date.now() + 25 * 60 * 1000).toISOString(),
-      pausedAt: new Date(Date.now()).toISOString(),
-      durationSec: 1500,
-    },
-    {
-      id: 2,
-      title: "리액트 공부",
-      status: "paused",
-      endTime: new Date(Date.now() + 10 * 60 * 1000).toISOString(),
-      pausedAt: new Date(Date.now()).toISOString(),
-      durationSec: 600,
-    },
-  ];
 
   useEffect(() => {
     if (shouldShowSessionList) setShowSessionListModal(true);
@@ -138,10 +119,10 @@ function Focus() {
 
   // 제목 설정 이후 타이머 시작
   const handleStart = () => {
-    if (!sessionTitle.trim()) return;
-    start(sessionTitle);
+    if (!title.trim()) return;
+    start(title);
     setShowTitleModal(false);
-    setSessionTitle("");
+    setTitle("");
   };
 
   // 재진입 팝업에서 "계속 진행" 선택 시 일시정지된 타이머를 재시작하고 팝업 닫기
@@ -170,7 +151,7 @@ function Focus() {
 
       {showSessionListModal && (
         <SessionListModal
-          sessions={dummySessions}
+          sessions={sessions}
           onSelect={(session) => {
             selectSession(session);
             setShowSessionListModal(false);
@@ -186,10 +167,7 @@ function Focus() {
           setShowModal={setShowTitleModal}
           confirmText="생성"
           innerComponent={
-            <SessionTitleInput
-              value={sessionTitle}
-              onChange={setSessionTitle}
-            />
+            <SessionTitleInput value={title} onChange={setTitle} />
           }
           onClickConfirm={handleStart}
         />
@@ -237,7 +215,11 @@ function Focus() {
       {/* 타이머 */}
       <div className={styles.timerSection}>
         <div className={styles.timerSectionheader}>
-          <h3 className={styles.timerTitle}>오늘의 집중</h3>
+          <h3 className={styles.timerTitle}>
+            {isRunning || isPaused
+              ? (currentTitle ?? "오늘의 집중")
+              : "오늘의 집중"}
+          </h3>
 
           {/* 타이머 시작 전/완료: 집중 시간 설정 UI 표시 */}
           {isIdle || isCompleted ? (
