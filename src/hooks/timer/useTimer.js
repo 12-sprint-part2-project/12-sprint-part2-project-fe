@@ -7,6 +7,7 @@ import {
 import useToast from "../useToast";
 import useTimerInterval from "./useTimerInterval";
 import { TIMER_STATUS } from "./timerConstants";
+import { calcRemaining } from "./timerUtils";
 
 function useTimer(studyId, durationSec) {
   const [timerStatus, setTimerStatus] = useState(TIMER_STATUS.IDLE);
@@ -93,9 +94,7 @@ function useTimer(studyId, durationSec) {
     setCurrentTitle(session.title); // 세션 선택 시 제목 저장
 
     if (session.status === TIMER_STATUS.RUNNING) {
-      const remaining = Math.ceil(
-        (new Date(session.endTime).getTime() - Date.now()) / 1000,
-      );
+      const remaining = calcRemaining(session.endTime);
 
       // 타이머가 돌아가는 도중 페이지를 나갔는데, 돌아왔을 때 타이머 시간이 다 지나버린 경우
       if (remaining <= 0) {
@@ -114,11 +113,7 @@ function useTimer(studyId, durationSec) {
       setSessionDuration(session.durationSec);
       setShouldShowResumePopup(true);
     } else if (session.status === TIMER_STATUS.PAUSED) {
-      const remaining = Math.ceil(
-        (new Date(session.endTime).getTime() -
-          new Date(session.pausedAt).getTime()) /
-          1000,
-      );
+      const remaining = calcRemaining(session.endTime, session.pausedAt);
 
       resetEndTime();
       setTimeLeft(remaining > 0 ? remaining : 0);
