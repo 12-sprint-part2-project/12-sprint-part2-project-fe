@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useRef, useCallback } from "react";
 import useFocusSession from "./useFocusSession";
 import useTimerInterval from "./useTimerInterval";
 import useTimerToast from "./useTimerToast";
@@ -28,7 +28,7 @@ function useTimer(studyId, durationSec) {
 
   // 타이머 완료 처리: failed=true일 경우 포인트 미지급
   const handleComplete = useCallback(
-    async ({ action = TIMER_STATUS.COMPLETED } = {}) => {
+    async ({ action = TIMER_STATUS.COMPLETED, isAuto = false } = {}) => {
       if (isCompletingRef.current) return;
       isCompletingRef.current = true;
 
@@ -36,7 +36,7 @@ function useTimer(studyId, durationSec) {
         const data = await updateSession(sessionIdRef.current, action);
         const pointResult = data.earnedPoint ?? 0;
         if (action === TIMER_STATUS.COMPLETED) setEarnedPoint(pointResult);
-        toastComplete(action, pointResult);
+        toastComplete(action, pointResult, isAuto);
         setTimerStatus(data.status);
       } catch (e) {
         isCompletingRef.current = false;
@@ -64,7 +64,7 @@ function useTimer(studyId, durationSec) {
 
       // 타이머가 돌아가는 도중 페이지를 나갔는데, 돌아왔을 때 타이머 시간이 다 지나버린 경우
       if (remaining <= 0) {
-        handleComplete();
+        handleComplete({ action: TIMER_STATUS.COMPLETED, isAuto: true });
         return;
       }
 
