@@ -1,7 +1,7 @@
 import styles from "./Toast.module.css";
 import { createPortal } from "react-dom";
 
-const Toast = ({ type, text, point = 0 }) => {
+const Toast = ({ type, text }) => {
   /**
    * type: success 또는 warning 2개 타입만
    * text: 띄울 문구
@@ -9,7 +9,7 @@ const Toast = ({ type, text, point = 0 }) => {
    */
   return createPortal(
     <div className={`${styles.toast} ${styles[type]}`}>
-      {type === "warning" ? "🚨" : "🎉"} {(point > 0 ? point : "") + text}
+      {type === "warning" ? "🚨" : "🎉"} {text}
     </div>,
     document.body,
   );
