@@ -1,0 +1,38 @@
+.studyForm {
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 24px;
+}
+
+/*-----아이콘-----*/
+.pawContainer {
+  width: 32px;
+  height: 32px;
+
+  border-radius: 50%;
+  background-color: rgba(65, 65, 65, 0.5);
+
+  position: absolute;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.paw {
+  width: 18px;
+  height: 18px;
+}
+
+/*-----Button------*/
+.button {
+  width: 100%;
+  max-width: 648px;
+  height: 58px;
+}
+/*-----Toast------*/
+.toast {
+  z-index: 1000;
+}
