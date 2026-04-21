@@ -35,11 +35,13 @@ function Focus() {
   const [title, setTitle] = useState("");
   // 세션 목록 확인 팝업 상태
   const [showSessionListModal, setShowSessionListModal] = useState(false);
+  // 세션 제목 입력 시 에러
+  const [titleError, setTitleError] = useState("");
 
   // 직접입력 버튼 클릭 시 분 input 포커스용 ref
   const minInputRef = useRef(null);
 
-  // 스터디 정보 조회 (추후 전역 상태로 수정 예정)
+  // 스터디 정보 조회
   useEffect(() => {
     const fetchStudy = async () => {
       const res = await getStudyDetail(studyId);
@@ -118,11 +120,16 @@ function Focus() {
   };
 
   // 제목 설정 이후 타이머 시작
-  const handleStart = () => {
-    if (!title.trim()) return;
+  const handleStart = async () => {
+    if (!title.trim()) {
+      setTitleError("제목을 입력해주세요.");
+      return;
+    }
+
     start(title);
     setShowTitleModal(false);
     setTitle("");
+    setTitleError("");
   };
 
   // 재진입 팝업에서 "계속 진행" 선택 시 일시정지된 타이머를 재시작하고 팝업 닫기
@@ -167,9 +174,17 @@ function Focus() {
           setShowModal={setShowTitleModal}
           confirmText="생성"
           innerComponent={
-            <SessionTitleInput value={title} onChange={setTitle} />
+            <SessionTitleInput
+              value={title}
+              onChange={(val) => {
+                setTitle(val);
+                if (val.trim()) setTitleError("");
+              }}
+              errorMessage={titleError}
+            />
           }
           onClickConfirm={handleStart}
+          preventAutoClose={true}
         />
       )}
 

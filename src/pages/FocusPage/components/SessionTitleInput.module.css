@@ -23,12 +23,17 @@
   border-color: var(--brand);
 }
 
+.inputError,
+.inputError:focus {
+  border-color: var(--error);
+}
+
 .helperText {
-  font: var(--text-12-regular);
+  font: var(--text-14-regular);
   color: var(--gray-500);
   padding: 0.5rem 0 0 0.3rem;
 }
 
-.errorText {
-  border-color: var(--error);
+.error {
+  color: var(--error);
 }
