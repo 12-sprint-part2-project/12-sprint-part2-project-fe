@@ -116,6 +116,8 @@ function Focus() {
   // 타이머 start 버튼 클릭 이벤트 핸들러
   const handleStartClick = () => {
     if (isEditing) setIsEditing(false);
+    setTitle("");
+    setTitleError("");
     setShowTitleModal(true);
   };
 
