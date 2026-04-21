@@ -44,6 +44,7 @@ const StudyDetail = () => {
         const res = await getStudyDetail(studyId);
         // console.log(res);
         const { data } = res.data;
+
         setStudy(data);
 
         saveRecentStudy(data); // localStorage 에 담기
@@ -56,7 +57,6 @@ const StudyDetail = () => {
 
     fetchStudy();
   }, [studyId]);
-  // console.log(study);
 
   // 획득 포인트 합계
   const totalPoints =
@@ -214,36 +214,6 @@ const StudyDetail = () => {
               </div>
 
               <Emoji studyId={study?.id} />
-
-              <div className={styles.emoji}>
-                <div className={styles.emojiTop3}>
-                  <Tag
-                    variant="general"
-                    type="emoji"
-                    theme="dark"
-                    emojiIcon="👩🏻‍💻"
-                    count={37}
-                  />
-                  <Tag
-                    variant="general"
-                    type="emoji"
-                    theme="dark"
-                    emojiIcon="👍"
-                    count={11}
-                  />
-                  <Tag
-                    variant="general"
-                    type="emoji"
-                    theme="dark"
-                    emojiIcon="🤩"
-                    count={9}
-                  />
-                </div>
-
-                <button className={styles.addEmoji}>
-                  <i className="ic smile"></i> 추가
-                </button>
-              </div>
             </div>
             <div className={styles.headerTitle}>
               <h2 className={styles.headline}>

@@ -19,6 +19,73 @@
   line-height: 1.2;
 }
 
+.emojiList {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  position: relative;
+}
+
+.pickerWrap {
+  position: relative;
+}
+
+.pickerWrap .picker {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+}
+
+.restEmoji {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.3125rem;
+  width: max-content;
+  padding: 0.375rem 0.5rem;
+  background-color: rgb(0 0 0 / 0.3);
+  border-radius: 5em;
+  font: var(--text-16-regular);
+  color: var(--white);
+  line-height: 1;
+}
+
+.iconPlus {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  width: 1rem;
+  aspect-ratio: 1;
+}
+
+.iconPlus::before,
+.iconPlus::after {
+  content: "";
+  position: absolute;
+  width: 62.5%;
+  height: 2px;
+  background-color: currentColor;
+  border-radius: 5em;
+}
+
+.iconPlus::after {
+  rotate: 90deg;
+}
+
+.dropdown {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  left: 0;
+  width: 100%;
+  padding: 0.75rem;
+  background-color: var(--white);
+  border: 1px solid var(--gray-300);
+  border-radius: 0.9375rem;
+}
+
 @media all and (max-width: 744px) {
   .emoji {
     margin-top: 1rem;

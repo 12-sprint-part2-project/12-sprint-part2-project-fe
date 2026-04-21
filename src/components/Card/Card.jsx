@@ -54,11 +54,11 @@ const Card = ({
         <div className={styles.emojis}>
           {emojis.map((emoji) => (
             <Tag
-              key={emoji.id}
+              key={emoji.emoji}
               type="emoji"
               theme="dark"
               count={emoji.count}
-              emojiIcon={emoji.icon}
+              emojiIcon={emoji.emoji}
             />
           ))}
         </div>

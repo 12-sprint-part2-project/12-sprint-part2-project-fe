@@ -1,5 +1,6 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import Tag from "../../../../components/Tag/Tag";
+import styles from "./Emoji.module.css";
 
 const EmojiRestDropdown = ({ emojis, onEmojiClick, onClose }) => {
   const ref = useRef();
@@ -9,13 +10,13 @@ const EmojiRestDropdown = ({ emojis, onEmojiClick, onClose }) => {
       if (ref.current && !ref.current.contains(e.target)) onClose();
     };
 
-    document.addEventListener("mousedown", handler);
-    return () => document.removeEventListener("mousedonw", handler);
+    document.addEventListener("mouseup", handler);
+    return () => document.removeEventListener("mouseup", handler);
   }, [onClose]);
 
   return (
     <div ref={ref} className={styles.dropdown}>
-      {emojis.mpa((emoji, count) => (
+      {emojis.map(({ emoji, count }) => (
         <Tag
           key={emoji}
           variant="general"

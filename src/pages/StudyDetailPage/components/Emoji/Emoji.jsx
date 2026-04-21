@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { addEmoji, getEmojis } from "../../../../api/studies";
 import EmojiPreview from "../../../../components/EmojiPreview/EmojiPreview";
-import styles from "./Emoji.module.css";
 import EmojiPickerPopup from "./EmojiPickerPopup";
+import EmojiRestDropdown from "./EmojiRestDropdown";
+import styles from "./Emoji.module.css";
 
 const Emoji = ({ studyId }) => {
   const [emojis, setEmojis] = useState([]); // 등록된 모든 이모지
@@ -46,13 +47,33 @@ const Emoji = ({ studyId }) => {
 
   return (
     <div className={styles.emoji}>
-      <div className={styles.emojiTop3}>
+      <div className={styles.emojiList}>
         <EmojiPreview emojis={top3} onEmojiClick={handleEmojiClick} />
+
+        {rest.length > 0 && (
+          <div>
+            <button
+              onMouseUp={(e) => e.stopPropagation()}
+              onClick={() => setShowRest((prev) => !prev)}
+              className={styles.restEmoji}
+            >
+              <span className={styles.iconPlus}></span> {rest.length}..
+            </button>
+            {showRest && (
+              <EmojiRestDropdown
+                emojis={rest}
+                onEmojiClick={handleEmojiClick}
+                onClose={() => setShowRest(false)}
+              />
+            )}
+          </div>
+        )}
       </div>
 
       <div className={styles.pickerWrap}>
         <button
           className={styles.addEmoji}
+          onMouseUp={(e) => e.stopPropagation()}
           onClick={() => setShowPicker((prev) => !prev)}
         >
           <i className="ic smile"></i> 추가
