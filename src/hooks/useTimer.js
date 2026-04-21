@@ -5,6 +5,7 @@ import {
   updateFocusSession,
 } from "../api/focus";
 import useToast from "./useToast";
+import useTimerInterval from "./useTimerInterval";
 
 export const TIMER_STATUS = {
   IDLE: "idle", // 시작 전
@@ -16,7 +17,6 @@ export const TIMER_STATUS = {
 
 function useTimer(studyId, durationSec) {
   const [timerStatus, setTimerStatus] = useState(TIMER_STATUS.IDLE);
-  const [timeLeft, setTimeLeft] = useState(durationSec);
   const [earnedPoint, setEarnedPoint] = useState(0);
   // 페이지 재진입 시 타이머 설정 시간 표시용
   const [sessionDuration, setSessionDuration] = useState(null);
@@ -29,12 +29,9 @@ function useTimer(studyId, durationSec) {
   const [shouldShowSessionList, setShouldShowSessionList] = useState(false);
   // 선택한 세션 정보
   const [selectedSession, setSelectedSession] = useState(null);
-
   // 사용자가 설정한 세션 제목
   const [currentTitle, setCurrentTitle] = useState(null);
 
-  const endTimeRef = useRef(null); // Date.now와 종료 시각을 기준으로 남은 시간 계산
-  const intervalIdRef = useRef(null); // 현재 실행 중인 Interval의 ID
   const sessionIdRef = useRef(null);
   const isCompletingRef = useRef(false); // 타이머 완료 API 중복 호출 방어 플래그
 
@@ -65,11 +62,15 @@ function useTimer(studyId, durationSec) {
       } catch (e) {
         isCompletingRef.current = false;
         showToast("warning", e.userMessage);
-        console.log(e);
       }
     },
     [showToast, studyId],
   );
+
+  const { timeLeft, setTimeLeft, setEndTime, resetEndTime } = useTimerInterval({
+    timerStatus,
+    onComplete: handleComplete,
+  });
 
   // 페이지 진입 시 세션 조회
   useEffect(() => {
@@ -114,7 +115,7 @@ function useTimer(studyId, durationSec) {
         action: TIMER_STATUS.PAUSED,
       });
 
-      endTimeRef.current = null;
+      resetEndTime();
       setTimeLeft(remaining);
       setTimerStatus(TIMER_STATUS.PAUSED);
       setSessionDuration(session.durationSec);
@@ -126,42 +127,13 @@ function useTimer(studyId, durationSec) {
           1000,
       );
 
-      endTimeRef.current = null;
+      resetEndTime();
       setTimeLeft(remaining > 0 ? remaining : 0);
       setTimerStatus(TIMER_STATUS.PAUSED);
       setSessionDuration(session.durationSec);
       setShouldShowResumePopup(true);
     }
   };
-
-  // 타이머 실행
-  useEffect(() => {
-    if (timerStatus !== TIMER_STATUS.RUNNING) {
-      clearInterval(intervalIdRef.current);
-      return;
-    }
-
-    // running일 때만 타이머 동작
-    intervalIdRef.current = setInterval(() => {
-      if (!endTimeRef.current) return;
-
-      // 현재 시각과 목표 종료 시각의 차이를 초 단위로 계산
-      const remaining = Math.ceil(
-        (endTimeRef.current.getTime() - Date.now()) / 1000,
-      );
-
-      if (remaining <= 0) {
-        clearInterval(intervalIdRef.current);
-        setTimeLeft(0);
-        handleComplete();
-      } else {
-        setTimeLeft(remaining);
-      }
-    }, 1000);
-
-    // cleanup 함수: timerStatus 변경이나 언마운트 시 interval 제거
-    return () => clearInterval(intervalIdRef.current);
-  }, [timerStatus, handleComplete]);
 
   const start = async (title) => {
     try {
@@ -173,7 +145,7 @@ function useTimer(studyId, durationSec) {
       const { data } = res.data;
 
       sessionIdRef.current = data.id;
-      endTimeRef.current = new Date(data.endTime);
+      setEndTime(new Date(data.endTime));
       setTimeLeft(durationSec);
       setTimerStatus(data.status);
       setCurrentTitle(title); // 시작 시 제목 저장
@@ -211,7 +183,7 @@ function useTimer(studyId, durationSec) {
 
       // 요청~응답 사이 경과 시간만큼 endTime을 앞당겨 네트워크 딜레이 보정
       const elapsed = Date.now() - requestedAt;
-      endTimeRef.current = new Date(new Date(data.endTime).getTime() - elapsed);
+      setEndTime(new Date(new Date(data.endTime).getTime() - elapsed));
       setTimerStatus(data.status);
     } catch (e) {
       showToast("warning", e.userMessage);
