@@ -69,6 +69,8 @@ const StudyDetail = () => {
 
   const [confirmText, setConfirmText] = useState(""); //버튼마다 비밀번호 모달 내 버튼명이 다르므로, 여기에 저장해서 사용.
 
+  const [currentType, setCurrentType] = useState("");
+
   //토스트
   const { toast, showToast } = useToast();
 
@@ -101,11 +103,12 @@ const StudyDetail = () => {
   };
 
   //세션을 체크하고, 그에 따른 결과를 이어지는 함수.
-  const validateSessionAndProceed = (type) => {
-    const isInSession = handleCheckSession();
+  const validateSessionAndProceed = async (type) => {
+    const isInSession = await handleCheckSession(); //await을 해야 정상적인 순서로 작동됨.
     if (isInSession) {
       onPasswordSuccess(type);
     } else {
+      setCurrentType(type); // type을 state로 저장
       setShowPwModal(true);
     }
   };
@@ -195,7 +198,7 @@ const StudyDetail = () => {
                 studyId={study?.id}
                 title={study?.title}
                 confirmText={confirmText}
-                onPasswordSuccess={onPasswordSuccess}
+                onPasswordSuccess={() => onPasswordSuccess(currentType)}
               />
             )}
           {showDeletePopup && ( //정말 삭제하시겠습니까? 팝업

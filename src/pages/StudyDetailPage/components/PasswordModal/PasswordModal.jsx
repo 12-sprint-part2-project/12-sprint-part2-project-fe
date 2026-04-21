@@ -58,7 +58,6 @@ const PasswordModal = ({
     try {
       const res = await verifyPassword(studyId, { password });
       console.log("비밀번호 검증 결과=>", res);
-      // showToast("success", "인증 되었습니다!");
       setShowModal(false); //비밀번호 일치하면 여기서 모달 닫음.
       onPasswordSuccess();
     } catch (e) {
