@@ -6,9 +6,14 @@ function useTimerToast() {
   const { toast, showToast } = useToast();
 
   const toastComplete = useCallback(
-    (action, point) => {
+    (action, point, isAuto = false) => {
       if (action === TIMER_STATUS.COMPLETED) {
-        showToast("success", "포인트를 획득했습니다!", point);
+        showToast(
+          "success",
+          isAuto
+            ? `집중 시간이 완료되었습니다! ${point}포인트가 지급되었습니다.`
+            : `${point}포인트를 획득했습니다!`,
+        );
       } else if (action === TIMER_STATUS.FAILED) {
         showToast("warning", "집중이 종료되어 포인트가 지급되지 않습니다.");
       }
