@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { TIMER_STATUS } from "./useTimer";
+import { TIMER_STATUS } from "./timerConstants";
 
 function useTimerInterval({ timerStatus, onComplete }) {
   const [timeLeft, setTimeLeft] = useState(0);

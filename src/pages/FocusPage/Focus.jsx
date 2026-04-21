@@ -5,11 +5,12 @@ import BoxHeaderInfo from "../../components/BoxHeader/BoxHeaderInfo";
 import NavButton from "../../components/NavButton/NavButton";
 import Toast from "../../components/Toast/Toast";
 import Modal from "../../components/Modal/Modal";
+import useTimer from "../../hooks/timer/useTimer";
+import { TIMER_STATUS } from "../../hooks/timer/timerConstants";
 import ResumeConfirmPopup from "./components/ResumeConfirmPopup";
 import StopConfirmPopup from "./components/StopConfirmPopup";
 import SessionTitleInput from "./components/SessionTitleInput";
 import SessionListModal from "./components/SessionListModal";
-import useTimer, { TIMER_STATUS } from "../../hooks/useTimer";
 import formatTime from "./formatTime";
 import styles from "./Focus.module.css";
 

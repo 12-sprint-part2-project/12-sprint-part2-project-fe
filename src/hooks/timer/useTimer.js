@@ -3,17 +3,10 @@ import {
   getFocusSession,
   createFocusSession,
   updateFocusSession,
-} from "../api/focus";
-import useToast from "./useToast";
+} from "../../api/focus";
+import useToast from "../useToast";
 import useTimerInterval from "./useTimerInterval";
-
-export const TIMER_STATUS = {
-  IDLE: "idle", // 시작 전
-  RUNNING: "running", // 진행 중
-  PAUSED: "paused", // 일시 정지
-  COMPLETED: "completed", // 종료
-  FAILED: "failed",
-};
+import { TIMER_STATUS } from "./timerConstants";
 
 function useTimer(studyId, durationSec) {
   const [timerStatus, setTimerStatus] = useState(TIMER_STATUS.IDLE);
