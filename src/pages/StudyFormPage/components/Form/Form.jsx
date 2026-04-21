@@ -51,16 +51,35 @@ const Form = ({ type, study }) => {
   //만들기/수정하기 버튼 클릭 시
   const onHandleSubmit = async () => {
     //설명 제외 모든 곳에 입력이 되었는지 검사 -> 입력 안된 부분 있으면 토스트 메세지로 띄우기
-    if (
-      nickname.trim() === "" ||
-      title.trim() === "" //||
-      //description.trim() === "" ||
-      // password.trim() === "" ||
-      // checkPassword.trim() === ""
-    ) {
-      showToast("warning", "입력이 필요합니다!");
-      return;
+    switch (type) {
+      case "create":
+        if (
+          nickname.trim() === "" ||
+          title.trim() === "" ||
+          //description.trim() === "" ||
+          password.trim() === "" ||
+          checkPassword.trim() === ""
+        ) {
+          showToast("warning", "입력이 필요합니다!");
+          return;
+        }
+        break;
+      case "modify":
+        if (
+          nickname.trim() === "" ||
+          title.trim() === "" //||
+          //description.trim() === "" ||
+          // password.trim() === "" ||
+          // checkPassword.trim() === ""
+        ) {
+          showToast("warning", "입력이 필요합니다!");
+          return;
+        }
+        break;
+      default:
+        break;
     }
+
     //비밀번호와 비밀번호 확인이 일치한지 검사 -> 다르면 토스트 메세지로 띄우기
     if (password !== checkPassword) {
       showToast("warning", "비밀번호가 일치하지 않습니다!");
@@ -76,8 +95,8 @@ const Form = ({ type, study }) => {
           title,
           nickname,
           description,
+          password,
           theme: selectedBackground,
-          ...(password ? { password } : {}), //password가 빈 문자열이 아닐때만 password 값을 보냄.
         });
         console.log("result=>", result);
 
@@ -88,8 +107,8 @@ const Form = ({ type, study }) => {
           title,
           nickname,
           description,
-          password,
           theme: selectedBackground,
+          ...(editPassword ? { password } : {}), //password 수정 상태라면 password 값을 보냄.
         });
         console.log("result=>", result);
         break;
