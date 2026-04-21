@@ -4,14 +4,13 @@ import { getStudyDetail } from "../../api/studies";
 import BoxHeaderInfo from "../../components/BoxHeader/BoxHeaderInfo";
 import NavButton from "../../components/NavButton/NavButton";
 import Toast from "../../components/Toast/Toast";
-import Modal from "../../components/Modal/Modal";
 import useTimer from "../../hooks/timer/useTimer";
 import { TIMER_STATUS } from "../../hooks/timer/timerConstants";
 import TimerSetting from "./components/TimerSetting";
 import TimerControls from "./components/TimerControls";
 import ResumeConfirmPopup from "./components/ResumeConfirmPopup";
 import StopConfirmPopup from "./components/StopConfirmPopup";
-import SessionTitleInput from "./components/SessionTitleInput";
+import SessionTitleModal from "./components/SessionTitleModal";
 import SessionListModal from "./components/SessionListModal";
 import formatTime from "./formatTime";
 import styles from "./Focus.module.css";
@@ -173,22 +172,15 @@ function Focus() {
 
       {/* 타이머 생성 시 집중 세션 제목 설정 팝업 */}
       {showTitleModal && (
-        <Modal
-          title="세션 생성"
-          setShowModal={setShowTitleModal}
-          confirmText="생성"
-          innerComponent={
-            <SessionTitleInput
-              value={title}
-              onChange={(val) => {
-                setTitle(val);
-                if (val.trim()) setTitleError("");
-              }}
-              errorMessage={titleError}
-            />
-          }
-          onClickConfirm={handleStart}
-          preventAutoClose={true}
+        <SessionTitleModal
+          title={title}
+          titleError={titleError}
+          onChangeTitle={(val) => {
+            setTitle(val);
+            if (val.trim()) setTitleError("");
+          }}
+          onConfirm={handleStart}
+          onClose={() => setShowTitleModal(false)}
         />
       )}
 
