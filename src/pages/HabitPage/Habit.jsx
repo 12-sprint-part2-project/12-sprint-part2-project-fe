@@ -80,13 +80,18 @@ function Habit() {
     setIsAdding(false);
   };
 
-  // 삭제: 편집 중인 아이템이 삭제되면 편집 상태도 초기화
+  // 삭제: 편집 중인 아이템이 삭제되면 편집 상태도 초기화, stagedEdits에서도 제거
   const handleDelete = async (habitId) => {
     await removeHabit(habitId);
     if (editingHabitId === habitId) {
       setEditingHabitId(null);
       setEditingValue("");
     }
+    setStagedEdits((prev) => {
+      const next = { ...prev };
+      delete next[habitId];
+      return next;
+    });
   };
 
   // + 버튼 클릭: 입력 중인 게 있으면 저장 후 새 입력 열기
