@@ -56,7 +56,10 @@ const Emoji = ({ studyId }) => {
           <div>
             <button
               onMouseUp={(e) => e.stopPropagation()}
-              onClick={() => setShowRest((prev) => !prev)}
+              onClick={() => {
+                setShowRest((prev) => !prev);
+                setShowPicker(false);
+              }}
               className={styles.restEmoji}
             >
               <span className={styles.iconPlus}></span> {rest.length}..
@@ -76,7 +79,10 @@ const Emoji = ({ studyId }) => {
         <button
           className={styles.addEmoji}
           onMouseUp={(e) => e.stopPropagation()}
-          onClick={() => setShowPicker((prev) => !prev)}
+          onClick={() => {
+            setShowPicker((prev) => !prev);
+            setShowRest(false);
+          }}
         >
           <i className="ic smile"></i> 추가
         </button>
