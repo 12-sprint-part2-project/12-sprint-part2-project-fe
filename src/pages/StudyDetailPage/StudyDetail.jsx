@@ -68,56 +68,64 @@ const StudyDetail = () => {
   const [showSharingModal, setShowSharingModal] = useState(false); //공유 모달
 
   const [confirmText, setConfirmText] = useState(""); //버튼마다 비밀번호 모달 내 버튼명이 다르므로, 여기에 저장해서 사용.
-  const [pwType, setPwType] = useState(""); //삭제/수정 중 무엇인지 기록하는 용도
 
   //토스트
   const { toast, showToast } = useToast();
 
   /* 공유/수정/삭제 버튼 클릭 핸들러 */
-  const onClickModify = async () => {
-    //먼저 세션 확인!!!!! 세션에 없다면 비밀번호 모달 실행
-    //비밀번호 체크 모달 -> 비밀번호 일치할 시 -> 수정 페이지로 Link
-    setPwType("modify"); //비밀번호 모달에 필요한 Props설정
-    setConfirmText("수정하러 가기");
-    checkSessionFunc();
-  };
-  const onClickDelete = async () => {
-    setPwType("delete");
-    setConfirmText("삭제하기");
-    checkSessionFunc();
-  };
   const onClickSharing = () => {
     setShowSharingModal(true);
   };
-  const onClickEnterHabit = () => {
-    //비밀번호 모달에 필요한 Props설정
-    setPwType("habit"); //어떤 페이지로 이동 시킬지 설정하기 위함
-    setConfirmText("확인");
-    checkSessionFunc();
+
+  const onClickModify = async () => {
+    //먼저 세션 확인!!!!! 세션에 없다면 비밀번호 모달 실행
+    //비밀번호 체크 모달 -> 비밀번호 일치할 시 -> 수정 페이지로 Link
+    const type = "modify";
+    setConfirmText("수정하러 가기");
+    validateSessionAndProceed(type);
   };
-  const onClickEnterFocus = () => {
-    //비밀번호 모달에 필요한 Props설정
-    setPwType("focus"); //어떤 페이지로 이동 시킬지 설정하기 위함
-    setConfirmText("확인");
-    checkSessionFunc();
+  const onClickDelete = async () => {
+    const type = "delete";
+    setConfirmText("삭제하기");
+    validateSessionAndProceed(type);
   };
 
-  //세션 체크 -> 존재하지 않으면 비밀번호 모달, 존재하면 타겟 페이지로 이동
-  const checkSessionFunc = async () => {
+  const onClickEnterHabit = () => {
+    const type = "habit";
+    validateSessionAndProceed(type);
+  };
+  const onClickEnterFocus = () => {
+    const type = "focus";
+    setConfirmText("확인");
+    validateSessionAndProceed(type);
+  };
+
+  //세션을 체크하고, 그에 따른 결과를 이어지는 함수.
+  const validateSessionAndProceed = (type) => {
+    const isInSession = handleCheckSession();
+    if (isInSession) {
+      onPasswordSuccess(type);
+    } else {
+      setShowPwModal(true);
+    }
+  };
+
+  //세션 체크 : 세션에 있는지 여부를 true/false로 리턴.
+  const handleCheckSession = async () => {
     try {
       await checkSession(studyId);
       //세션에 존재할 시, 바로 다음 페이지로 보냄
-      onPasswordSuccess(); //(원랜 이걸 비밀번호 모달에 넘겨줬었다.)
+      return true;
     } catch (e) {
       console.log("세션에 존재하지 않음 =>", e);
-      setShowPwModal(true);
+      return false;
     }
   };
 
   //비밀번호 인증 성공 시 실행할 함수.
   //ㄴ그렇담 여기에서 성공 토스트 메세지를 실행한다!
-  const onPasswordSuccess = () => {
-    switch (pwType) {
+  const onPasswordSuccess = (type) => {
+    switch (type) {
       case "modify":
         showToast("success", "인증 되었습니다!"); //비밀번호 일치로 넘어갈 때도, 세션에 들어있어서 넘어갈 때도 모두 토스트 메세지를 보여줄 수 있다.
         setTimeout(() => {
