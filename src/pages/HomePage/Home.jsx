@@ -58,6 +58,8 @@ const Home = () => {
         const res = await getStudies(params);
         const { data, total, has_more } = res.data;
 
+        // console.log(res);
+
         setStudies((prev) => [...prev, ...data]);
         setUsableMore(has_more);
         setTotal(total);

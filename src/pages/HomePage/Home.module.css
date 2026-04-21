@@ -144,6 +144,11 @@
   gap: 1.5rem;
 }
 
+.cardList a {
+  display: block;
+  width: 100%;
+}
+
 .notification {
   grid-column: 1 / span 3;
   padding-block: 1.25rem;
