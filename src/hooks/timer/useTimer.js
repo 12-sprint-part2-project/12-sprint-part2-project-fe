@@ -6,6 +6,7 @@ import {
 } from "../../api/focus";
 import useToast from "../useToast";
 import useTimerInterval from "./useTimerInterval";
+import useTimerToast from "./useTimerToast";
 import { TIMER_STATUS } from "./timerConstants";
 import { calcRemaining } from "./timerUtils";
 
@@ -29,7 +30,7 @@ function useTimer(studyId, durationSec) {
   const sessionIdRef = useRef(null);
   const isCompletingRef = useRef(false); // 타이머 완료 API 중복 호출 방어 플래그
 
-  const { toast, showToast } = useToast();
+  const { toast, toastComplete, toastPause, toastError } = useTimerToast();
 
   // 타이머 완료 처리: failed=true일 경우 포인트 미지급
   const handleComplete = useCallback(
@@ -44,21 +45,18 @@ function useTimer(studyId, durationSec) {
 
         const { data } = res.data;
 
+        const pointResult = data.earnedPoint ?? 0;
         if (action === TIMER_STATUS.COMPLETED) {
-          const pointResult = data.earnedPoint ?? 0;
           setEarnedPoint(pointResult);
-          showToast("success", "포인트를 획득했습니다!", pointResult);
-        } else if (action === TIMER_STATUS.FAILED) {
-          showToast("warning", "집중이 종료되어 포인트가 지급되지 않습니다.");
         }
-
+        toastComplete(action, pointResult);
         setTimerStatus(data.status);
       } catch (e) {
         isCompletingRef.current = false;
-        showToast("warning", e.userMessage);
+        toastError(e.userMessage);
       }
     },
-    [showToast, studyId],
+    [toastComplete, toastError, studyId],
   );
 
   const { timeLeft, setTimeLeft, setEndTime, resetEndTime } = useTimerInterval({
@@ -78,12 +76,12 @@ function useTimer(studyId, durationSec) {
         setSessions(data);
         setShouldShowSessionList(true);
       } catch (e) {
-        showToast("warning", e.userMessage);
+        toastError(e.userMessage);
       }
     };
 
     fetchSession();
-  }, [studyId, handleComplete, showToast]);
+  }, [studyId, handleComplete, toastError]);
 
   // 세션 선택 시 호출 (SessionListModal에서 클릭 시)
   const selectSession = async (session) => {
@@ -138,7 +136,8 @@ function useTimer(studyId, durationSec) {
       setTimerStatus(data.status);
       setCurrentTitle(title); // 시작 시 제목 저장
     } catch (e) {
-      showToast("warning", e.userMessage);
+      toastError(e.userMessage);
+
       throw e;
     }
   };
@@ -153,9 +152,9 @@ function useTimer(studyId, durationSec) {
       const { data } = res.data;
 
       setTimerStatus(data.status);
-      showToast("warning", "집중이 중단되었습니다.");
+      toastPause();
     } catch (e) {
-      showToast("warning", e.userMessage);
+      toastError(e.userMessage);
     }
   };
 
@@ -174,7 +173,7 @@ function useTimer(studyId, durationSec) {
       setEndTime(new Date(new Date(data.endTime).getTime() - elapsed));
       setTimerStatus(data.status);
     } catch (e) {
-      showToast("warning", e.userMessage);
+      toastError(e.userMessage);
     }
   };
 
