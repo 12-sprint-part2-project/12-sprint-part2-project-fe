@@ -8,6 +8,7 @@ import Modal from "../../components/Modal/Modal";
 import useTimer from "../../hooks/timer/useTimer";
 import { TIMER_STATUS } from "../../hooks/timer/timerConstants";
 import TimerSetting from "./components/TimerSetting";
+import TimerControls from "./components/TimerControls";
 import ResumeConfirmPopup from "./components/ResumeConfirmPopup";
 import StopConfirmPopup from "./components/StopConfirmPopup";
 import SessionTitleInput from "./components/SessionTitleInput";
@@ -284,47 +285,15 @@ function Focus() {
 
         {/* 타이머 조작 버튼 (시작/일시정지/재시작) */}
         <div className={styles.btnContainer}>
-          {/* 타이머 시작 전/완료: 시작 버튼만 표시 */}
-          {isIdle || isCompleted ? (
-            <button
-              type="button"
-              className={`${styles.btnBase} ${styles.timerStartButton}`}
-              onClick={handleStartClick}
-            >
-              <span className="ic play"></span>
-              Start!
-            </button>
-          ) : (
-            <>
-              {/* 타이머 진행 중/일시중지: 시작, 일시정지, 재시작 버튼 모두 표시 */}
-              <button
-                type="button"
-                className={`${styles.btnBase} ${styles.btnCircle} ${styles.timerPauseButton}`}
-                onClick={pause}
-                disabled={isPaused}
-              >
-                <span className="ic pause"></span>
-              </button>
-
-              <button
-                type="button"
-                className={`${styles.btnBase} ${styles.timerStartButton}`}
-                disabled={isRunning || isPaused}
-              >
-                <span className="ic play"></span>
-                Start!
-              </button>
-
-              <button
-                type="button"
-                className={`${styles.btnBase} ${styles.btnCircle} ${styles.timerRestartButton}`}
-                onClick={resume}
-                disabled={isRunning}
-              >
-                <span className="ic restart"></span>
-              </button>
-            </>
-          )}
+          <TimerControls
+            isIdle={isIdle}
+            isCompleted={isCompleted}
+            isRunning={isRunning}
+            isPaused={isPaused}
+            onStart={handleStartClick}
+            onPause={pause}
+            onResume={resume}
+          />
         </div>
       </div>
     </section>

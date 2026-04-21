@@ -106,54 +106,6 @@
   gap: 1.5rem;
 }
 
-/* 버튼 공통 스타일 */
-.btnBase {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border: none;
-  cursor: pointer;
-  font-family: Pretendard, sans-serif;
-  transition: background-color 0.2s;
-}
-
-.btnBase:disabled {
-  background-color: var(--gray-500);
-  cursor: not-allowed;
-}
-
-/* 원형 버튼 공통 스타일 */
-.btnCircle {
-  width: 4rem;
-  height: 4rem;
-  border-radius: 50%;
-}
-
-.btnCircle span {
-  width: 2.2rem;
-  height: 2.2rem;
-}
-
-/* 각 버튼별 개별 스타일 */
-.timerStartButton {
-  gap: 1rem;
-  width: 20.8125rem;
-  height: 3.75rem;
-  border-radius: 3.125rem;
-  font-size: 1.75rem;
-  font-weight: 800;
-  color: var(--white);
-  background-color: var(--brand);
-}
-
-.timerPauseButton {
-  background-color: var(--green-text);
-}
-
-.timerRestartButton {
-  background-color: var(--brand);
-}
-
 /* ── 태블릿 (~ 744px) ── */
 @media (max-width: 744px) {
   .container {
@@ -209,28 +161,5 @@
 
   .btnContainer {
     gap: 0.5rem;
-  }
-
-  .timerStartButton {
-    gap: 0.5rem;
-    width: 8.75rem;
-    height: 2.8125rem;
-    border-radius: 3.125rem;
-    font: var(--text-18-bold);
-  }
-
-  .timerStartButton span {
-    width: 1.5rem;
-    height: 1.5rem;
-  }
-
-  .btnCircle {
-    width: 3rem;
-    height: 3rem;
-  }
-
-  .btnCircle span {
-    width: 1.65rem;
-    height: 1.65rem;
   }
 }
