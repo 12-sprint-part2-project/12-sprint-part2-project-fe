@@ -5,45 +5,6 @@
   background-color: var(--white);
 }
 
-/* 상단 헤더 영역 (제목, 네비게이션 버튼, 포인트) */
-.header {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-}
-
-.headerTop {
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 1rem;
-}
-
-.title {
-  font: var(--text-32-bold);
-  color: var(--black);
-}
-
-/* 내비게이션 버튼 (오늘의 습관, 홈) */
-.nav {
-  display: flex;
-  gap: 1rem;
-}
-
-.navBtn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.25rem;
-  padding: 0.75rem 1rem 0.75rem 1.5rem;
-  border-radius: 0.9375rem;
-  border: 1px solid var(--gray-300);
-  font: var(--text-16-medium);
-  color: var(--gray-500);
-  background-color: var(--white);
-}
-
 /* 타이머 섹션 */
 .timerSection {
   display: flex;
@@ -113,10 +74,6 @@
     padding: 1.5rem;
   }
 
-  .header {
-    margin-bottom: 2.5rem;
-  }
-
   .timerSection {
     height: 31.875rem;
     border-radius: 1.25rem;
@@ -132,18 +89,6 @@
   .container {
     width: min(100%, 21.5rem);
     padding: 1rem;
-  }
-
-  .header {
-    margin-bottom: 1.5rem;
-  }
-
-  .nav {
-    gap: 0.5rem;
-  }
-
-  .navBtn {
-    padding: 0.5rem 0.37rem 0.5rem 0.62rem;
   }
 
   .timerSection {

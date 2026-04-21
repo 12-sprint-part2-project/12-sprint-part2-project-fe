@@ -1,8 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { getStudyDetail } from "../../api/studies";
-import BoxHeaderInfo from "../../components/BoxHeader/BoxHeaderInfo";
-import NavButton from "../../components/NavButton/NavButton";
 import Toast from "../../components/Toast/Toast";
 import useTimer from "../../hooks/timer/useTimer";
 import { TIMER_STATUS } from "../../hooks/timer/timerConstants";
@@ -12,6 +10,7 @@ import ResumeConfirmPopup from "./components/ResumeConfirmPopup";
 import StopConfirmPopup from "./components/StopConfirmPopup";
 import SessionTitleModal from "./components/SessionTitleModal";
 import SessionListModal from "./components/SessionListModal";
+import StudyHeader from "./components/StudyHeader";
 import formatTime from "./formatTime";
 import styles from "./Focus.module.css";
 
@@ -204,24 +203,13 @@ function Focus() {
       )}
 
       {/* 스터디 정보 표시 */}
-      <div className={styles.header}>
-        <div className={styles.headerTop}>
-          <h2 className={styles.title}>
-            {study?.nickname}의 {study?.title}
-          </h2>
-          <div className={styles.nav}>
-            <NavButton
-              label="오늘의 습관"
-              onClick={() => navigate(`/studies/${studyId}/habits`)}
-            />
-            <NavButton label="홈" onClick={() => navigate("/")} />
-          </div>
-        </div>
-
-        <div>
-          <BoxHeaderInfo type="point" info={earnedPoint} />
-        </div>
-      </div>
+      <StudyHeader
+        nickname={study?.nickname}
+        title={study?.title}
+        earnedPoint={earnedPoint}
+        onNavigateHabit={() => navigate(`/studies/${studyId}/habits`)}
+        onNavigateHome={() => navigate("/")}
+      />
 
       {/* 타이머 */}
       <div className={styles.timerSection}>
