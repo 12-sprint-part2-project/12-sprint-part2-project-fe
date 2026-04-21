@@ -1,4 +1,4 @@
-import Modal from "../../../components/Modal/Modal";
+import Modal from "../../../../components/Modal/Modal";
 import styles from "./SessionListModal.module.css";
 
 function SessionListModal({ sessions, onSelect, onClose }) {

@@ -1,5 +1,5 @@
+import formatTime from "../../formatTime";
 import styles from "./TimerSetting.module.css";
-import formatTime from "../formatTime";
 
 const PRESETS = [15, 25, 50];
 

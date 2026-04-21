@@ -1,5 +1,5 @@
-import BoxHeaderInfo from "../../../components/BoxHeader/BoxHeaderInfo";
-import NavButton from "../../../components/NavButton/NavButton";
+import BoxHeaderInfo from "../../../../components/BoxHeader/BoxHeaderInfo";
+import NavButton from "../../../../components/NavButton/NavButton";
 import styles from "./StudyHeader.module.css";
 
 function StudyHeader({
