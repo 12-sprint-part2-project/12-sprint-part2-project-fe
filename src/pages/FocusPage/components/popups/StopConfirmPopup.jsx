@@ -1,5 +1,4 @@
-import React from "react";
-import Popup from "../../../components/Popup/Popup";
+import Popup from "../../../../components/Popup/Popup";
 
 function StopConfirmPopup({ setShow, onResume, onStop }) {
   return (
