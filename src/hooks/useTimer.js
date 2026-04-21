@@ -179,6 +179,7 @@ function useTimer(studyId, durationSec) {
       setCurrentTitle(title); // 시작 시 제목 저장
     } catch (e) {
       showToast("warning", e.userMessage);
+      throw e;
     }
   };
 
