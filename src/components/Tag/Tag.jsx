@@ -9,6 +9,7 @@ const Tag = ({
   points,
   count,
   emojiIcon,
+  onClick,
 }) => {
   const config = {
     point: {
@@ -34,6 +35,7 @@ const Tag = ({
         ${styles[`tag-${theme}`]}
         ${variant === "general" ? styles[`tag-${type}-general`] : ""}
       `}
+      onClick={onClick}
     >
       <div
         className={`

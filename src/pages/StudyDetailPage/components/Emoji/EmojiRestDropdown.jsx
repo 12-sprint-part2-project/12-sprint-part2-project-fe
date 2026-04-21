@@ -19,11 +19,11 @@ const EmojiRestDropdown = ({ emojis, onEmojiClick, onClose }) => {
       {emojis.map(({ emoji, count }) => (
         <Tag
           key={emoji}
-          variant="general"
           type="emoji"
           theme="dark"
-          emojiIcon={emoji}
+          variant="general"
           count={count}
+          emojiIcon={emoji}
           onClick={() => onEmojiClick(emoji)}
           styles={{ cursor: "pointer" }}
         />

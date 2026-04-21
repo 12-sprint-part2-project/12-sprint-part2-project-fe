@@ -8,11 +8,11 @@ const EmojiPreview = ({ emojis, onEmojiClick }) => {
       {emojis.map(({ emoji, count }) => (
         <Tag
           key={emoji}
-          variant="general"
           type="emoji"
           theme="dark"
-          emojiIcon={emoji}
+          variant="general"
           count={count}
+          emojiIcon={emoji}
           onClick={onEmojiClick ? () => onEmojiClick(emoji) : undefined}
           style={onEmojiClick ? { cursor: "pointer" } : { cursor: "default" }}
         />

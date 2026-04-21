@@ -26,6 +26,8 @@ const Emoji = ({ studyId }) => {
   }, [studyId]);
 
   const handleEmojiClick = async (emoji) => {
+    console.log(`클릭된 이모지: ${emoji}`);
+
     await addEmoji(studyId, { emoji });
 
     setEmojis((prev) => {
