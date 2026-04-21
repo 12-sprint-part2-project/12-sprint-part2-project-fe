@@ -152,6 +152,11 @@ function Focus() {
     setShowStopConfirmPopup(false);
   };
 
+  // 획득 포인트 합계
+  const totalPoints =
+    (study?.focusSessions?.reduce((acc, cur) => acc + cur.earnedPoint, 0) ??
+      0) + earnedPoint;
+
   return (
     <section className={styles.container}>
       {toast && (
@@ -206,7 +211,7 @@ function Focus() {
       <StudyHeader
         nickname={study?.nickname}
         title={study?.title}
-        earnedPoint={earnedPoint}
+        earnedPoint={totalPoints}
         onNavigateHabit={() => navigate(`/studies/${studyId}/habits`)}
         onNavigateHome={() => navigate("/")}
       />
