@@ -1,9 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import {
-  getFocusSession,
-  createFocusSession,
-  updateFocusSession,
-} from "../../api/focus";
+import useFocusSession from "./useFocusSession";
 import useTimerInterval from "./useTimerInterval";
 import useTimerToast from "./useTimerToast";
 import { TIMER_STATUS } from "./timerConstants";
@@ -17,10 +13,6 @@ function useTimer(studyId, durationSec) {
   // 페이지 재진입 시 타이머가 paused 상태인지 여부 (재개 팝업 표시용)
   const [shouldShowResumePopup, setShouldShowResumePopup] = useState(false);
 
-  // 페이지 재진입 시 과거에 진행 중이던 집중 세션 목록
-  const [sessions, setSessions] = useState([]);
-  // 페이지 재진입 시 진행 중이던 집중 세션 목록 모달 상태
-  const [shouldShowSessionList, setShouldShowSessionList] = useState(false);
   // 선택한 세션 정보
   const [selectedSession, setSelectedSession] = useState(null);
   // 사용자가 설정한 세션 제목
@@ -31,6 +23,9 @@ function useTimer(studyId, durationSec) {
 
   const { toast, toastComplete, toastPause, toastError } = useTimerToast();
 
+  const { sessions, shouldShowSessionList, createSession, updateSession } =
+    useFocusSession(studyId);
+
   // 타이머 완료 처리: failed=true일 경우 포인트 미지급
   const handleComplete = useCallback(
     async ({ action = TIMER_STATUS.COMPLETED } = {}) => {
@@ -38,16 +33,9 @@ function useTimer(studyId, durationSec) {
       isCompletingRef.current = true;
 
       try {
-        const res = await updateFocusSession(studyId, sessionIdRef.current, {
-          action,
-        });
-
-        const { data } = res.data;
-
+        const data = await updateSession(sessionIdRef.current, action);
         const pointResult = data.earnedPoint ?? 0;
-        if (action === TIMER_STATUS.COMPLETED) {
-          setEarnedPoint(pointResult);
-        }
+        if (action === TIMER_STATUS.COMPLETED) setEarnedPoint(pointResult);
         toastComplete(action, pointResult);
         setTimerStatus(data.status);
       } catch (e) {
@@ -55,32 +43,13 @@ function useTimer(studyId, durationSec) {
         toastError(e.userMessage);
       }
     },
-    [toastComplete, toastError, studyId],
+    [toastComplete, toastError, updateSession],
   );
 
   const { timeLeft, setTimeLeft, setEndTime, resetEndTime } = useTimerInterval({
     timerStatus,
     onComplete: handleComplete,
   });
-
-  // 페이지 진입 시 세션 조회
-  useEffect(() => {
-    const fetchSession = async () => {
-      try {
-        const res = await getFocusSession(studyId);
-        const { data } = res.data;
-
-        if (!data || data.length === 0) return;
-
-        setSessions(data);
-        setShouldShowSessionList(true);
-      } catch (e) {
-        toastError(e.userMessage);
-      }
-    };
-
-    fetchSession();
-  }, [studyId, handleComplete, toastError]);
 
   // 세션 선택 시 호출 (SessionListModal에서 클릭 시)
   const selectSession = async (session) => {
@@ -100,9 +69,7 @@ function useTimer(studyId, durationSec) {
       }
 
       // 서버에 paused로 요청
-      await updateFocusSession(studyId, session.id, {
-        action: TIMER_STATUS.PAUSED,
-      });
+      await updateSession(session.id, TIMER_STATUS.PAUSED);
 
       resetEndTime();
       setTimeLeft(remaining);
@@ -122,21 +89,14 @@ function useTimer(studyId, durationSec) {
 
   const start = async (title) => {
     try {
-      const res = await createFocusSession(studyId, {
-        durationSec,
-        title,
-      });
-
-      const { data } = res.data;
-
+      const data = await createSession({ durationSec, title });
       sessionIdRef.current = data.id;
       setEndTime(new Date(data.endTime));
       setTimeLeft(durationSec);
       setTimerStatus(data.status);
-      setCurrentTitle(title); // 시작 시 제목 저장
+      setCurrentTitle(title);
     } catch (e) {
       toastError(e.userMessage);
-
       throw e;
     }
   };
@@ -144,12 +104,10 @@ function useTimer(studyId, durationSec) {
   // 일시 정지 (interval만 멈추고 endTimeRef 유지)
   const pause = async () => {
     try {
-      const res = await updateFocusSession(studyId, sessionIdRef.current, {
-        action: TIMER_STATUS.PAUSED,
-      });
-
-      const { data } = res.data;
-
+      const data = await updateSession(
+        sessionIdRef.current,
+        TIMER_STATUS.PAUSED,
+      );
       setTimerStatus(data.status);
       toastPause();
     } catch (e) {
@@ -160,13 +118,10 @@ function useTimer(studyId, durationSec) {
   const resume = async () => {
     try {
       const requestedAt = Date.now(); // 네트워크 요청 직전 시각
-
-      const res = await updateFocusSession(studyId, sessionIdRef.current, {
-        action: TIMER_STATUS.RUNNING,
-      });
-
-      const { data } = res.data;
-
+      const data = await updateSession(
+        sessionIdRef.current,
+        TIMER_STATUS.RUNNING,
+      );
       // 요청~응답 사이 경과 시간만큼 endTime을 앞당겨 네트워크 딜레이 보정
       const elapsed = Date.now() - requestedAt;
       setEndTime(new Date(new Date(data.endTime).getTime() - elapsed));
@@ -176,10 +131,6 @@ function useTimer(studyId, durationSec) {
     }
   };
 
-  const complete = (options) => {
-    handleComplete(options);
-  };
-
   return {
     timerStatus,
     timeLeft,
@@ -187,7 +138,7 @@ function useTimer(studyId, durationSec) {
     start,
     pause,
     resume,
-    complete,
+    complete: (options) => handleComplete(options),
     toast,
     sessionDuration,
     shouldShowResumePopup,
