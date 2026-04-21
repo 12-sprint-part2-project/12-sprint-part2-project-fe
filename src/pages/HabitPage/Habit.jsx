@@ -19,6 +19,7 @@ function Habit() {
   const [editingHabitId, setEditingHabitId] = useState(null);
   const [originalHabitName, setOriginalHabitName] = useState("");
   const [editingValue, setEditingValue] = useState("");
+  const [stagedEdits, setStagedEdits] = useState({});
   const { habits, isLoading, toggleHabit, addHabit, editHabit, removeHabit } =
     useHabits(studyId);
 
@@ -42,20 +43,25 @@ function Habit() {
       return;
     }
     setEditingHabitId(habit.id);
-    setEditingValue(habit.habitName);
+    // 이미 stagedEdits에 수정값이 있으면 그걸 보여줌 (다른 습관 편집 후 돌아올 때)
+    setEditingValue(stagedEdits[habit.id] ?? habit.habitName);
     setOriginalHabitName(habit.habitName);
   };
 
-  // 수정 완료: 편집 중인 습관 저장 + 추가 중인 습관 저장
+  // 편집값 변경 시 stagedEdits에 누적
+  const handleEditChange = (habitId, value) => {
+    setEditingValue(value);
+    setStagedEdits((prev) => ({ ...prev, [habitId]: value }));
+  };
+
+  // 수정 완료: stagedEdits 전체 API 전송 + 추가 중인 습관 저장
   const handleConfirm = async () => {
     try {
-      if (
-        editingHabitId !== null &&
-        editingValue.trim() &&
-        editingValue.trim() !== originalHabitName
-      ) {
-        await editHabit(editingHabitId, editingValue.trim());
-      }
+      const editPromises = Object.entries(stagedEdits)
+        .filter(([, name]) => name.trim())
+        .map(([id, name]) => editHabit(Number(id), name.trim()));
+      await Promise.all(editPromises);
+
       if (isAdding && habitInput.trim()) {
         await addHabit(habitInput);
       }
@@ -65,6 +71,7 @@ function Habit() {
       setOriginalHabitName("");
       setHabitInput("");
       setIsAdding(false);
+      setStagedEdits({});
     }
   };
 
@@ -107,8 +114,9 @@ function Habit() {
           isEditMode={true}
           isEditing={editingHabitId === habit.id}
           editValue={editingValue}
+          stagedName={stagedEdits[habit.id]}
           onEditStart={handleEditStart}
-          onEditChange={setEditingValue}
+          onEditChange={handleEditChange}
           onDelete={handleDelete}
         />
       ))}
@@ -214,6 +222,7 @@ function Habit() {
             setEditingValue("");
             setIsAdding(false);
             setHabitInput("");
+            setStagedEdits({});
           }}
           innerComponent={modalInner}
         />
