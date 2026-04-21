@@ -24,6 +24,9 @@ export const verifyPassword = (studyId, body) =>
 export const checkSession = (studyId) =>
   api.get(`/studies/${studyId}/check-session`);
 
+// 응원 이모지 조회
+export const getEmojis = (studyId) => api.get(`/studies/${studyId}/emojis`);
+
 // 응원 이모지 추가
 export const addEmoji = (studyId, body) =>
   api.post(`/studies/${studyId}/emojis`, body);
