@@ -7,25 +7,6 @@
   gap: 24px;
 }
 
-/*-----아이콘-----*/
-.pawContainer {
-  width: 32px;
-  height: 32px;
-
-  border-radius: 50%;
-  background-color: rgba(65, 65, 65, 0.5);
-
-  position: absolute;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.paw {
-  width: 18px;
-  height: 18px;
-}
-
 /*-----Button------*/
 .button {
   width: 100%;
@@ -35,4 +16,51 @@
 /*-----Toast------*/
 .toast {
   z-index: 1000;
+}
+
+.passwordInputs {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  width: 100%;
+
+  background-color: var(--white);
+  border: 3px solid var(--green);
+  padding: 24px;
+  border-radius: 20px;
+
+  box-shadow: 0px 0px 6px 0px rgba(0, 0, 0, 0.1);
+}
+.editPasswordCancelBtn {
+  background-color: var(--white);
+  padding: 16px;
+  border-radius: 30px;
+  width: fit-content;
+
+  color: var(--black);
+  font-family: Pretendard;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+
+  border: 1px solid var(--green);
+  box-shadow: 0px 0px 6px 0px rgba(0, 0, 0, 0.1);
+}
+.editPasswordBtn {
+  background-color: var(--white);
+  padding: 16px;
+  border-radius: 30px;
+  width: 100%;
+
+  color: var(--black);
+  font-family: Pretendard;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+
+  border: 1px solid var(--green);
+  box-shadow: 0px 0px 6px 0px rgba(0, 0, 0, 0.1);
 }
