@@ -4,7 +4,6 @@ import {
   createFocusSession,
   updateFocusSession,
 } from "../../api/focus";
-import useToast from "../useToast";
 import useTimerInterval from "./useTimerInterval";
 import useTimerToast from "./useTimerToast";
 import { TIMER_STATUS } from "./timerConstants";
