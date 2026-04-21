@@ -30,6 +30,9 @@ const Form = ({ type, study }) => {
   //배경 이미지 (추후에 따로 분리해두면 좋을듯)
   const [selectedBackground, setSelectedBackground] = useState("GREEN"); //기본값주기?
 
+  //비밀번호 수정 여부 - false: 비밀번호 수정 버튼, true: 비밀번호 입력 창
+  const [editPassword, setEditPassword] = useState(false);
+
   //비밀번호 확인 입력 시, 비밀번호와 일치하는지 검사하고, 일치하지 않다면 문구 띄우기
   useEffect(() => {
     if (password.trim() !== "" && checkPassword.trim() !== "") {
@@ -48,16 +51,35 @@ const Form = ({ type, study }) => {
   //만들기/수정하기 버튼 클릭 시
   const onHandleSubmit = async () => {
     //설명 제외 모든 곳에 입력이 되었는지 검사 -> 입력 안된 부분 있으면 토스트 메세지로 띄우기
-    if (
-      nickname.trim() === "" ||
-      title.trim() === "" ||
-      description.trim() === "" ||
-      password.trim() === "" ||
-      checkPassword.trim() === ""
-    ) {
-      showToast("warning", "입력이 필요합니다!");
-      return;
+    switch (type) {
+      case "create":
+        if (
+          nickname.trim() === "" ||
+          title.trim() === "" ||
+          //description.trim() === "" ||
+          password.trim() === "" ||
+          checkPassword.trim() === ""
+        ) {
+          showToast("warning", "입력이 필요합니다!");
+          return;
+        }
+        break;
+      case "modify":
+        if (
+          nickname.trim() === "" ||
+          title.trim() === "" //||
+          //description.trim() === "" ||
+          // password.trim() === "" ||
+          // checkPassword.trim() === ""
+        ) {
+          showToast("warning", "입력이 필요합니다!");
+          return;
+        }
+        break;
+      default:
+        break;
     }
+
     //비밀번호와 비밀번호 확인이 일치한지 검사 -> 다르면 토스트 메세지로 띄우기
     if (password !== checkPassword) {
       showToast("warning", "비밀번호가 일치하지 않습니다!");
@@ -66,7 +88,6 @@ const Form = ({ type, study }) => {
 
     //생성/수정 api 보내기
     let result;
-    // study.id = 8; //테스트용
     switch (type) {
       case "create":
         console.log("스터디 생성 요청 시작");
@@ -86,8 +107,8 @@ const Form = ({ type, study }) => {
           title,
           nickname,
           description,
-          password,
           theme: selectedBackground,
+          ...(editPassword ? { password } : {}), //password 수정 상태라면 password 값을 보냄.
         });
         console.log("result=>", result);
         break;
@@ -126,25 +147,49 @@ const Form = ({ type, study }) => {
         selectedBackground={selectedBackground}
         setSelectedBackground={setSelectedBackground}
       />
-      <Input
-        input={password}
-        setInput={setPassword}
-        title="비밀번호"
-        placeholder="비밀번호를 입력해 주세요"
-        warningText="* 비밀번호를 입력해 주세요"
-        isPassword={true}
-      />
-      <Input
-        input={checkPassword}
-        setInput={setCheckPassword}
-        title="비밀번호 확인"
-        placeholder="비밀번호를 한번 더 입력해 주세요"
-        isPassword={true}
-        isPasswordCheck={true}
-        isPwSame={isPwSame}
-        pwCheckWarningText={pwCheckWarningText}
-      />
 
+      {editPassword ? (
+        <div className={styles.passwordInputs}>
+          <Input
+            input={password}
+            setInput={setPassword}
+            title="비밀번호"
+            placeholder="비밀번호를 입력해 주세요"
+            warningText="* 비밀번호를 입력해 주세요"
+            isPassword={true}
+          />
+          <Input
+            input={checkPassword}
+            setInput={setCheckPassword}
+            title="비밀번호 확인"
+            placeholder="비밀번호를 한번 더 입력해 주세요"
+            isPassword={true}
+            isPasswordCheck={true}
+            isPwSame={isPwSame}
+            pwCheckWarningText={pwCheckWarningText}
+          />
+          <button
+            className={styles.editPasswordCancelBtn}
+            onClick={() => {
+              setEditPassword(false);
+              setPassword("");
+              setCheckPassword("");
+            }}
+          >
+            비밀번호 수정 취소
+          </button>
+        </div>
+      ) : (
+        <button
+          className={styles.editPasswordBtn}
+          type="button"
+          onClick={() => {
+            setEditPassword(true);
+          }}
+        >
+          비밀번호 수정
+        </button>
+      )}
       <div className={styles.button}>
         <Button
           label={type === "modify" ? "수정하기" : "만들기"}
