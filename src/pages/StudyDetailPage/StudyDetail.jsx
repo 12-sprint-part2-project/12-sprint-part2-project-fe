@@ -101,8 +101,8 @@ const StudyDetail = () => {
   };
 
   //세션을 체크하고, 그에 따른 결과를 이어지는 함수.
-  const validateSessionAndProceed = (type) => {
-    const isInSession = handleCheckSession();
+  const validateSessionAndProceed = async (type) => {
+    const isInSession = await handleCheckSession();
     if (isInSession) {
       onPasswordSuccess(type);
     } else {
