@@ -6,6 +6,7 @@ function HabitItem({
   isEditMode,
   isEditing,
   editValue,
+  stagedName,
   onToggle,
   onEditStart,
   onEditChange,
@@ -20,7 +21,7 @@ function HabitItem({
             <input
               className={styles.editInput}
               value={editValue}
-              onChange={(e) => onEditChange(e.target.value)}
+              onChange={(e) => onEditChange(habit.id, e.target.value)}
               onKeyDown={(e) => {
                 if (e.key === "Escape") onEditStart(null);
               }}
@@ -45,7 +46,7 @@ function HabitItem({
           className={`${styles.editItem} ${habit.isCompleted ? styles.completed : ""}`}
           onClick={() => onEditStart(habit)}
         >
-          <span className={styles.editName}>{habit.habitName}</span>
+          <span className={styles.editName}>{stagedName ?? habit.habitName}</span>
         </button>
         <button
           className={styles.deleteBtn}

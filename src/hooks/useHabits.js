@@ -18,6 +18,7 @@ function useHabits(studyId) {
     setError(null);
     try {
       const res = await getTodayHabits(studyId);
+      console.log("[useHabits] getTodayHabits 응답:", res.data);
       setHabits(res.data.data);
     } catch (err) {
       setError(err.userMessage || "습관을 불러오지 못했습니다.");
