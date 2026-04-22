@@ -3,6 +3,8 @@ import Tag from "../Tag/Tag";
 import styles from "./EmojiPreview.module.css";
 
 const EmojiPreview = ({ emojis, onEmojiClick }) => {
+  console.log(onEmojiClick);
+
   return (
     <div className={styles.emojiTop3}>
       {emojis.map(({ emoji, count }) => (
@@ -14,7 +16,6 @@ const EmojiPreview = ({ emojis, onEmojiClick }) => {
           count={count}
           emojiIcon={emoji}
           onClick={onEmojiClick ? () => onEmojiClick(emoji) : undefined}
-          style={onEmojiClick ? { cursor: "pointer" } : { cursor: "default" }}
         />
       ))}
     </div>

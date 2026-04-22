@@ -5,8 +5,6 @@ import EmojiPickerPopup from "./EmojiPickerPopup";
 import EmojiRestDropdown from "./EmojiRestDropdown";
 import styles from "./Emoji.module.css";
 
-const RECENT_STUDIES = "recent_studies";
-
 const Emoji = ({ studyId }) => {
   const [emojis, setEmojis] = useState([]); // 등록된 모든 이모지
   const [showPicker, setShowPicker] = useState(false); // picker showing 상태
