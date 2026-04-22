@@ -5,7 +5,7 @@ import useToast from "./useToast";
 
 function useStudySessionCheck(studyId) {
   const navigate = useNavigate();
-  const { showToast } = useToast();
+  const { toast, showToast } = useToast();
 
   useEffect(() => {
     const validateSession = async () => {
@@ -22,6 +22,8 @@ function useStudySessionCheck(studyId) {
 
     validateSession();
   }, [studyId]);
+
+  return { toast };
 }
 
 export default useStudySessionCheck;

@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import styles from "./Habit.module.css";
 import NavButton from "../../components/NavButton/NavButton";
 import BoxHeaderInfo from "../../components/BoxHeader/BoxHeaderInfo";
+import Toast from "../../components/Toast/Toast";
 import HabitItem from "./components/HabitItem";
 import Modal from "../../components/Modal/Modal";
 import { getStudyDetail } from "../../api/studies";
@@ -23,7 +24,8 @@ function Habit() {
   const [stagedEdits, setStagedEdits] = useState({});
   const { habits, isLoading, toggleHabit, addHabit, editHabit, removeHabit } =
     useHabits(studyId);
-  useStudySessionCheck(studyId);
+
+  const { toast: sessionToast } = useStudySessionCheck(studyId);
 
   useEffect(() => {
     const fetchStudy = async () => {
@@ -162,6 +164,9 @@ function Habit() {
 
   return (
     <div className={styles.container}>
+      {sessionToast && (
+        <Toast type={sessionToast.type} text={sessionToast.text} />
+      )}
       {/* 헤더 영역 */}
       <div className={styles.studyInfo}>
         <div className={styles.studyTitleRow}>
