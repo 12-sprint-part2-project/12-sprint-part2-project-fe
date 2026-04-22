@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { getStudyDetail } from "../../api/studies";
+import { getStudyDetail, checkSession } from "../../api/studies";
 import Toast from "../../components/Toast/Toast";
 import useTimer from "../../hooks/timer/useTimer";
 import { TIMER_STATUS } from "../../hooks/timer/timerConstants";
@@ -38,6 +38,19 @@ function Focus() {
 
   // 직접입력 버튼 클릭 시 분 input 포커스용 ref
   const minInputRef = useRef(null);
+
+  useEffect(() => {
+    const validateSession = async () => {
+      try {
+        await checkSession(studyId);
+      } catch (err) {
+        alert("정상 경로로 다시 접속해주세요.");
+        navigate(`/studies/${studyId}`);
+      }
+    };
+
+    validateSession();
+  }, [studyId, navigate]);
 
   // 스터디 정보 조회
   useEffect(() => {
