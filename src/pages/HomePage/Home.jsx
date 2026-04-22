@@ -41,38 +41,56 @@ const Home = () => {
   const { toast, showToast } = useToast();
 
   useEffect(() => {
-    setPage(1);
     setStudies([]);
-  }, [keyword, sortBy, order]);
 
-  useEffect(() => {
     const fetchStudies = async () => {
       try {
-        page === 1 ? setInitLoading(true) : setMoreLoading(true);
+        setInitLoading(true);
 
-        const params = { page, limit: LIMIT, sortBy, order };
+        const params = { page: 1, limit: LIMIT, sortBy, order };
         if (keyword) params.keyword = keyword;
-
-        // console.log(params);
 
         const res = await getStudies(params);
         const { data, total, has_more } = res.data;
 
-        // console.log(res);
-
-        setStudies((prev) => [...prev, ...data]);
+        setStudies(data); // prev spread 없이 그냥 교체
+        setPage(1);
         setUsableMore(has_more);
         setTotal(total);
       } catch (error) {
         console.error(`데이터 조회 실패: ${error}`);
       } finally {
         setInitLoading(false);
-        setMoreLoading(false);
       }
     };
 
     fetchStudies();
-  }, [page, keyword, sortBy, order]);
+  }, [keyword, sortBy, order]);
+
+  useEffect(() => {
+    if (page === 1) return; // 위 effect가 처리하므로 스킵
+
+    const fetchMore = async () => {
+      try {
+        setMoreLoading(true);
+
+        const params = { page, limit: LIMIT, sortBy, order };
+        if (keyword) params.keyword = keyword;
+
+        const res = await getStudies(params);
+        const { data, has_more } = res.data;
+
+        setStudies((prev) => [...prev, ...data]); // 더보기는 append
+        setUsableMore(has_more);
+      } catch (error) {
+        console.error(`데이터 조회 실패: ${error}`);
+      } finally {
+        setMoreLoading(false);
+      }
+    };
+
+    fetchMore();
+  }, [page]);
 
   useEffect(() => {
     const storaged = JSON.parse(localStorage.getItem(RECENT_STUDIES) || "[]");
