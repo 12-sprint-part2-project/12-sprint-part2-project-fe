@@ -33,6 +33,9 @@ const Form = ({ type, study }) => {
   //비밀번호 수정 여부 - false: 비밀번호 수정 버튼, true: 비밀번호 입력 창
   const [editPassword, setEditPassword] = useState(false);
 
+  //제출 버튼을 클릭했는지 ( -> 클릭되었다면, 비어있는 input칸에 대해 붉은 표시)
+  const [isSubmitClicked, setIsSubmitClicked] = useState(false);
+
   //비밀번호 확인 입력 시, 비밀번호와 일치하는지 검사하고, 일치하지 않다면 문구 띄우기
   useEffect(() => {
     if (password.trim() !== "" && checkPassword.trim() !== "") {
@@ -50,13 +53,14 @@ const Form = ({ type, study }) => {
 
   //만들기/수정하기 버튼 클릭 시
   const onHandleSubmit = async () => {
+    //제출 버튼 클릭 상태 true로.
+    setIsSubmitClicked(true);
     //설명 제외 모든 곳에 입력이 되었는지 검사 -> 입력 안된 부분 있으면 토스트 메세지로 띄우기
     switch (type) {
       case "create":
         if (
           nickname.trim() === "" ||
           title.trim() === "" ||
-          //description.trim() === "" ||
           password.trim() === "" ||
           checkPassword.trim() === ""
         ) {
@@ -68,7 +72,6 @@ const Form = ({ type, study }) => {
         if (
           nickname.trim() === "" ||
           title.trim() === "" //||
-          //description.trim() === "" ||
           // password.trim() === "" ||
           // checkPassword.trim() === ""
         ) {
@@ -128,6 +131,7 @@ const Form = ({ type, study }) => {
         title="닉네임"
         placeholder="닉네임을 입력해 주세요"
         warningText="* 닉네임을 입력해 주세요"
+        isSubmitClicked={isSubmitClicked}
       />
       <Input
         input={title}
@@ -135,6 +139,7 @@ const Form = ({ type, study }) => {
         title="스터디 이름"
         placeholder="스터디 이름을 입력해 주세요"
         warningText="* 스터디 이름을 입력해 주세요"
+        isSubmitClicked={isSubmitClicked}
       />
       <Input
         input={description}
@@ -157,6 +162,7 @@ const Form = ({ type, study }) => {
             placeholder="비밀번호를 입력해 주세요"
             warningText="* 비밀번호를 입력해 주세요"
             isPassword={true}
+            isSubmitClicked={isSubmitClicked}
           />
           <Input
             input={checkPassword}
@@ -167,6 +173,7 @@ const Form = ({ type, study }) => {
             isPasswordCheck={true}
             isPwSame={isPwSame}
             pwCheckWarningText={pwCheckWarningText}
+            isSubmitClicked={isSubmitClicked}
           />
           <button
             className={styles.editPasswordCancelBtn}

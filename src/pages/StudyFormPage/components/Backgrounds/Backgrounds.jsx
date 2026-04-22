@@ -67,7 +67,7 @@ const Backgrounds = ({ selectedBackground, setSelectedBackground }) => {
     },
   ];
   return (
-    <div>
+    <div className={styles.inputElement}>
       <p className={styles.label}>배경을 선택해주세요</p>
       <div className={styles.backgrounds}>
         {backgrounds.map((background) => {

@@ -25,6 +25,10 @@
   border: 1px solid var(--gray-300, #ddd);
   background: #fff;
 }
+.input:focus {
+  border: 1px solid var(--green-text);
+  transition: all 0.5s;
+}
 .pwInput {
   padding-right: 50px; /*visible icon 자리를 위해*/
 }
@@ -42,9 +46,11 @@
 
   line-height: 1.5;
 }
-.noContent {
-  border: 1px solid var(--error, #c41013);
+.textarea:focus {
+  border: 1px solid var(--green-text);
+  transition: all 0.5s;
 }
+
 .input::placeholder {
   color: var(--gray-500, #818181);
   font-family: Pretendard;
@@ -69,7 +75,11 @@
   right: 20px;
 }
 
-/*-----부가 텍스트-----*/
+/*-----특수 상황-----*/
+.noContent {
+  border: 1px solid var(--error, #c41013);
+  transition: all 0.5s;
+}
 .warningText {
   color: var(--error, #c41013);
   font-family: Pretendard;
