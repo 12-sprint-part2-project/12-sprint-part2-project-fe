@@ -99,12 +99,23 @@ const Home = () => {
         const storaged = JSON.parse(
           localStorage.getItem(RECENT_STUDIES) || "[]",
         );
+
+        if (!storaged.length) {
+          setRecentLoading(false);
+          return;
+        }
+
+        // console.log("로컬스토리지에 담긴 id들 => ", storaged);
+
         const params = {
           ids: storaged.join(","),
         };
 
+        // console.log("api 요청시 보낼 파라미터 => ", params);
+
         const res = await getRecentStudies(params);
         const { data } = res.data;
+
         // console.log(res);
 
         setRecentStudies(data);
