@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { getStudies } from "../../api/studies";
+import { getRecentStudies, getStudies } from "../../api/studies";
 import useToast from "../../hooks/useToast";
 import Card from "../../components/Card/Card";
 import Toast from "../../components/Toast/Toast";
@@ -93,9 +93,20 @@ const Home = () => {
   }, [page]);
 
   useEffect(() => {
-    const storaged = JSON.parse(localStorage.getItem(RECENT_STUDIES) || "[]");
+    const fetchRecentStudies = async () => {
+      const storaged = JSON.parse(localStorage.getItem(RECENT_STUDIES) || "[]");
+      const params = {
+        ids: storaged.join(","),
+      };
 
-    setRecentStudies(storaged);
+      const res = await getRecentStudies(params);
+      const { data } = res.data;
+      console.log(res);
+
+      setRecentStudies(data);
+    };
+
+    fetchRecentStudies();
   }, []);
 
   const currentSort = SORTINGS.find(
