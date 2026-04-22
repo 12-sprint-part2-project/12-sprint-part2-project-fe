@@ -5,7 +5,8 @@ import NavButton from "../../components/NavButton/NavButton";
 import BoxHeaderInfo from "../../components/BoxHeader/BoxHeaderInfo";
 import HabitItem from "./components/HabitItem";
 import Modal from "../../components/Modal/Modal";
-import { getStudyDetail, checkSession } from "../../api/studies";
+import { getStudyDetail } from "../../api/studies";
+import useStudySessionCheck from "../../hooks/useStudySessionCheck";
 import useHabits from "../../hooks/useHabits";
 import "../../styles/global/icon.css";
 
@@ -22,19 +23,7 @@ function Habit() {
   const [stagedEdits, setStagedEdits] = useState({});
   const { habits, isLoading, toggleHabit, addHabit, editHabit, removeHabit } =
     useHabits(studyId);
-
-  useEffect(() => {
-    const validateSession = async () => {
-      try {
-        await checkSession(studyId);
-      } catch (err) {
-        alert("정상 경로로 다시 접속해주세요.");
-        navigate(`/studies/${studyId}`);
-      }
-    };
-
-    validateSession();
-  }, [studyId, navigate]);
+  useStudySessionCheck(studyId);
 
   useEffect(() => {
     const fetchStudy = async () => {
