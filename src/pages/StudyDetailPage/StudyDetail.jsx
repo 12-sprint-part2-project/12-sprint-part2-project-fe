@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 import { checkSession, deleteStudy, getStudyDetail } from "../../api/studies";
 import useToast from "../../hooks/useToast";
 import Tag from "../../components/Tag/Tag";
@@ -13,11 +14,15 @@ import HabitTable from "./components/HabitTable/HabitTable";
 import styles from "./StudyDetail.module.css";
 
 const RECENT_STUDIES = "recent_studies";
+const MINUTES = 1000 * 60;
 
 const StudyDetail = () => {
-  const [loading, setLoading] = useState(true);
   const { studyId } = useParams();
-  const [study, setStudy] = useState(null); //가져온 스터디 객체를 저장할 변수
+  const { data: study, isLoading } = useQuery({
+    queryKey: ["study", studyId],
+    queryFn: () => getStudyDetail(studyId).then((res) => res.data.data),
+    staleTime: 5 * MINUTES,
+  });
   const navigate = useNavigate();
 
   const saveRecentStudy = (data) => {
@@ -36,26 +41,6 @@ const StudyDetail = () => {
 
     localStorage.setItem(RECENT_STUDIES, JSON.stringify(filtered));
   };
-
-  useEffect(() => {
-    const fetchStudy = async () => {
-      try {
-        const res = await getStudyDetail(studyId);
-        // console.log(res);
-        const { data } = res.data;
-        setStudy(data);
-
-        saveRecentStudy(data); // localStorage 에 담기
-      } catch (error) {
-        console.error(`데이터 조회 실패: ${error}`);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchStudy();
-  }, [studyId]);
-  console.log(study);
 
   // 획득 포인트 합계
   const totalPoints =
@@ -187,7 +172,7 @@ const StudyDetail = () => {
 
   return (
     <section className={styles.box}>
-      {loading ? (
+      {isLoading ? (
         <p className={styles.notification}>스터디 조회중...</p>
       ) : (
         <>
