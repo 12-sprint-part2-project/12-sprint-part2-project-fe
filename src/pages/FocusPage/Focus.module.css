@@ -60,6 +60,15 @@
   border-bottom: 2px solid var(--brand);
 }
 
+/* 1분 이상 시간 설정 안내 */
+.helperText {
+  height: 1rem;
+  margin-top: 0.5rem;
+  text-align: center;
+  font: var(--text-14-medium);
+  color: var(--gray-500);
+}
+
 /* 타이머 조작 버튼 */
 .btnContainer {
   display: flex;
