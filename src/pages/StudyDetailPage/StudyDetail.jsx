@@ -94,6 +94,7 @@ const StudyDetail = () => {
 
   const onClickEnterHabit = () => {
     const type = "habit";
+    setConfirmText("확인");
     validateSessionAndProceed(type);
   };
   const onClickEnterFocus = () => {
