@@ -28,6 +28,7 @@ const SORTINGS = [
 const Home = () => {
   const [initLoading, setInitLoading] = useState(true); // 초기 로딩
   const [moreLoading, setMoreLoading] = useState(false); // 더보기 로딩
+  const [recentLoading, setRecentLoading] = useState(true); // 최근 조회한 스터디 로딩
   const [studies, setStudies] = useState([]); // 스터디 둘러보기
   const [recentStudies, setRecentStudies] = useState([]); // 최근 조회한 스터디
   const [page, setPage] = useState(1); // 첫 페이지 1
@@ -58,7 +59,7 @@ const Home = () => {
         setUsableMore(has_more);
         setTotal(total);
       } catch (error) {
-        console.error(`데이터 조회 실패: ${error}`);
+        console.error(`스터디 전체 불러오기 실패: ${error}`);
       } finally {
         setInitLoading(false);
       }
@@ -83,7 +84,7 @@ const Home = () => {
         setStudies((prev) => [...prev, ...data]); // 더보기는 append
         setUsableMore(has_more);
       } catch (error) {
-        console.error(`데이터 조회 실패: ${error}`);
+        console.error(`더보기 실패: ${error}`);
       } finally {
         setMoreLoading(false);
       }
@@ -94,16 +95,24 @@ const Home = () => {
 
   useEffect(() => {
     const fetchRecentStudies = async () => {
-      const storaged = JSON.parse(localStorage.getItem(RECENT_STUDIES) || "[]");
-      const params = {
-        ids: storaged.join(","),
-      };
+      try {
+        const storaged = JSON.parse(
+          localStorage.getItem(RECENT_STUDIES) || "[]",
+        );
+        const params = {
+          ids: storaged.join(","),
+        };
 
-      const res = await getRecentStudies(params);
-      const { data } = res.data;
-      console.log(res);
+        const res = await getRecentStudies(params);
+        const { data } = res.data;
+        console.log(res);
 
-      setRecentStudies(data);
+        setRecentStudies(data);
+      } catch (error) {
+        console.error(`최근 조회한 스터디 불러오기 실패: ${error}`);
+      } finally {
+        setRecentLoading(false);
+      }
     };
 
     fetchRecentStudies();
@@ -130,7 +139,9 @@ const Home = () => {
         <h2 className={styles.headline}>최근 조회한 스터디</h2>
 
         <div className={`${styles.cardList} ${styles.recent}`}>
-          {recentStudies.length ? (
+          {recentLoading ? (
+            <p className={styles.notification}>불러오는 중...</p>
+          ) : recentStudies.length ? (
             recentStudies.map((study) => {
               const createdAt = new Date(study.createdAt);
               const today = new Date();
