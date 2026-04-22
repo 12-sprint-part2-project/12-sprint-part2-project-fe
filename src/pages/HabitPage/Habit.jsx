@@ -1,11 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import styles from "./Habit.module.css";
 import NavButton from "../../components/NavButton/NavButton";
 import BoxHeaderInfo from "../../components/BoxHeader/BoxHeaderInfo";
 import HabitItem from "./components/HabitItem";
 import Modal from "../../components/Modal/Modal";
-import { getStudyDetail } from "../../api/studies";
+import useStudyDetail from "../../hooks/useStudyDetail";
 import useStudySessionCheck from "../../hooks/useStudySessionCheck";
 import useHabits from "../../hooks/useHabits";
 import "../../styles/global/icon.css";
@@ -13,7 +13,7 @@ import "../../styles/global/icon.css";
 function Habit() {
   const { studyId } = useParams();
   const navigate = useNavigate();
-  const [study, setStudy] = useState(null);
+  const { data: study } = useStudyDetail(studyId);
   const [showModal, setShowModal] = useState(false);
   const [isAdding, setIsAdding] = useState(false);
   const [habitInput, setHabitInput] = useState("");
@@ -24,18 +24,6 @@ function Habit() {
   const { habits, isLoading, toggleHabit, addHabit, editHabit, removeHabit } =
     useHabits(studyId);
   useStudySessionCheck(studyId);
-
-  useEffect(() => {
-    const fetchStudy = async () => {
-      try {
-        const res = await getStudyDetail(studyId);
-        setStudy(res.data.data);
-      } catch (err) {
-        console.error("스터디 정보를 불러오는데 실패했습니다.", err);
-      }
-    };
-    fetchStudy();
-  }, [studyId]);
 
   // 인라인 편집 시작 / 취소
   const handleEditStart = (habit) => {
