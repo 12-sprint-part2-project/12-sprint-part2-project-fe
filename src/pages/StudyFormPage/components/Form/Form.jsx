@@ -10,7 +10,10 @@ import styles from "./Form.module.css";
 import Input from "../Input/Input";
 import Backgrounds from "../Backgrounds/Backgrounds";
 
+import { useQueryClient } from "@tanstack/react-query";
+
 const Form = ({ type, study }) => {
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
 
   //input 상태 변수들
@@ -119,6 +122,13 @@ const Form = ({ type, study }) => {
         console.log("type이 잘못되었습니다. type=>", type);
     }
     showToast("success", "등록되었습니다!");
+
+    //리액트 쿼리 관련 코드
+    const id = result.data.data.id;
+    queryClient.invalidateQueries({
+      queryKey: ["study", id],
+    });
+
     console.log("이 id의 상세 페이지로 이동 =>", result.data.data.id);
     navigate(`/studies/${result.data.data.id}`); //create,modify모두 스터디 상세 페이지로 이동하도록 한다.
     //데이터가 등록된 후에 이동해야 하기에, Link가 아닌 navigate를 이용.
