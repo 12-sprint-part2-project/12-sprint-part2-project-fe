@@ -105,7 +105,7 @@ const Home = () => {
 
         const res = await getRecentStudies(params);
         const { data } = res.data;
-        console.log(res);
+        // console.log(res);
 
         setRecentStudies(data);
       } catch (error) {

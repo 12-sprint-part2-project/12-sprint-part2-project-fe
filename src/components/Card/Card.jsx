@@ -1,6 +1,7 @@
 import React from "react";
 import Tag from "../Tag/Tag";
 import styles from "./Card.module.css";
+import EmojiPreview from "../EmojiPreview/EmojiPreview";
 
 const COLOR_THEMES = ["GREEN", "YELLOW", "BLUE", "PINK"];
 
@@ -51,7 +52,7 @@ const Card = ({
           {description}
         </p>
 
-        <div className={styles.emojis}>
+        {/* <div className={styles.emojis}>
           {emojis.map((emoji) => (
             <Tag
               key={emoji.emoji}
@@ -61,7 +62,8 @@ const Card = ({
               emojiIcon={emoji.emoji}
             />
           ))}
-        </div>
+        </div> */}
+        <EmojiPreview emojis={emojis} />
       </div>
     </div>
   );

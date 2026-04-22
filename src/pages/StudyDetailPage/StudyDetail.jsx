@@ -12,6 +12,7 @@ import SharingModal from "./components/SharingModal/SharingModal";
 import Toast from "../../components/Toast/Toast";
 import HabitTable from "./components/HabitTable/HabitTable";
 import styles from "./StudyDetail.module.css";
+import Emoji from "./components/Emoji/Emoji";
 
 const RECENT_STUDIES = "recent_studies";
 const MINUTES = 1000 * 60;
@@ -215,35 +216,7 @@ const StudyDetail = () => {
                 </ul>
               </div>
 
-              <div className={styles.emoji}>
-                <div className={styles.emojiTop3}>
-                  <Tag
-                    variant="general"
-                    type="emoji"
-                    theme="dark"
-                    emojiIcon="👩🏻‍💻"
-                    count={37}
-                  />
-                  <Tag
-                    variant="general"
-                    type="emoji"
-                    theme="dark"
-                    emojiIcon="👍"
-                    count={11}
-                  />
-                  <Tag
-                    variant="general"
-                    type="emoji"
-                    theme="dark"
-                    emojiIcon="🤩"
-                    count={9}
-                  />
-                </div>
-
-                <button className={styles.addEmoji}>
-                  <i className="ic smile"></i> 추가
-                </button>
-              </div>
+              <Emoji studyId={study.id} />
             </div>
             <div className={styles.headerTitle}>
               <h2 className={styles.headline}>
