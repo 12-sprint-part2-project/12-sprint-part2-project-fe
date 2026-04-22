@@ -271,6 +271,9 @@ function Focus() {
           ) : (
             formatTime(isIdle || isCompleted ? durationSec : timeLeft)
           )}
+          <p className={styles.helperText}>
+            {isEditing ? "최소 1분부터 설정할 수 있어요" : ""}
+          </p>
         </div>
 
         {/* 타이머 조작 버튼 (시작/일시정지/재시작) */}
