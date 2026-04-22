@@ -16,12 +16,12 @@ function useStudySessionCheck(studyId) {
 
         setTimeout(() => {
           navigate(`/studies/${studyId}`);
-        }, 500);
+        }, 1500);
       }
     };
 
     validateSession();
-  }, [studyId, navigate, showToast]);
+  }, [studyId]);
 }
 
 export default useStudySessionCheck;
