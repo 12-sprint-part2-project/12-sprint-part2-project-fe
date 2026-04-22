@@ -12,10 +12,12 @@ function TimerSetting({
 }) {
   // 타이머 진행 중/일시중지: 타이머 설정 시간 표시
   if (isActive) {
-    <div className={styles.timerSetTime}>
-      <span className={`ic timer ${styles.timerSetIcon}`}></span>
-      <span className={styles.timerSetValue}>{formatTime(durationSec)}</span>
-    </div>;
+    return (
+      <div className={styles.timerSetTime}>
+        <span className={`ic timer ${styles.timerSetIcon}`}></span>
+        <span className={styles.timerSetValue}>{formatTime(durationSec)}</span>
+      </div>
+    );
   }
 
   return (
