@@ -8,31 +8,38 @@ function useTimerInterval({ timerStatus, onComplete }) {
 
   // 타이머 실행
   useEffect(() => {
-    if (timerStatus !== TIMER_STATUS.RUNNING) {
-      clearInterval(intervalIdRef.current);
+    // RUNNING 상태가 아니거나 종료시간이 없으면 Interva 종료
+    if (timerStatus !== TIMER_STATUS.RUNNING || !endTimeRef.current) {
+      if (intervalIdRef.current) clearInterval(intervalIdRef.current);
       return;
     }
 
-    // running일 때만 타이머 동작
-    intervalIdRef.current = setInterval(() => {
+    // 시간 계산 로직을 별도로 분리
+    const updateTick = () => {
       if (!endTimeRef.current) return;
 
-      // 현재 시각과 목표 종료 시각의 차이를 초 단위로 계산
-      const remaining = Math.ceil(
-        (endTimeRef.current.getTime() - Date.now()) / 1000,
-      );
+      const now = Date.now();
+      const end = endTimeRef.current.getTime();
+      const diff = end - now;
+
+      const remaining = Math.max(0, Math.ceil(diff / 1000));
+      setTimeLeft(remaining);
 
       if (remaining <= 0) {
-        clearInterval(intervalIdRef.current);
-        setTimeLeft(0);
+        if (intervalIdRef.current) clearInterval(intervalIdRef.current);
         onComplete();
-      } else {
-        setTimeLeft(remaining);
       }
-    }, 1000);
+    };
 
-    // cleanup 함수: timerStatus 변경이나 언마운트 시 interval 제거
-    return () => clearInterval(intervalIdRef.current);
+    // 즉시 실행
+    updateTick();
+
+    // 200ms 주기로 업데이트
+    intervalIdRef.current = setInterval(updateTick, 200);
+
+    return () => {
+      if (intervalIdRef.current) clearInterval(intervalIdRef.current);
+    };
   }, [timerStatus, onComplete]);
 
   const setEndTime = (date) => {
