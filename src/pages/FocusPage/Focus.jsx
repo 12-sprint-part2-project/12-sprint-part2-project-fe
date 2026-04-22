@@ -14,6 +14,7 @@ import SessionListModal from "./components/session/SessionListModal";
 import StudyHeader from "./components/header/StudyHeader";
 import formatTime from "./formatTime";
 import styles from "./Focus.module.css";
+import useStudySessionCheck from "../../hooks/useStudySessionCheck";
 
 function Focus() {
   const navigate = useNavigate();
@@ -39,6 +40,9 @@ function Focus() {
 
   // 직접입력 버튼 클릭 시 분 input 포커스용 ref
   const minInputRef = useRef(null);
+
+  // 스터디 세션 체크
+  const { toast: sessionToast } = useStudySessionCheck(studyId);
 
   // 스터디 정보 조회
   const { data: study, isLoading } = useStudyDetail(studyId);
@@ -102,14 +106,22 @@ function Focus() {
     setTimeout(() => minInputRef.current?.focus(), 0);
   };
 
-  // input 값대로 타이머 시간 설정
+  // 타이머 시간 설정: 분/초 입력값 보정
   const handleInputChange = (min, sec) => {
     const m = Math.min(99, Math.max(0, parseInt(min) || 1));
     const s = Math.min(59, Math.max(0, parseInt(sec) || 0));
 
-    setInputMin(String(m));
-    setInputSec(String(s).padStart(2, "0"));
-    setDurationSec(Math.max(1, m * 60 + s));
+    let total = m * 60 + s;
+
+    // 1분 미만이면 1:00으로 고정
+    if (total < 60) total = 60;
+
+    const newMin = Math.floor(total / 60);
+    const newSec = total % 60;
+
+    setInputMin(String(newMin));
+    setInputSec(String(newSec).padStart(2, "0"));
+    setDurationSec(total);
   };
 
   // 타이머 start 버튼 클릭 이벤트 핸들러
@@ -162,6 +174,9 @@ function Focus() {
     <section className={styles.container}>
       {toast && (
         <Toast type={toast.type} text={toast.text} point={toast.point} />
+      )}
+      {sessionToast && (
+        <Toast type={sessionToast.type} text={sessionToast.text} />
       )}
       {showSessionListModal && (
         <SessionListModal
@@ -262,6 +277,9 @@ function Focus() {
           ) : (
             formatTime(isIdle || isCompleted ? durationSec : timeLeft)
           )}
+          <p className={styles.helperText}>
+            {isEditing ? "최소 1분부터 설정할 수 있어요" : ""}
+          </p>
         </div>
 
         {/* 타이머 조작 버튼 (시작/일시정지/재시작) */}
