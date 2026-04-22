@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { getStudyDetail, checkSession } from "../../api/studies";
+import { useQueryClient } from "@tanstack/react-query";
 import Toast from "../../components/Toast/Toast";
+import useStudyDetail from "../../hooks/useStudyDetail";
 import useTimer from "../../hooks/timer/useTimer";
 import { TIMER_STATUS } from "../../hooks/timer/timerConstants";
 import TimerSetting from "./components/timer/TimerSetting";
@@ -17,8 +18,8 @@ import styles from "./Focus.module.css";
 function Focus() {
   const navigate = useNavigate();
   const { studyId } = useParams();
+  const queryClient = useQueryClient();
 
-  const [study, setStudy] = useState(null);
   const [durationSec, setDurationSec] = useState(25 * 60);
   const [isEditing, setIsEditing] = useState(false);
   const [inputMin, setInputMin] = useState("25");
@@ -39,29 +40,16 @@ function Focus() {
   // 직접입력 버튼 클릭 시 분 input 포커스용 ref
   const minInputRef = useRef(null);
 
-  useEffect(() => {
-    const validateSession = async () => {
-      try {
-        await checkSession(studyId);
-      } catch (err) {
-        alert("정상 경로로 다시 접속해주세요.");
-        navigate(`/studies/${studyId}`);
-      }
-    };
-
-    validateSession();
-  }, [studyId, navigate]);
-
   // 스터디 정보 조회
-  useEffect(() => {
-    const fetchStudy = async () => {
-      const res = await getStudyDetail(studyId);
-      const { data } = res.data;
-      setStudy(data);
-    };
+  const { data: study, isLoading } = useStudyDetail(studyId);
 
-    fetchStudy();
-  }, [studyId]);
+  useEffect(() => {
+    return () => {
+      queryClient.invalidateQueries({
+        queryKey: ["study", studyId],
+      });
+    };
+  }, [queryClient, studyId]);
 
   const {
     timerStatus,
@@ -175,7 +163,6 @@ function Focus() {
       {toast && (
         <Toast type={toast.type} text={toast.text} point={toast.point} />
       )}
-
       {showSessionListModal && (
         <SessionListModal
           sessions={sessions}
@@ -186,7 +173,6 @@ function Focus() {
           onClose={() => setShowSessionListModal(false)}
         />
       )}
-
       {/* 타이머 생성 시 집중 세션 제목 설정 팝업 */}
       {showTitleModal && (
         <SessionTitleModal
@@ -200,7 +186,6 @@ function Focus() {
           onClose={() => setShowTitleModal(false)}
         />
       )}
-
       {/* 페이지 재진입 시 진행 중이던 타이머가 있었던 경우 표시되는 재개 여부 선택 팝업 */}
       {showResumePopup && (
         <ResumeConfirmPopup
@@ -210,7 +195,6 @@ function Focus() {
           title={selectedSession?.title}
         />
       )}
-
       {/* 재진입 팝업에서 종료 선택 시 표시되는 최종 종료 확인 팝업 */}
       {showStopConfirmPopup && (
         <StopConfirmPopup
@@ -219,7 +203,6 @@ function Focus() {
           onStop={handleStopConfirm}
         />
       )}
-
       {/* 스터디 정보 표시 */}
       <StudyHeader
         nickname={study?.nickname}
