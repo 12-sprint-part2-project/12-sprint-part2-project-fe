@@ -1,4 +1,5 @@
 import { useState, useRef, useCallback } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import useFocusSession from "./useFocusSession";
 import useTimerInterval from "./useTimerInterval";
 import useTimerToast from "./useTimerToast";
@@ -6,6 +7,8 @@ import { TIMER_STATUS } from "./timerConstants";
 import { calcRemaining } from "./timerUtils";
 
 function useTimer(studyId, durationSec) {
+  const queryClient = useQueryClient();
+
   const [timerStatus, setTimerStatus] = useState(TIMER_STATUS.IDLE);
   const [earnedPoint, setEarnedPoint] = useState(0);
   // 페이지 재진입 시 타이머 설정 시간 표시용
@@ -34,6 +37,9 @@ function useTimer(studyId, durationSec) {
 
       try {
         const data = await updateSession(sessionIdRef.current, action);
+
+        queryClient.invalidateQueries(["sessions", studyId]);
+
         const pointResult = data.earnedPoint ?? 0;
         if (action === TIMER_STATUS.COMPLETED) setEarnedPoint(pointResult);
         toastComplete(action, pointResult, isAuto);
@@ -43,7 +49,7 @@ function useTimer(studyId, durationSec) {
         toastError(e.userMessage);
       }
     },
-    [toastComplete, toastError, updateSession],
+    [toastComplete, toastError, updateSession.queryClient, studyId],
   );
 
   const { timeLeft, setTimeLeft, setEndTime, resetEndTime } = useTimerInterval({
@@ -90,6 +96,7 @@ function useTimer(studyId, durationSec) {
   const start = async (title) => {
     try {
       const data = await createSession({ durationSec, title });
+      queryClient.invalidateQueries(["sessions", studyId]);
       sessionIdRef.current = data.id;
       setEndTime(new Date(data.endTime));
       setTimeLeft(durationSec);

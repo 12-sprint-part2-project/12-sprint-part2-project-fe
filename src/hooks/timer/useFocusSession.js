@@ -1,4 +1,5 @@
-import { useEffect, useState, useCallback } from "react";
+import { useCallback } from "react";
+import { useQuery } from "@tanstack/react-query";
 import {
   getFocusSession,
   createFocusSession,
@@ -6,23 +7,15 @@ import {
 } from "../../api/focus";
 
 function useFocusSession(studyId) {
-  const [sessions, setSessions] = useState([]);
-  const [shouldShowSessionList, setShouldShowSessionList] = useState(false);
+  const { data: sessions = [] } = useQuery({
+    queryKey: ["sessions", studyId],
+    queryFn: async () => {
+      const res = await getFocusSession(studyId);
+      return res.data.data || [];
+    },
+  });
 
-  useEffect(() => {
-    const fetchSession = async () => {
-      try {
-        const res = await getFocusSession(studyId);
-        const { data } = res.data;
-        if (!data || data.length === 0) return;
-        setSessions(data);
-        setShouldShowSessionList(true);
-      } catch (e) {
-        throw e;
-      }
-    };
-    fetchSession();
-  }, [studyId]);
+  const shouldShowSessionList = sessions.length > 0;
 
   const createSession = useCallback(
     async ({ durationSec, title }) => {
