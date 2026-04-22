@@ -16,7 +16,7 @@ function useStudySessionCheck(studyId) {
 
         setTimeout(() => {
           navigate(`/studies/${studyId}`);
-        }, 1500);
+        }, 1000);
       }
     };
 
