@@ -11,7 +11,6 @@ import SharingModal from "./components/SharingModal/SharingModal";
 import Toast from "../../components/Toast/Toast";
 import HabitTable from "./components/HabitTable/HabitTable";
 import styles from "./StudyDetail.module.css";
-import Emoji from "./components/Emoji/Emoji";
 
 const RECENT_STUDIES = "recent_studies";
 
@@ -44,7 +43,6 @@ const StudyDetail = () => {
         const res = await getStudyDetail(studyId);
         // console.log(res);
         const { data } = res.data;
-
         setStudy(data);
 
         saveRecentStudy(data); // localStorage 에 담기
@@ -57,6 +55,7 @@ const StudyDetail = () => {
 
     fetchStudy();
   }, [studyId]);
+  console.log(study);
 
   // 획득 포인트 합계
   const totalPoints =
@@ -69,69 +68,91 @@ const StudyDetail = () => {
   const [showSharingModal, setShowSharingModal] = useState(false); //공유 모달
 
   const [confirmText, setConfirmText] = useState(""); //버튼마다 비밀번호 모달 내 버튼명이 다르므로, 여기에 저장해서 사용.
-  const [pwType, setPwType] = useState(""); //삭제/수정 중 무엇인지 기록하는 용도
+
+  const [currentType, setCurrentType] = useState("");
 
   //토스트
   const { toast, showToast } = useToast();
 
   /* 공유/수정/삭제 버튼 클릭 핸들러 */
-  const onClickModify = async () => {
-    //먼저 세션 확인!!!!! 세션에 없다면 비밀번호 모달 실행
-    //비밀번호 체크 모달 -> 비밀번호 일치할 시 -> 수정 페이지로 Link
-    setPwType("modify"); //비밀번호 모달에 필요한 Props설정
-    setConfirmText("수정하러 가기");
-    checkSessionFunc();
-  };
-  const onClickDelete = async () => {
-    setPwType("delete");
-    setConfirmText("삭제하기");
-    checkSessionFunc();
-  };
   const onClickSharing = () => {
     setShowSharingModal(true);
   };
-  const onClickEnterHabit = () => {
-    //비밀번호 모달에 필요한 Props설정
-    setPwType("habit"); //어떤 페이지로 이동 시킬지 설정하기 위함
-    setConfirmText("확인");
-    checkSessionFunc();
+
+  const onClickModify = async () => {
+    //먼저 세션 확인!!!!! 세션에 없다면 비밀번호 모달 실행
+    //비밀번호 체크 모달 -> 비밀번호 일치할 시 -> 수정 페이지로 Link
+    const type = "modify";
+    setConfirmText("수정하러 가기");
+    validateSessionAndProceed(type);
   };
-  const onClickEnterFocus = () => {
-    //비밀번호 모달에 필요한 Props설정
-    setPwType("focus"); //어떤 페이지로 이동 시킬지 설정하기 위함
-    setConfirmText("확인");
-    checkSessionFunc();
+  const onClickDelete = async () => {
+    const type = "delete";
+    setConfirmText("삭제하기");
+    validateSessionAndProceed(type);
   };
 
-  //세션 체크 -> 존재하지 않으면 비밀번호 모달, 존재하면 타겟 페이지로 이동
-  const checkSessionFunc = async () => {
-    try {
-      await checkSession(studyId);
-      //세션에 존재할 시, 바로 다음 페이지로 보냄
-      onPasswordSuccess(); //(원랜 이걸 비밀번호 모달에 넘겨줬었다.)
-    } catch (e) {
-      console.log("세션에 존재하지 않음 =>", e);
+  const onClickEnterHabit = () => {
+    const type = "habit";
+    validateSessionAndProceed(type);
+  };
+  const onClickEnterFocus = () => {
+    const type = "focus";
+    setConfirmText("확인");
+    validateSessionAndProceed(type);
+  };
+
+  //세션을 체크하고, 그에 따른 결과를 이어지는 함수.
+  const validateSessionAndProceed = async (type) => {
+    const isInSession = await handleCheckSession(); //await을 해야 정상적인 순서로 작동됨.
+    if (isInSession) {
+      onPasswordSuccess(type);
+    } else {
+      setCurrentType(type); // type을 state로 저장
       setShowPwModal(true);
     }
   };
 
+  //세션 체크 : 세션에 있는지 여부를 true/false로 리턴.
+  const handleCheckSession = async () => {
+    try {
+      await checkSession(studyId);
+      //세션에 존재할 시, 바로 다음 페이지로 보냄
+      return true;
+    } catch (e) {
+      console.log("세션에 존재하지 않음 =>", e);
+      return false;
+    }
+  };
+
   //비밀번호 인증 성공 시 실행할 함수.
-  const onPasswordSuccess = () => {
-    switch (pwType) {
+  //ㄴ그렇담 여기에서 성공 토스트 메세지를 실행한다!
+  const onPasswordSuccess = (type) => {
+    switch (type) {
       case "modify":
-        navigate(`/studies/new`, {
-          state: { type: "modify", study },
-        });
+        showToast("success", "인증 되었습니다!"); //비밀번호 일치로 넘어갈 때도, 세션에 들어있어서 넘어갈 때도 모두 토스트 메세지를 보여줄 수 있다.
+        setTimeout(() => {
+          //성공 시의 toast메세지가 보이게 하기 위함.
+          navigate(`/studies/new`, { state: { type: "modify", study } });
+        }, 500); // 0.5초 후 이동
         break;
       case "delete":
         //진짜로 삭제할거냔 거 표시하기 -> 취소버튼 누르면, 원래 상세 페이지로. 확인 버튼 누르면 -> delete api 호출
         setShowDeletePopup(true);
         break;
       case "habit":
-        navigate(`/studies/${studyId}/habits`);
+        showToast("success", "인증 되었습니다!");
+        setTimeout(() => {
+          navigate(`/studies/${studyId}/habits`);
+        }, 500);
+
         break;
       case "focus":
-        navigate(`/studies/${studyId}/focus`);
+        showToast("success", "인증 되었습니다!");
+        setTimeout(() => {
+          navigate(`/studies/${studyId}/focus`);
+        }, 500);
+
         break;
       default:
         break;
@@ -177,7 +198,7 @@ const StudyDetail = () => {
                 studyId={study?.id}
                 title={study?.title}
                 confirmText={confirmText}
-                onPasswordSuccess={onPasswordSuccess}
+                onPasswordSuccess={() => onPasswordSuccess(currentType)}
               />
             )}
           {showDeletePopup && ( //정말 삭제하시겠습니까? 팝업
@@ -213,7 +234,35 @@ const StudyDetail = () => {
                 </ul>
               </div>
 
-              <Emoji studyId={study?.id} />
+              <div className={styles.emoji}>
+                <div className={styles.emojiTop3}>
+                  <Tag
+                    variant="general"
+                    type="emoji"
+                    theme="dark"
+                    emojiIcon="👩🏻‍💻"
+                    count={37}
+                  />
+                  <Tag
+                    variant="general"
+                    type="emoji"
+                    theme="dark"
+                    emojiIcon="👍"
+                    count={11}
+                  />
+                  <Tag
+                    variant="general"
+                    type="emoji"
+                    theme="dark"
+                    emojiIcon="🤩"
+                    count={9}
+                  />
+                </div>
+
+                <button className={styles.addEmoji}>
+                  <i className="ic smile"></i> 추가
+                </button>
+              </div>
             </div>
             <div className={styles.headerTitle}>
               <h2 className={styles.headline}>
