@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
 import { checkSession, deleteStudy, getStudyDetail } from "../../api/studies";
+import useStudyDetail from "../../hooks/useStudyDetail";
 import useToast from "../../hooks/useToast";
 import Tag from "../../components/Tag/Tag";
 import BoxHeaderInfo from "../../components/BoxHeader/BoxHeaderInfo";
@@ -18,11 +18,7 @@ const MINUTES = 1000 * 60;
 
 const StudyDetail = () => {
   const { studyId } = useParams();
-  const { data: study, isLoading } = useQuery({
-    queryKey: ["study", studyId],
-    queryFn: () => getStudyDetail(studyId).then((res) => res.data.data),
-    staleTime: 5 * MINUTES,
-  });
+  const { data: study, isLoading: loading } = useStudyDetail(studyId);
   const navigate = useNavigate();
 
   const saveRecentStudy = (data) => {
@@ -172,7 +168,7 @@ const StudyDetail = () => {
 
   return (
     <section className={styles.box}>
-      {isLoading ? (
+      {loading ? (
         <p className={styles.notification}>스터디 조회중...</p>
       ) : (
         <>
