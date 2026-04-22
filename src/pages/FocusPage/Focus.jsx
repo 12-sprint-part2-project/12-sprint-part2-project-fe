@@ -41,9 +41,12 @@ function Focus() {
   // 직접입력 버튼 클릭 시 분 input 포커스용 ref
   const minInputRef = useRef(null);
 
+  // 스터디 세션 체크
+  const { toast: sessionToast } = useStudySessionCheck(studyId);
+
   // 스터디 정보 조회
   const { data: study, isLoading } = useStudyDetail(studyId);
-  useStudySessionCheck(studyId);
+
   useEffect(() => {
     return () => {
       queryClient.invalidateQueries({
@@ -171,6 +174,9 @@ function Focus() {
     <section className={styles.container}>
       {toast && (
         <Toast type={toast.type} text={toast.text} point={toast.point} />
+      )}
+      {sessionToast && (
+        <Toast type={sessionToast.type} text={sessionToast.text} />
       )}
       {showSessionListModal && (
         <SessionListModal
