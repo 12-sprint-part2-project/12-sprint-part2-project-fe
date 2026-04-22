@@ -3,8 +3,6 @@ import Tag from "../Tag/Tag";
 import styles from "./EmojiPreview.module.css";
 
 const EmojiPreview = ({ emojis, onEmojiClick }) => {
-  console.log(onEmojiClick);
-
   return (
     <div className={styles.emojiTop3}>
       {emojis.map(({ emoji, count }) => (
