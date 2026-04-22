@@ -14,6 +14,7 @@ import SessionListModal from "./components/session/SessionListModal";
 import StudyHeader from "./components/header/StudyHeader";
 import formatTime from "./formatTime";
 import styles from "./Focus.module.css";
+import useStudySessionCheck from "../../hooks/useStudySessionCheck";
 
 function Focus() {
   const navigate = useNavigate();
@@ -42,7 +43,7 @@ function Focus() {
 
   // 스터디 정보 조회
   const { data: study, isLoading } = useStudyDetail(studyId);
-
+  useStudySessionCheck(studyId);
   useEffect(() => {
     return () => {
       queryClient.invalidateQueries({

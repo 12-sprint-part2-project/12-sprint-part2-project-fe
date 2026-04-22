@@ -6,6 +6,7 @@ import BoxHeaderInfo from "../../components/BoxHeader/BoxHeaderInfo";
 import HabitItem from "./components/HabitItem";
 import Modal from "../../components/Modal/Modal";
 import { getStudyDetail } from "../../api/studies";
+import useStudySessionCheck from "../../hooks/useStudySessionCheck";
 import useHabits from "../../hooks/useHabits";
 import "../../styles/global/icon.css";
 
@@ -22,6 +23,7 @@ function Habit() {
   const [stagedEdits, setStagedEdits] = useState({});
   const { habits, isLoading, toggleHabit, addHabit, editHabit, removeHabit } =
     useHabits(studyId);
+  useStudySessionCheck(studyId);
 
   useEffect(() => {
     const fetchStudy = async () => {
