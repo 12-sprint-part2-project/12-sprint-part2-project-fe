@@ -156,7 +156,7 @@ const StudyDetail = () => {
   //삭제해주는 함수. 삭제 버튼 -> 비밀번호 입력 -> 인증 성공 -> 정말 삭제하시겠습니까? 네 -> 하고나서 실행 될 함수.
   const handleDelete = async () => {
     try {
-      await deleteStudy(id);
+      await deleteStudy(studyId);
       navigate("/");
       showToast("success", "삭제되었습니다");
     } catch (e) {
