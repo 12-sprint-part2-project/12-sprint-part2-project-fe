@@ -187,7 +187,7 @@ const Form = ({ type, study }) => {
         setSelectedBackground={setSelectedBackground}
       />
 
-      {editPassword ? (
+      {editPassword || type === "create" ? (
         <div className={styles.passwordInputs}>
           <Input
             input={password}
@@ -209,16 +209,18 @@ const Form = ({ type, study }) => {
             pwCheckWarningText={pwCheckWarningText}
             isSubmitClicked={isSubmitClicked}
           />
-          <button
-            className={styles.editPasswordCancelBtn}
-            onClick={() => {
-              setEditPassword(false);
-              setPassword("");
-              setCheckPassword("");
-            }}
-          >
-            비밀번호 수정 취소
-          </button>
+          {type === "modify" && (
+            <button
+              className={styles.editPasswordCancelBtn}
+              onClick={() => {
+                setEditPassword(false);
+                setPassword("");
+                setCheckPassword("");
+              }}
+            >
+              비밀번호 수정 취소
+            </button>
+          )}
         </div>
       ) : (
         <button
