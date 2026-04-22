@@ -10,7 +10,10 @@ import styles from "./Form.module.css";
 import Input from "../Input/Input";
 import Backgrounds from "../Backgrounds/Backgrounds";
 
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+
 const Form = ({ type, study }) => {
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
 
   //input 상태 변수들
@@ -35,6 +38,37 @@ const Form = ({ type, study }) => {
 
   //제출 버튼을 클릭했는지 ( -> 클릭되었다면, 비어있는 input칸에 대해 붉은 표시)
   const [isSubmitClicked, setIsSubmitClicked] = useState(false);
+
+  //리액트 쿼리
+  const { mutateAsync: create } = useMutation({
+    mutationFn: (body) => {
+      return createStudy(body);
+    },
+    onSuccess: (result) => {
+      console.log("생성 성공");
+      const id = result.data.data.id;
+      showToast("success", "등록되었습니다!");
+      navigate(`/studies/${id}`);
+    },
+    onError: () => {
+      showToast("warning", "등록에 실패했습니다!");
+    },
+  });
+  const { mutateAsync: modify } = useMutation({
+    mutationFn: ({ id, body }) => {
+      return updateStudy(id, body);
+    },
+    onSuccess: (result) => {
+      console.log("수정 성공");
+      const id = result.data.data.id;
+      queryClient.invalidateQueries({ queryKey: ["study", id] }); // 기존 캐시 무효화
+      showToast("success", "등록되었습니다!");
+      navigate(`/studies/${id}`);
+    },
+    onError: () => {
+      showToast("warning", "수정에 실패했습니다!");
+    },
+  });
 
   //비밀번호 확인 입력 시, 비밀번호와 일치하는지 검사하고, 일치하지 않다면 문구 띄우기
   useEffect(() => {
@@ -94,7 +128,7 @@ const Form = ({ type, study }) => {
     switch (type) {
       case "create":
         console.log("스터디 생성 요청 시작");
-        result = await createStudy({
+        result = await create({
           title,
           nickname,
           description,
@@ -102,25 +136,25 @@ const Form = ({ type, study }) => {
           theme: selectedBackground,
         });
         console.log("result=>", result);
-
         break;
       case "modify":
         console.log("스터디 수정 요청 시작");
-        result = await updateStudy(study.id, {
-          title,
-          nickname,
-          description,
-          theme: selectedBackground,
-          ...(editPassword ? { password } : {}), //password 수정 상태라면 password 값을 보냄.
+        result = await modify({
+          id: study.id,
+          body: {
+            title,
+            nickname,
+            description,
+            theme: selectedBackground,
+            ...(editPassword ? { password } : {}), //password 수정 상태라면 password 값을 보냄.
+          },
         });
         console.log("result=>", result);
         break;
       default:
         console.log("type이 잘못되었습니다. type=>", type);
     }
-    showToast("success", "등록되었습니다!");
-    console.log("이 id의 상세 페이지로 이동 =>", result.data.data.id);
-    navigate(`/studies/${result.data.data.id}`); //create,modify모두 스터디 상세 페이지로 이동하도록 한다.
+
     //데이터가 등록된 후에 이동해야 하기에, Link가 아닌 navigate를 이용.
   };
   return (
