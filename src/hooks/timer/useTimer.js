@@ -117,14 +117,12 @@ function useTimer(studyId, durationSec) {
 
   const resume = async () => {
     try {
-      const requestedAt = Date.now(); // 네트워크 요청 직전 시각
       const data = await updateSession(
         sessionIdRef.current,
         TIMER_STATUS.RUNNING,
       );
-      // 요청~응답 사이 경과 시간만큼 endTime을 앞당겨 네트워크 딜레이 보정
-      const elapsed = Date.now() - requestedAt;
-      setEndTime(new Date(new Date(data.endTime).getTime() - elapsed));
+
+      setEndTime(new Date(data.endTime));
       setTimerStatus(data.status);
     } catch (e) {
       toastError(e.userMessage);
