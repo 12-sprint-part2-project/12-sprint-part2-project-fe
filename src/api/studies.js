@@ -3,6 +3,10 @@ import api from "./instance";
 // 스터디 목록 조회
 export const getStudies = (params) => api.get("/studies", { params });
 
+// 최근 스터디 조회
+export const getRecentStudies = (params) =>
+  api.get("/studies/recent", { params });
+
 // 스터디 생성
 export const createStudy = (body) => api.post("/studies", body);
 

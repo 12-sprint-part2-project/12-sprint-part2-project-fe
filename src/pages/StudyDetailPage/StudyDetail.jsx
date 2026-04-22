@@ -21,15 +21,10 @@ const StudyDetail = () => {
   const { data: study, isLoading: loading } = useStudyDetail(studyId);
   const navigate = useNavigate();
 
-  const saveRecentStudy = (data) => {
-    const recentStudyTotalPoints =
-      data.focusSessions?.reduce((acc, cur) => acc + cur.earnedPoint, 0) ?? 0;
-
-    data.points = recentStudyTotalPoints;
-
+  const saveRecentStudy = (id) => {
     const storaged = JSON.parse(localStorage.getItem(RECENT_STUDIES) || "[]");
-    const filtered = storaged.filter((s) => s.id !== data.id); // 이미 로컬스토리지에 해당 스터디가 저장되어 있는 경우 담지 않음
-    filtered.unshift(data);
+    const filtered = storaged.filter((existId) => existId !== id); // 이미 로컬스토리지에 해당 스터디가 저장되어 있는 경우 담지 않음
+    filtered.unshift(id);
     if (filtered.length > 3) {
       // 3개를 넘어가면 제일 처음에 조회한 스터디 제거
       filtered.pop();
@@ -37,6 +32,10 @@ const StudyDetail = () => {
 
     localStorage.setItem(RECENT_STUDIES, JSON.stringify(filtered));
   };
+
+  useEffect(() => {
+    if (study) saveRecentStudy(study.id);
+  }, [study]);
 
   // 획득 포인트 합계
   const totalPoints =
