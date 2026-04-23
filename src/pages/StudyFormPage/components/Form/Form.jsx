@@ -23,6 +23,11 @@ const Form = ({ type, study }) => {
   const [password, setPassword] = useState(""); //비밀번호는 빈 값으로 둠! (보통 그렇지 않나;;)
   const [checkPassword, setCheckPassword] = useState("");
 
+  //각 인풋 별 warningText
+  const [nicknameWarningTxt, setNicknameWarningTxt] = useState();
+  const [titleWarningTxt, setTitleWarningTxt] = useState();
+  const [passwordWarningTxt, setPasswordWarningTxt] = useState();
+
   //비밀번호 같은지 텍스트
   const [pwCheckWarningText, setPwCheckWarningText] = useState("");
   //비밀번호 일치/비일치 상태
@@ -35,9 +40,6 @@ const Form = ({ type, study }) => {
 
   //비밀번호 수정 여부 - false: 비밀번호 수정 버튼, true: 비밀번호 입력 창
   const [editPassword, setEditPassword] = useState(false);
-
-  //제출 버튼을 클릭했는지 ( -> 클릭되었다면, 비어있는 input칸에 대해 붉은 표시)
-  const [isSubmitClicked, setIsSubmitClicked] = useState(false);
 
   //리액트 쿼리
   const { mutateAsync: create } = useMutation({
@@ -85,10 +87,58 @@ const Form = ({ type, study }) => {
     }
   }, [password, checkPassword]);
 
+  useEffect(() => {
+    if (nickname.trim().length > 10)
+      setNicknameWarningTxt("* 닉네임은 최대 10글자입니다.");
+    if (nickname.trim().length <= 10) setNicknameWarningTxt("");
+  }, [nickname]);
+
+  useEffect(() => {
+    if (title.trim().length > 15)
+      setTitleWarningTxt("* 스터디 이름은 최대 15글자입니다.");
+    if (title.trim().length <= 15) setTitleWarningTxt("");
+  }, [title]);
+
+  useEffect(() => {
+    if (password.trim().length === 0) {
+      setPasswordWarningTxt("");
+    } else if (password.trim().length < 4) {
+      setPasswordWarningTxt("* 비밀번호는 최소 4글자 입니다.");
+    } else {
+      setPasswordWarningTxt("");
+    }
+  }, [password]);
+
   //만들기/수정하기 버튼 클릭 시
   const onHandleSubmit = async () => {
-    //제출 버튼 클릭 상태 true로.
-    setIsSubmitClicked(true);
+    if (nickname.trim().length === 0) {
+      setNicknameWarningTxt("* 닉네임을 입력해 주세요");
+    }
+    if (title.trim().length === 0) {
+      setTitleWarningTxt("* 스터디 이름을 입력해 주세요");
+    }
+    if (password.trim().length === 0) {
+      setPasswordWarningTxt("* 비밀번호를 입력해 주세요");
+    }
+    switch (editPassword || type === "create") {
+      case true:
+        if (
+          nickname.trim().length > 10 ||
+          title.trim().length > 15 ||
+          password.trim().length < 4
+        ) {
+          showToast("warning", "조건을 확인해주세요!");
+          return;
+        }
+        break;
+      case false:
+        if (nickname.trim().length > 10 || title.trim().length > 15) {
+          showToast("warning", "조건을 확인해주세요!");
+          return;
+        }
+        break;
+    }
+
     //설명 제외 모든 곳에 입력이 되었는지 검사 -> 입력 안된 부분 있으면 토스트 메세지로 띄우기
     switch (type) {
       case "create":
@@ -163,17 +213,15 @@ const Form = ({ type, study }) => {
         input={nickname}
         setInput={setNickname}
         title="닉네임"
-        placeholder="닉네임을 입력해 주세요"
-        warningText="* 닉네임을 입력해 주세요"
-        isSubmitClicked={isSubmitClicked}
+        placeholder="닉네임을 입력해 주세요 (최대 10글자)"
+        warningText={nicknameWarningTxt}
       />
       <Input
         input={title}
         setInput={setTitle}
         title="스터디 이름"
-        placeholder="스터디 이름을 입력해 주세요"
-        warningText="* 스터디 이름을 입력해 주세요"
-        isSubmitClicked={isSubmitClicked}
+        placeholder="스터디 이름을 입력해 주세요 (최대 15글자)"
+        warningText={titleWarningTxt}
       />
       <Input
         input={description}
@@ -194,9 +242,8 @@ const Form = ({ type, study }) => {
             setInput={setPassword}
             title="비밀번호"
             placeholder="비밀번호를 입력해 주세요"
-            warningText="* 비밀번호를 입력해 주세요"
+            warningText={passwordWarningTxt}
             isPassword={true}
-            isSubmitClicked={isSubmitClicked}
           />
           <Input
             input={checkPassword}
@@ -207,7 +254,6 @@ const Form = ({ type, study }) => {
             isPasswordCheck={true}
             isPwSame={isPwSame}
             pwCheckWarningText={pwCheckWarningText}
-            isSubmitClicked={isSubmitClicked}
           />
           {type === "modify" && (
             <button
