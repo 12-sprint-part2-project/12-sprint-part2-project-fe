@@ -49,9 +49,7 @@ function Focus() {
 
   useEffect(() => {
     return () => {
-      queryClient.invalidateQueries({
-        queryKey: ["study", studyId],
-      });
+      queryClient.invalidateQueries({ queryKey: ["study", Number(studyId)] });
     };
   }, [queryClient, studyId]);
 
