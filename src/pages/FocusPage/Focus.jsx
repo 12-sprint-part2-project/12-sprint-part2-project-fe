@@ -224,7 +224,7 @@ function Focus() {
         title={study?.title}
         earnedPoint={totalPoints}
         onNavigateHabit={() => navigate(`/studies/${studyId}/habits`)}
-        onNavigateHome={() => navigate("/")}
+        onNavigateStudyDetail={() => navigate(`/studies/${studyId}`)}
       />
 
       {/* 타이머 */}
