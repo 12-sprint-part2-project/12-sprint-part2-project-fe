@@ -102,7 +102,7 @@ const StudyDetail = () => {
       //세션에 존재할 시, 바로 다음 페이지로 보냄
       return true;
     } catch (e) {
-      console.log("세션에 존재하지 않음 =>", e);
+      //console.log("세션에 존재하지 않음 =>", e);
       return false;
     }
   };
@@ -145,10 +145,10 @@ const StudyDetail = () => {
   const onHandleSharing = async () => {
     try {
       await navigator.clipboard.writeText(window.location.href);
-      console.log("복사 성공.");
+      //console.log("복사 성공.");
       showToast("success", "복사되었습니다!");
     } catch (e) {
-      console.log("복사 실패=>", e);
+      //console.log("복사 실패=>", e);
       showToast("warning", "복사에 실패했습니다.");
     }
   };
@@ -161,7 +161,7 @@ const StudyDetail = () => {
       showToast("success", "삭제되었습니다");
     } catch (e) {
       showToast("warning", "삭제에 실패했습니다");
-      console.log("삭제 실패 =>", e);
+      //console.log("삭제 실패 =>", e);
     }
     setShowDeletePopup(false);
   };
