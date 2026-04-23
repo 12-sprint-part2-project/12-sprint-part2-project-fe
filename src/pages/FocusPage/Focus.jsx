@@ -69,6 +69,7 @@ function Focus() {
     selectSession,
     selectedSession,
     currentTitle,
+    isUpdating,
   } = useTimer(studyId, durationSec);
 
   useEffect(() => {
@@ -292,6 +293,7 @@ function Focus() {
             isCompleted={isCompleted}
             isRunning={isRunning}
             isPaused={isPaused}
+            isUpdating={isUpdating}
             onStart={handleStartClick}
             onPause={pause}
             onResume={resume}

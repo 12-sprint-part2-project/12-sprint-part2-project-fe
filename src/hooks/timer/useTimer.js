@@ -8,6 +8,8 @@ import { calcRemaining } from "./timerUtils";
 function useTimer(studyId, durationSec) {
   const [timerStatus, setTimerStatus] = useState(TIMER_STATUS.IDLE);
   const [earnedPoint, setEarnedPoint] = useState(0);
+  const [isUpdating, setIsUpdating] = useState(false);
+
   // 페이지 재진입 시 타이머 설정 시간 표시용
   const [sessionDuration, setSessionDuration] = useState(null);
   // 페이지 재진입 시 타이머가 paused 상태인지 여부 (재개 팝업 표시용)
@@ -105,6 +107,8 @@ function useTimer(studyId, durationSec) {
   // 일시 정지 (interval만 멈추고 endTimeRef 유지)
   const pause = async () => {
     try {
+      setIsUpdating(true);
+
       const data = await updateSession(
         sessionIdRef.current,
         TIMER_STATUS.PAUSED,
@@ -113,11 +117,15 @@ function useTimer(studyId, durationSec) {
       toastPause();
     } catch (e) {
       toastError(e.userMessage);
+    } finally {
+      setIsUpdating(false);
     }
   };
 
   const resume = async () => {
     try {
+      setIsUpdating(true);
+
       const data = await updateSession(
         sessionIdRef.current,
         TIMER_STATUS.RUNNING,
@@ -127,6 +135,8 @@ function useTimer(studyId, durationSec) {
       setTimerStatus(data.status);
     } catch (e) {
       toastError(e.userMessage);
+    } finally {
+      setIsUpdating(false);
     }
   };
 
@@ -146,6 +156,7 @@ function useTimer(studyId, durationSec) {
     selectSession,
     selectedSession,
     currentTitle,
+    isUpdating,
   };
 }
 
