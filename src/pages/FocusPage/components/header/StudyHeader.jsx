@@ -7,7 +7,7 @@ function StudyHeader({
   title,
   earnedPoint,
   onNavigateHabit,
-  onNavigateHome,
+  onNavigateStudyDetail,
 }) {
   return (
     <div className={styles.header}>
@@ -17,7 +17,7 @@ function StudyHeader({
         </h2>
         <div className={styles.nav}>
           <NavButton label="오늘의 습관" onClick={onNavigateHabit} />
-          <NavButton label="홈" onClick={onNavigateHome} />
+          <NavButton label="스터디 상세" onClick={onNavigateStudyDetail} />
         </div>
       </div>
 
