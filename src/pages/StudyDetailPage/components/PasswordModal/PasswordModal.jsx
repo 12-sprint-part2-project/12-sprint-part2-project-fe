@@ -60,7 +60,7 @@ const PasswordModal = ({
 
       const sessionId = res.data.data.sessionId;
       localStorage.setItem("sessionId", sessionId);
-      console.log("비밀번호 검증 결과=>", res);
+      //console.log("비밀번호 검증 결과=>", res);
       setShowModal(false); //비밀번호 일치하면 여기서 모달 닫음.
       onPasswordSuccess();
     } catch (e) {

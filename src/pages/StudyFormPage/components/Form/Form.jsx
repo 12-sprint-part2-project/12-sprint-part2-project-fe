@@ -45,7 +45,7 @@ const Form = ({ type, study }) => {
       return createStudy(body);
     },
     onSuccess: (result) => {
-      console.log("생성 성공");
+      //console.log("생성 성공");
       const id = result.data.data.id;
       showToast("success", "등록되었습니다!");
       navigate(`/studies/${id}`);
@@ -59,7 +59,7 @@ const Form = ({ type, study }) => {
       return updateStudy(id, body);
     },
     onSuccess: (result) => {
-      console.log("수정 성공");
+      //console.log("수정 성공");
       const id = result.data.data.id;
       queryClient.invalidateQueries({ queryKey: ["study", id] }); // 기존 캐시 무효화
       showToast("success", "등록되었습니다!");
@@ -127,7 +127,7 @@ const Form = ({ type, study }) => {
     let result;
     switch (type) {
       case "create":
-        console.log("스터디 생성 요청 시작");
+        //console.log("스터디 생성 요청 시작");
         result = await create({
           title,
           nickname,
@@ -135,10 +135,10 @@ const Form = ({ type, study }) => {
           password,
           theme: selectedBackground,
         });
-        console.log("result=>", result);
+        //console.log("result=>", result);
         break;
       case "modify":
-        console.log("스터디 수정 요청 시작");
+        //console.log("스터디 수정 요청 시작");
         result = await modify({
           id: study.id,
           body: {
@@ -149,10 +149,10 @@ const Form = ({ type, study }) => {
             ...(editPassword ? { password } : {}), //password 수정 상태라면 password 값을 보냄.
           },
         });
-        console.log("result=>", result);
+        //console.log("result=>", result);
         break;
       default:
-        console.log("type이 잘못되었습니다. type=>", type);
+      //console.log("type이 잘못되었습니다. type=>", type);
     }
 
     //데이터가 등록된 후에 이동해야 하기에, Link가 아닌 navigate를 이용.
