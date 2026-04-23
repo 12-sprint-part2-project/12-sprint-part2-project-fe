@@ -38,6 +38,7 @@ function useTimer(studyId, durationSec) {
         if (action === TIMER_STATUS.COMPLETED) setEarnedPoint(pointResult);
         toastComplete(action, pointResult, isAuto);
         setTimerStatus(data.status);
+        isCompletingRef.current = false;
       } catch (e) {
         isCompletingRef.current = false;
         toastError(e.userMessage);
