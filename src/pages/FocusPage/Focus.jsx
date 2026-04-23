@@ -147,6 +147,11 @@ function Focus() {
     } catch {}
   };
 
+  const handleStop = () => {
+    pause();
+    setShowStopConfirmPopup(true);
+  };
+
   // 재진입 팝업에서 "계속 진행" 선택 시 일시정지된 타이머를 재시작하고 팝업 닫기
   const handleResumeConfirm = () => {
     resume();
@@ -292,6 +297,7 @@ function Focus() {
             onStart={handleStartClick}
             onPause={pause}
             onResume={resume}
+            onStop={handleStop}
           />
         </div>
       </div>

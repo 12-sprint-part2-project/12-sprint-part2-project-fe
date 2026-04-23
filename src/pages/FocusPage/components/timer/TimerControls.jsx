@@ -8,6 +8,7 @@ function TimerControls({
   onStart,
   onPause,
   onResume,
+  onStop,
 }) {
   if (isIdle || isCompleted) {
     return (
@@ -37,7 +38,8 @@ function TimerControls({
       <button
         type="button"
         className={`${styles.btnBase} ${styles.timerStartButton}`}
-        disabled={isRunning || isPaused}
+        onClick={onResume}
+        disabled={isRunning}
       >
         <span className="ic play"></span>
         Start!
@@ -46,8 +48,7 @@ function TimerControls({
       <button
         type="button"
         className={`${styles.btnBase} ${styles.btnCircle} ${styles.timerRestartButton}`}
-        onClick={onResume}
-        disabled={isRunning}
+        onClick={onStop}
       >
         <span className="ic restart"></span>
       </button>
