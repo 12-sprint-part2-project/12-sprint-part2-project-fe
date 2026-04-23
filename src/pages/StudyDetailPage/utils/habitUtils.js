@@ -40,7 +40,7 @@ export const isHabitActive = (habit, date) => {
 
   if (habit.endAt) {
     const end = new Date(habit.endAt);
-    end.setHours(24, 59, 59, 999);
+    end.setHours(23, 59, 59, 999);
 
     if (date > end) return false;
   }
