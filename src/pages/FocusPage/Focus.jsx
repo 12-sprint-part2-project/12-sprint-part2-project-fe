@@ -148,6 +148,7 @@ function Focus() {
   };
 
   const handleStop = () => {
+    pause();
     setShowStopConfirmPopup(true);
   };
 
