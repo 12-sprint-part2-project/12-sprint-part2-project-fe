@@ -5,6 +5,15 @@ const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
 });
 
+// 요청 인터셉터 추가
+api.interceptors.request.use((config) => {
+  const sessionId = localStorage.getItem("sessionId");
+  if (sessionId) {
+    config.headers["x-session-id"] = sessionId;
+  }
+  return config;
+});
+
 api.interceptors.response.use(
   (res) => res,
   (error) => {
