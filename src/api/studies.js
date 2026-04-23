@@ -26,7 +26,11 @@ export const verifyPassword = (studyId, body) =>
 
 // 세션 검증 (비밀번호가 이미 인증된 스터디인지)
 export const checkSession = (studyId) =>
-  api.get(`/studies/${studyId}/check-session`);
+  api.get(`/studies/${studyId}/check-session`, {
+    headers: {
+      "x-session-id": localStorage.getItem("sessionId"),
+    },
+  });
 
 // 응원 이모지 조회
 export const getEmojis = (studyId) => api.get(`/studies/${studyId}/emojis`);
