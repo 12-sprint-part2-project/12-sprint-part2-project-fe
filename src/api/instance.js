@@ -5,11 +5,16 @@ const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
 });
 
-// 요청 인터셉터 추가
 api.interceptors.request.use((config) => {
   const sessionId = localStorage.getItem("sessionId");
   if (sessionId) {
-    config.headers["x-session-id"] = sessionId;
+    const timestamp = Number(sessionId.split("-")[0]);
+    const ONE_HOUR = 1000 * 60 * 60;
+    if (Date.now() - timestamp > ONE_HOUR) {
+      localStorage.removeItem("sessionId");
+    } else {
+      config.headers["x-session-id"] = sessionId;
+    }
   }
   return config;
 });
