@@ -20,7 +20,7 @@ function useHabits(studyId) {
   // 캐시 무효화 헬퍼 — habits 캐시 + study 캐시 동시 무효화
   const invalidateAll = () => {
     queryClient.invalidateQueries({ queryKey: ["habits", studyId] });
-    queryClient.invalidateQueries({ queryKey: ["study", studyId] });
+    queryClient.invalidateQueries({ queryKey: ["study", Number(studyId)] });
   };
 
   // 습관 추가
