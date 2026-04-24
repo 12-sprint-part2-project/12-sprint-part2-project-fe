@@ -64,6 +64,11 @@ const Form = ({ type, study }) => {
       //console.log("수정 성공");
       const id = result.data.data.id;
       queryClient.invalidateQueries({ queryKey: ["study", id] }); // 기존 캐시 무효화
+
+      if (editPassword) {
+        localStorage.removeItem("sessionId"); // 비밀번호 수정했을 때만 localStorage 삭제
+      }
+
       showToast("success", "등록되었습니다!");
       navigate(`/studies/${id}`);
     },
