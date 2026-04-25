@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { checkSession, deleteStudy, getStudyDetail } from "../../api/studies";
+import { checkSession, deleteStudy } from "../../api/studies";
 import useStudyDetail from "../../hooks/useStudyDetail";
 import useToast from "../../hooks/useToast";
-import Tag from "../../components/Tag/Tag";
 import BoxHeaderInfo from "../../components/BoxHeader/BoxHeaderInfo";
 import NavButton from "../../components/NavButton/NavButton";
 import PasswordModal from "./components/PasswordModal/PasswordModal";
@@ -15,7 +14,6 @@ import styles from "./StudyDetail.module.css";
 import Emoji from "./components/Emoji/Emoji";
 
 const RECENT_STUDIES = "recent_studies";
-const MINUTES = 1000 * 60;
 
 const StudyDetail = () => {
   const { studyId } = useParams();
@@ -112,7 +110,7 @@ const StudyDetail = () => {
   const onPasswordSuccess = (type) => {
     switch (type) {
       case "modify":
-        showToast("success", "인증 되었습니다!"); //비밀번호 일치로 넘어갈 때도, 세션에 들어있어서 넘어갈 때도 모두 토스트 메세지를 보여줄 수 있다.
+        showToast("success", "인증되었습니다!"); //비밀번호 일치로 넘어갈 때도, 세션에 들어있어서 넘어갈 때도 모두 토스트 메세지를 보여줄 수 있다.
         setTimeout(() => {
           //성공 시의 toast메세지가 보이게 하기 위함.
           navigate(`/studies/new`, { state: { type: "modify", study } });
@@ -123,14 +121,14 @@ const StudyDetail = () => {
         setShowDeletePopup(true);
         break;
       case "habit":
-        showToast("success", "인증 되었습니다!");
+        showToast("success", "인증되었습니다!");
         setTimeout(() => {
           navigate(`/studies/${studyId}/habits`);
         }, 500);
 
         break;
       case "focus":
-        showToast("success", "인증 되었습니다!");
+        showToast("success", "인증되었습니다!");
         setTimeout(() => {
           navigate(`/studies/${studyId}/focus`);
         }, 500);
@@ -160,7 +158,7 @@ const StudyDetail = () => {
       navigate("/");
       showToast("success", "삭제되었습니다");
     } catch (e) {
-      showToast("warning", "삭제에 실패했습니다");
+      showToast("warning", e.userMessage);
       //console.log("삭제 실패 =>", e);
     }
     setShowDeletePopup(false);
