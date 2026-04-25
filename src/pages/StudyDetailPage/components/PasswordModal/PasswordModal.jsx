@@ -64,7 +64,7 @@ const PasswordModal = ({
       setShowModal(false); //비밀번호 일치하면 여기서 모달 닫음.
       onPasswordSuccess();
     } catch (e) {
-      showToast("warning", "비밀번호가 일치하지 않습니다!");
+      showToast("warning", e.userMessage);
       return;
     }
   };

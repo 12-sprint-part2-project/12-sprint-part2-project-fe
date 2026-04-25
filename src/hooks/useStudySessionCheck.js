@@ -11,8 +11,9 @@ function useStudySessionCheck(studyId) {
     const validateSession = async () => {
       try {
         await checkSession(studyId);
-      } catch {
-        showToast("warning", "스터디 비밀번호 인증 후 이용해주세요.");
+      } catch (e) {
+        console.log(e.userMessage);
+        showToast("warning", e.userMessage);
 
         setTimeout(() => {
           navigate(`/studies/${studyId}`);
