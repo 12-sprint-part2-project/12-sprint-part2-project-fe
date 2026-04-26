@@ -1,0 +1,6 @@
+.url {
+  padding: 1rem;
+  font: var(--text-14-regular);
+  border-radius: 1rem;
+  border: 1px solid var(--gray-300);
+}

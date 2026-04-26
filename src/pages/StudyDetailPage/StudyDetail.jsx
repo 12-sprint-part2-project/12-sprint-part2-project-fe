@@ -12,13 +12,20 @@ import Toast from "../../components/Toast/Toast";
 import HabitTable from "./components/HabitTable/HabitTable";
 import styles from "./StudyDetail.module.css";
 import Emoji from "./components/Emoji/Emoji";
+import NotFoundPage from "../NotFoundPage/NotFoundPage";
 
 const RECENT_STUDIES = "recent_studies";
 
 const StudyDetail = () => {
   const { studyId } = useParams();
-  const { data: study, isLoading: loading } = useStudyDetail(studyId);
   const navigate = useNavigate();
+
+  const {
+    data: study,
+    isLoading: loading,
+    isError,
+    error,
+  } = useStudyDetail(studyId);
 
   const saveRecentStudy = (id) => {
     const storaged = JSON.parse(localStorage.getItem(RECENT_STUDIES) || "[]");
@@ -164,10 +171,12 @@ const StudyDetail = () => {
     setShowDeletePopup(false);
   };
 
+  if (error?.code === "STUDY_NOT_FOUND") return <NotFoundPage />;
+
   return (
     <section className={styles.box}>
       {loading ? (
-        <p className={styles.notification}>스터디 조회중...</p>
+        <p className={styles.notification}>스터디 조회 중...</p>
       ) : (
         <>
           {toast && <Toast type={toast.type} text={toast.text} />}

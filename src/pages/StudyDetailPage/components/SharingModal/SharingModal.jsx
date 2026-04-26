@@ -1,5 +1,5 @@
-import React from "react";
 import Modal from "../../../../components/Modal/Modal";
+import styles from "./SharingModal.module.css";
 
 const SharingModal = ({ setShowModal, title, url, onClickConfirm }) => {
   return (
@@ -10,7 +10,7 @@ const SharingModal = ({ setShowModal, title, url, onClickConfirm }) => {
         hasCancel={false}
         hasExit={true}
         confirmText="복사하기"
-        innerComponent={<p>{url}</p>}
+        innerComponent={<p className={styles.url}>{url}</p>}
         onClickConfirm={onClickConfirm}
       />
     </div>

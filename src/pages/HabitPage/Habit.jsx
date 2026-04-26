@@ -167,7 +167,7 @@ function Habit() {
               onClick={() => navigate(`/studies/${studyId}/focus`)}
             />
             <NavButton
-              label="홈"
+              label="스터디 상세"
               onClick={() => navigate(`/studies/${studyId}`)}
             />
           </div>
