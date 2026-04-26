@@ -6,6 +6,7 @@ function useStudyDetail(studyId) {
     queryKey: ["study", Number(studyId)],
     queryFn: () => getStudyDetail(studyId).then((res) => res.data.data),
     staleTime: 1000 * 60 * 5,
+    retry: 0,
   });
 }
 
