@@ -1,6 +1,9 @@
 import Modal from "../../../../components/Modal/Modal";
 import styles from "./SharingModal.module.css";
-
+/*
+공유하기 모달
+- 공통 컴포넌트 모달을 사용
+*/
 const SharingModal = ({ setShowModal, title, url, onClickConfirm }) => {
   return (
     <div>
