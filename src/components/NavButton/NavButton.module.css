@@ -1,0 +1,33 @@
+.navBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  padding: 0.75rem 1rem 0.75rem 1.5rem;
+  border-radius: 0.9375rem;
+  border: 1px solid var(--gray-300);
+  font: var(--text-16-medium);
+  color: var(--gray-500);
+  background-color: var(--white);
+  transition: all 0.15s ease;
+}
+
+.navBtn:hover {
+  background-color: var(--gray-200);
+}
+
+.navBtn:active {
+  border-color: var(--gray-500);
+  transform: scale(0.98);
+}
+
+.navBtn:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+}
+
+@media (max-width: 375px) {
+  .navBtn {
+    padding: 0.5rem 0.37rem 0.5rem 0.62rem;
+  }
+}

@@ -10,7 +10,7 @@ export const createHabit = (studyId, body) =>
 
 // 습관 체크/해제
 export const checkHabit = (studyId, habitId, body) =>
-  api.patch(`/studies/${studyId}/habits/today/${habitId}`, body);
+  api.patch(`/studies/${studyId}/habits/${habitId}/today`, body);
 
 // 습관 수정
 export const updateHabit = (studyId, habitId, body) =>

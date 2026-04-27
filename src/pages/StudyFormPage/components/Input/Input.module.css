@@ -1,0 +1,98 @@
+/*-----Input------*/
+.inputElement {
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1rem;
+}
+.label {
+  color: var(--black, #414141);
+  font-family: Pretendard;
+  font-size: 1.125rem;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+}
+.input {
+  padding: 15px 20px;
+
+  width: 100%;
+  height: 3rem;
+
+  border-radius: 15px;
+  border: 1px solid var(--gray-300, #ddd);
+  background: #fff;
+}
+.input:focus {
+  border: 1px solid var(--green-text);
+  transition: all 0.5s;
+}
+.pwInput {
+  padding-right: 3.125rem; /*visible icon 자리를 위해*/
+}
+.textarea {
+  padding: 15px 20px;
+  padding-right: 3.125rem; /*visible icon 자리를 위해*/
+  resize: none; /* 크기 조절 막기 */
+
+  width: 100%;
+  height: 6.125rem;
+
+  border-radius: 15px;
+  border: 1px solid var(--gray-300, #ddd);
+  background: #fff;
+
+  line-height: 1.5;
+}
+.textarea:focus {
+  border: 1px solid var(--green-text);
+  transition: all 0.5s;
+}
+
+.input::placeholder {
+  color: var(--gray-500, #818181);
+  font-family: Pretendard;
+  font-size: 1rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+.inputContainer {
+  width: 100%;
+
+  position: relative;
+
+  display: flex;
+  align-items: center;
+}
+.inputContainer button {
+  width: 1.2796rem;
+  height: 1.1291rem;
+
+  position: absolute;
+  right: 1.25rem;
+}
+
+/*-----특수 상황-----*/
+.noContent {
+  border: 1px solid var(--error, #c41013);
+  transition: all 0.5s;
+}
+.warningText {
+  color: var(--error, #c41013);
+  font-family: Pretendard;
+  font-size: 0.875rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+.correctText {
+  color: var(--green-text);
+  font-family: Pretendard;
+  font-size: 0.875rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}

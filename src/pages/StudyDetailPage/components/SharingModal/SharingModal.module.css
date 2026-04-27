@@ -1,0 +1,13 @@
+.url {
+  padding: 1rem;
+  border-radius: 1rem;
+  border: 1px solid var(--gray-300);
+
+  color: var(--gray-500, #818181);
+  text-align: center;
+  font-family: Pretendard;
+  font-size: 1.125rem;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+}

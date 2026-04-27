@@ -1,0 +1,110 @@
+.habitBtn {
+  width: 100%;
+  height: 54px;
+  padding: 0 1rem;
+  border-radius: 1.25rem;
+  border: none;
+  background-color: var(--gray-200);
+  color: var(--gray-500);
+  font: var(--text-16-bold);
+  text-align: center;
+  cursor: pointer;
+  /* 터치 시 자연스럽게 전환 */
+  transition:
+    opacity 0.15s ease,
+    background-color 0.2s ease;
+}
+
+.habitBtn.completed {
+  background-color: var(--brand);
+  color: var(--white);
+}
+
+.editRow {
+  width: 600px;
+  max-width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.editItem {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 400px;
+  height: 54px;
+  margin-left: 100px;
+  padding: 0 1rem;
+  border: none;
+  border-radius: 1.25rem;
+  background-color: var(--gray-200);
+  cursor: pointer;
+}
+
+.editItem.completed {
+  background-color: var(--brand);
+}
+
+.editName {
+  font: var(--text-16-bold);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  color: var(--gray-500);
+  flex: 1;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.editItem.completed .editName {
+  color: var(--white);
+}
+
+/* 인라인 편집 입력 */
+.editInputWrap {
+  width: 400px;
+  flex-shrink: 0;
+  height: 54px;
+  margin-left: 100px;
+  border-radius: 1.25rem;
+  background-color: var(--gray-200);
+  display: flex;
+  align-items: center;
+}
+
+.editInput {
+  width: 100%;
+  height: 100%;
+  padding: 0 1rem;
+  border: none;
+  border-radius: 1.25rem;
+  background: transparent;
+  font: var(--text-16-bold);
+  text-align: center;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  outline: none;
+  color: var(--gray-500);
+}
+
+.deleteBtn {
+  width: 42px;
+  height: 42px;
+  margin-left: 8px;
+  border: none;
+  border-radius: 50%;
+  background: #ffe6ed;
+  color: var(--error);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  font-size: 1.2rem;
+  transition: opacity 0.15s ease;
+}
+
+.deleteBtn:hover {
+  opacity: 0.7;
+}

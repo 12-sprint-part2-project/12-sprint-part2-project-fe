@@ -1,0 +1,193 @@
+.container {
+  max-width: 1248px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 40px;
+  background-color: var(--white);
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+/* 헤더 영역 */
+.studyInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.studyTitleRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.studyName {
+  font: var(--text-32-bold);
+}
+
+.navButtons {
+  display: flex;
+  gap: 12px;
+}
+
+/* 내부 컨테이너 */
+.habitSection {
+  border: 1px solid var(--gray-300);
+  border-radius: 20px;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.habitHeader {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* 타이틀 + 버튼 묶음 — 이 wrapper가 중앙에 오고 버튼은 타이틀 기준으로 위치 */
+.titleGroup {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.habitTitle {
+  font: var(--text-24-bold);
+  white-space: nowrap;
+}
+
+/* 목록 수정 버튼 — titleGroup 기준 타이틀 오른쪽 끝에서 92px */
+.editBtn {
+  position: absolute;
+  left: calc(100% + 92px);
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: var(--gray-500);
+  font: var(--text-14-medium);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.habitList {
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* 빈 상태 */
+.emptyState {
+  text-align: center;
+  color: var(--gray-500);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 40px 0;
+}
+
+/* 모달 내부 */
+.modalInner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+/* 새 습관 입력 행 — editRow와 동일한 구조 */
+.newHabitRow {
+  width: 600px;
+  max-width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+/* 새 습관 입력 — 습관 버튼과 같은 스타일 */
+.newHabitInputWrap {
+  position: relative;
+  width: 400px;
+  max-width: 100%;
+  height: 54px;
+  margin-left: 100px;
+  border-radius: 1.25rem;
+  background-color: var(--gray-200);
+}
+
+.newHabitInputWrap::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 12px;
+  width: 127.5px;
+  height: 1.8px;
+  background-color: var(--gray-500);
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.newHabitInputWrap:focus-within::before,
+.newHabitInputWrap.hasValue::before {
+  display: none;
+}
+
+.newHabitInput {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  padding: 0 1rem;
+  border: none;
+  border-radius: 20px;
+  background: transparent;
+  font: var(--text-16-bold);
+  text-align: center;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  outline: none;
+  color: var(--gray-500);
+}
+
+/* 새 습관 삭제(취소) 버튼 */
+.newHabitDeleteBtn {
+  width: 42px;
+  height: 42px;
+  margin-left: 8px;
+  border: none;
+  border-radius: 50%;
+  background: #ffe6ed;
+  color: var(--error);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  font-size: 1.2rem;
+  transition: opacity 0.15s ease;
+  flex-shrink: 0;
+}
+
+.newHabitDeleteBtn:hover {
+  opacity: 0.7;
+}
+
+/* + 추가 버튼 */
+.addBtn {
+  width: 400px;
+  max-width: 100%;
+  height: 54px;
+  border-radius: 20px;
+  border: 2px solid var(--black);
+  background: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: var(--black);
+}
