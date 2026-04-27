@@ -4,14 +4,14 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 24px;
+  gap: 1.5rem;
 }
 
 /*-----Button------*/
 .button {
   width: 100%;
-  max-width: 648px;
-  height: 58px;
+  max-width: 40.5rem;
+  height: 3.625rem;
 }
 /*-----Toast------*/
 .toast {
@@ -22,7 +22,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 24px;
+  gap: 1.5rem;
   width: 100%;
 
   background-color: var(--white);
@@ -41,7 +41,7 @@
 
   color: var(--black);
   font-family: Pretendard;
-  font-size: 18px;
+  font-size: 1.125rem;
   font-style: normal;
   font-weight: 600;
   line-height: normal;
@@ -51,13 +51,13 @@
 }
 .editPasswordCancelBtn {
   background-color: var(--white);
-  padding: 16px;
+  padding: 1rem;
   border-radius: 30px;
   width: fit-content;
 
   color: var(--black);
   font-family: Pretendard;
-  font-size: 16px;
+  font-size: 1rem;
   font-style: normal;
   font-weight: 600;
   line-height: normal;
