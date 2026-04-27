@@ -1,5 +1,13 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import styles from "./Input.module.css";
+
+/*
+Form에 사용되는 Input
+
+자주 쓰이는 요소이기에, 컴포넌트로 분리함.
+
+비밀번호 관련한 인풋은, 기존의 인풋과는 조금 다르게 작동하는 부분이 있으므로, 이를 위한 Props가 여럿 존재한다.
+*/
 
 const Input = ({
   input,

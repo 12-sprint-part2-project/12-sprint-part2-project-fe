@@ -1,4 +1,3 @@
-import React from "react";
 import styles from "./Backgrounds.module.css";
 
 //이미지는 이렇게 가져와야 정상적으로 작동할 확률이 높다.
@@ -6,7 +5,9 @@ import desk1 from "../../../../assets/images/desk1.jpg";
 import desk2 from "../../../../assets/images/desk2.jpg";
 import tile from "../../../../assets/images/tile.jpg";
 import leaf from "../../../../assets/images/leaf.jpg";
-
+/*
+Form의 여러 배경을 선택하는 부분
+*/
 const Backgrounds = ({ selectedBackground, setSelectedBackground }) => {
   const backgrounds = [
     {

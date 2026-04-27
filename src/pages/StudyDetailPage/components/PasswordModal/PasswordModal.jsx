@@ -1,11 +1,14 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import styles from "./PasswordModal.module.css";
 import Modal from "../../../../components/Modal/Modal";
 import { verifyPassword } from "../../../../api/studies";
 import useToast from "../../../../hooks/useToast";
 import Toast from "../../../../components/Toast/Toast";
 
-//TODO: innerComponent 를 컴포넌트로 따로 빼기
+/*
+비밀번호 모달
+- 공통 컴포넌트 모달을 사용
+*/
 const PasswordModal = ({
   setShowModal = () => {}, //이 모달을 보여줄지에 대한 상태. 이걸 넘겨주면, Modal에서 setShowModal(false)로 모달을 끌 수 있다.
   studyId, //스터디 id (비밀번호 검증 API에 이용)

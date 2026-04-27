@@ -4,13 +4,13 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 16px;
+  gap: 1rem;
 }
 
 .label {
   color: var(--black, #414141);
   font-family: Pretendard;
-  font-size: 18px;
+  font-size: 1.125rem;
   font-style: normal;
   font-weight: 600;
   line-height: normal;
@@ -21,14 +21,14 @@
   width: 100%;
 
   display: flex;
-  gap: 16px;
+  gap: 1rem;
   flex-wrap: wrap;
   align-items: flex-start;
   align-content: flex-start;
 }
 .background {
-  width: 150px;
-  height: 150px;
+  width: 9.375rem;
+  height: 9.375rem;
 
   border-radius: 16px;
   border: 1px solid rgba(0, 0, 0, 0.1);
@@ -67,8 +67,8 @@
 
 /*-----아이콘-----*/
 .pawContainer {
-  width: 32px;
-  height: 32px;
+  width: 2rem;
+  height: 2rem;
 
   border-radius: 50%;
   background-color: rgba(65, 65, 65, 0.5);
@@ -80,6 +80,6 @@
   align-items: center;
 }
 .paw {
-  width: 18px;
-  height: 18px;
+  width: 1.125rem;
+  height: 1.125rem;
 }
