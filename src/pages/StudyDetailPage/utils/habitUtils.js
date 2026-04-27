@@ -3,22 +3,26 @@
  * 이번 주 월~일 날짜 생성
  */
 export const getWeekDates = () => {
-  const today = new Date();
-  const day = today.getDay();
+  // KST 기준 오늘 날짜 문자열
+  const kstNow = new Date(new Date().getTime() + 9 * 60 * 60 * 1000);
+  const kstDateStr = kstNow.toISOString().slice(0, 10); // "2026-04-27"
+
+  // UTC 자정 기준 Date로 변환 (DB logDate와 맞추기 위해)
+  const today = new Date(`${kstDateStr}T00:00:00.000Z`);
+  const day = today.getUTCDay();
   const monday = new Date(today);
-  monday.setDate(today.getDate() - (day === 0 ? 6 : day - 1));
-  monday.setHours(0, 0, 0, 0); // 시간 설정 - 시, 분, 초, 마이크로초?
+  monday.setUTCDate(today.getUTCDate() - (day === 0 ? 6 : day - 1));
 
   return Array.from({ length: 7 }, (_, i) => {
     const date = new Date(monday);
-    date.setDate(monday.getDate() + i);
+    date.setUTCDate(monday.getUTCDate() + i);
     return date;
   });
 };
 
 export const habitLogsMap = (habitLogs) => {
   return habitLogs.reduce((acc, log) => {
-    const key = log.logDate.slice(0, 10); // yyyy-mm-dd
+    const key = log.logDate.slice(0, 10); // 그냥 UTC 날짜 그대로 사용
     acc[key] = log;
     return acc;
   }, {});
@@ -32,17 +36,14 @@ export const habitLogsMap = (habitLogs) => {
  * @returns {Boolean} 습관 출력 조건값
  */
 export const isHabitActive = (habit, date) => {
-  const start = new Date(habit.startAt);
-  start.setHours(0, 0, 0, 0);
+  const startUTC = habit.startAt.slice(0, 10); // "2026-04-26"
+  const dateUTC = dateFormat(date, "yyyy-mm-dd"); // UTC 기준
 
-  // start 이전 이면 비활성
-  if (date < start) return false;
+  if (dateUTC < startUTC) return false;
 
   if (habit.endAt) {
-    const end = new Date(habit.endAt);
-    end.setHours(23, 59, 59, 999);
-
-    if (date > end) return false;
+    const endUTC = habit.endAt.slice(0, 10);
+    if (dateUTC > endUTC) return false;
   }
 
   return true;
@@ -67,19 +68,15 @@ export const getHabitColor = (studyId, index) => {
  * @returns {String} 변환된 날짜 데이터
  */
 export const dateFormat = (date, format) => {
-  let convertedDate;
-
   switch (format) {
     case "yyyy-mm-dd":
+      // UTC 기준으로 날짜 추출 (DB와 맞추기)
       const d = new Date(date);
-      const yyyy = d.getFullYear();
-      const mm = String(d.getMonth() + 1).padStart(2, "0");
-      const dd = String(d.getDate()).padStart(2, "0");
-      convertedDate = `${yyyy}-${mm}-${dd}`;
-      break;
+      const yyyy = d.getUTCFullYear();
+      const mm = String(d.getUTCMonth() + 1).padStart(2, "0");
+      const dd = String(d.getUTCDate()).padStart(2, "0");
+      return `${yyyy}-${mm}-${dd}`;
     default:
-      convertedDate = date;
+      return date;
   }
-
-  return convertedDate;
 };
